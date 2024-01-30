@@ -1,11 +1,10 @@
 <script>
 import { defineComponent } from "vue";
 import DropDownSVGVue from "../general/DropDownSVG.vue";
+import { Icon } from "@iconify/vue";
 
-export default {
-  data() {
-    return {};
-  },
+export default defineComponent( {
+  name: 'BloodChecklist',
   methods: {
     currentDate() {
       const current = new Date();
@@ -29,162 +28,208 @@ export default {
   },
   components: {
     DropDownSVGVue,
+    Icon,
   },
-};
+});
 </script>
 
 <template>
-  <div style="display: flex; /* justify-content: space-between */">
-    <div class="card" style="border: 0px; margin-left: 30px; width: 1366px">
-      <div class="container">
-        <form>
-          <!-- Header -->
-          <div class="row">
-            <div class="col-7">
-              <div style="margin-top: 60px">
-                <p class="fontSize_header">
-                  ฟอร์มนำส่งตรวจการเกิดปฏิกิริยาจากการรับเลือด
+  <div class="container" style="max-width: Fixed 100%">
+    <form style="width: Fixed 100%">
+      <div
+        class="card"
+        style="border: 0px; width: Fixed 100%; justify-content: center"
+      >
+        <!-- Header -->
+        <div class="row">
+          <div class="col-md-6">
+            <div style="margin-top: 60px">
+              <p class="fontSize_header">
+                ฟอร์มนำส่งตรวจการเกิดปฏิกิริยาจากการรับเลือด
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <p class="fontTopicBox">HN</p>
+            <div class="card card-box-style">
+              <div class="card-body card-box-body-style">
+                <!-- HN value -->
+                <p class="fontInsideBox">
+                  <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0 0 0
+                  0 0
                 </p>
               </div>
             </div>
-            <div class="col">
-              <p class="fontTopicBox">HN</p>
+          </div>
+          <div class="col-md-3">
+            <div>
+              <p class="fontTopicBox">ชื่อผู้ป่วย</p>
               <div class="card card-box-style">
                 <div class="card-body card-box-body-style">
-                  <!-- HN value -->
                   <p class="fontInsideBox">
                     <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0 0
-                    0 0 0
+                    &nbsp;Name
                   </p>
                 </div>
               </div>
             </div>
-            <div class="col">
-              <div>
-                <p class="fontTopicBox">ชื่อผู้ป่วย</p>
-                <div class="card card-box-style">
-                  <div class="card-body card-box-body-style">
-                    <p class="fontInsideBox">
-                      <i
-                        class="fa-regular fa-id-card"
-                        style="color: #00bfa5"
-                      ></i>
-                      &nbsp;Name
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-          <div class="card card-box-info-style">
-            <!-- row 1 -->
-            <div
-              class="row card-box-info-row"
-              style="display: flex; justify-content: space-between"
-            >
-              <div class="col-2 card-box-info-layout-component-style">
-                <div class="card-box-info-row-1-component-style">
-                  <i
-                    class="fa-solid fa-calendar-day"
-                    style="font-size: 24px; margin-left: 16px; margin-top: 18px"
-                  ></i>
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 32px; margin-top: 7px"
-                    >
-                      วันที่
-                    </p>
-                    <p
-                      style="
-                        margin-left: 32px;
-                        font-size: 16px;
-                        font-weight: 400;
-                      "
-                    >
-                      {{ currentDate() }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-2 card-box-info-layout-component-style">
-                <div class="card-box-info-row-1-component-style">
-                  <i
-                    class="fa-regular fa-clock"
-                    style="font-size: 24px; margin-left: 16px; margin-top: 18px"
-                  ></i>
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 32px; margin-top: 7px"
-                    >
-                      เวลา
-                    </p>
-                    <p
-                      style="
-                        margin-left: 32px;
-                        font-size: 16px;
-                        font-weight: 400;
-                      "
-                    >
-                      {{ currentTime() }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-6" style="width: 312px; height: 71px">
-                <div
+        </div>
+        <div class="card card-box-info-style">
+          <!-- row 1 -->
+          <div
+            class="row card-box-info-row"
+            style="display: flex; justify-content: space-between"
+          >
+            <div class="col-md-2 card-box-info-layout-component-style">
+              <div class="card-box-info-row-1-component-style">
+                <Icon
+                  icon="bx:calendar-event"
                   style="
-                    width: 312px;
-                    height: 50px;
-                    background-color: rgba(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid rgba(219, 225, 230, 1);
-                    border-radius: 5px 5px 0px 0px;
+                    width: 24px;
+                    height: 24px;
+                    margin-left: 16px;
+                    margin-top: 18px;
+                    padding-right: 0%;
                   "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      หอผู้ป่วย
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm select-box-style"
+                />
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    วันที่
+                  </p>
+                  <div style="position: relative">
+                    <div style="display: inline; position: absolute">
+                      <input
+                        class="form-control typing-box-style"
                         style="
-                          /* margin-left: 16px; */
+                          width: 178px;
+                          margin-left: 0px;
                           margin-right: 16px;
                           padding-left: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
+                        type="text"
+                        :value="currentDate()"
+                        aria-label="readonly input example"
+                        readonly
+                      />
                     </div>
-
-                    <!-- <DropDownSVGVue class="position-absolute  translate-middle-y" style="left: 276px; top:35px"/> -->
                   </div>
                 </div>
               </div>
-              <div class="col-2 card-box-info-layout-component-style">
-                <div class="card-box-info-row-1-component-style">
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
+            </div>
+            <div class="col-md-2 card-box-info-layout-component-style">
+              <div class="card-box-info-row-1-component-style">
+                <Icon
+                  icon="bx:alarm"
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    margin-left: 16px;
+                    margin-top: 18px;
+                  "
+                />
+                <!-- <i
+                    class="fa-regular fa-clock"
+                    style="font-size: 24px; margin-left: 16px; margin-top: 18px"
+                  ></i> -->
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    เวลา
+                  </p>
+                  <!-- <p
+                      style="
+                        margin-left: 16px;
+                        font-size: 16px;
+                        font-weight: 400;
+                      "
                     >
-                      โทร
-                    </p>
-                    <p
+                      {{ currentTime() }}
+                    </p> -->
+                  <div style="position: relative">
+                    <div style="display: inline; position: absolute">
+                      <input
+                        class="form-control typing-box-style"
+                        style="
+                          width: 178px;
+                          margin-left: 0px;
+                          margin-right: 16px;
+                          padding-left: 16px;
+                          padding-top: 0px;
+                          padding-bottom: 0px;
+                        "
+                        type="text"
+                        :value="currentTime()"
+                        aria-label="readonly input example"
+                        readonly
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6" style="width: 312px; height: 71px">
+              <div
+                style="
+                  width: 312px;
+                  height: 50px;
+                  background-color: rgba(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid rgba(219, 225, 230, 1);
+                  border-radius: 5px 5px 0px 0px;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    หอผู้ป่วย
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        /* margin-left: 16px; */
+                        margin-right: 16px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+
+                  <!-- <DropDownSVGVue class="position-absolute  translate-middle-y" style="left: 276px; top:35px"/> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 card-box-info-layout-component-style">
+              <div class="card-box-info-row-1-component-style">
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    โทร
+                  </p>
+                  <!-- <p
                       style="
                         margin-left: 16px;
                         font-size: 16px;
@@ -192,39 +237,58 @@ export default {
                       "
                     >
                       123-456-789
-                    </p>
+                    </p> -->
+                  <div style="position: relative">
+                    <div style="display: inline; position: absolute">
+                      <input
+                        class="form-control typing-box-style"
+                        style="
+                          width: 218px;
+                          margin-left: 0px;
+                          margin-right: 16px;
+                          padding-left: 16px;
+                          padding-top: 0px;
+                          padding-bottom: 0px;
+                        "
+                        type="text"
+                        value="123-456-759"
+                        aria-label="readonly input example"
+                        readonly
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- row 2 -->
-            <div
-              class="row card-box-info-row"
-              style="display: flex; justify-content: space-between"
-            >
-              <div class="col-8" style="width: 800px; height: 71px">
-                <div class="card-box-info-row-2-component-style">
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      การวินิจฉัย
-                    </p>
-                    <input
-                      class="form-control typing-box-style"
-                      style="
-                        width: 800px;
-                        margin-left: 0px;
-                        margin-right: 16px;
-                        padding-left: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      type="text"
-                      aria-label="default input example"
-                    />
-                    <!-- <div class="custom-select">
+          </div>
+          <!-- row 2 -->
+          <div
+            class="row card-box-info-row"
+            style="display: flex; justify-content: space-between"
+          >
+            <div class="col-md-8" style="width: 800px; height: 71px">
+              <div class="card-box-info-row-2-component-style">
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    การวินิจฉัย
+                  </p>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      width: 800px;
+                      margin-left: 0px;
+                      margin-right: 16px;
+                      padding-left: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    aria-label="default input example"
+                  />
+                  <!-- <div class="custom-select">
                       <select
                         class="form-select-sm select-box-style"
                         style="
@@ -242,8 +306,8 @@ export default {
                         <option value="3">Three</option>
                       </select>
                     </div> -->
-                  </div>
-                  <!-- <div style="display: inline; position: absolute">
+                </div>
+                <!-- <div style="display: inline; position: absolute">
                     <p
                       class="fontTopicInfo"
                       style="margin-left: 16px; margin-top: 7px"
@@ -257,305 +321,317 @@ export default {
                       aria-label="default input example"
                     />
                   </div> -->
-                </div>
-              </div>
-              <div class="col-4" style="width: 312px; height: 71px">
-                <div
-                  style="
-                    width: 312px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                  "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      แพทย์เจ้าของไข้
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm select-box-style"
-                        style="
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                        "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
-            <!-- row 3 -->
-            <div
-              class="row card-box-info-row"
-              style="display: flex; justify-content: space-between"
-            >
-              <div class="col-3" style="width: 180px; height: 71px">
-                <div
-                  style="
-                    width: 180px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                  "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      หมู่เลือดผู้ป่วย
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm"
-                        style="
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                          background-color: rgb(213, 224, 224, 0);
-                          border: rgb(213, 224, 224, 0);
-                          width: 180px;
-                        "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3" style="width: 180px; height: 71px">
-                <div
-                  style="
-                    width: 180px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                  "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      RH
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm"
-                        style="
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                          background-color: rgb(213, 224, 224, 0);
-                          border: rgb(213, 224, 224, 0);
-                          width: 180px;
-                        "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3" style="width: 180px; height: 71px">
-                <div
-                  style="
-                    width: 180px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                  "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      ชนิดของเลือดที่ให้
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm"
-                        style="
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                          background-color: rgb(213, 224, 224, 0);
-                          border: rgb(213, 224, 224, 0);
-                          width: 180px;
-                        "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3" style="width: 180px; height: 71px">
-                <div
-                  style="
-                    width: 180px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                  "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      หมู่เลือดผู้บริจาค
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm"
-                        style="
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                          background-color: rgb(213, 224, 224, 0);
-                          border: rgb(213, 224, 224, 0);
-                          width: 180px;
-                        "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3" style="width: 180px; height: 71px">
-                <div
-                  style="
-                    width: 180px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                  "
-                >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      RH
-                    </p>
-
-                    <div class="custom-select">
-                      <select
-                        class="form-select-sm"
-                        style="
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                          background-color: rgb(213, 224, 224, 0);
-                          border: rgb(213, 224, 224, 0);
-                          width: 180px;
-                        "
-                        aria-label="Small select example"
-                      >
-                        <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- row 4 -->
-            <div 
-              class="row card-box-info-row"
-              style="display: flex; justify-content: space-between"
+            <div class="col-md-4" style="width: 312px; height: 71px">
+              <div
+                style="
+                  width: 312px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                "
               >
-              <div class="col-3" style="width: 234px; height: 71px">
-                <div class="card-box-info-row-4-component-style">
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      หมายเลขถุงเลือด
-                    </p>
-                    <input
-                      class="form-control typing-box-style"
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    แพทย์เจ้าของไข้
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
                       style="
-                        width: 234px;
                         margin-left: 0px;
                         margin-right: 16px;
                         padding-left: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
                       "
-                      type="text"
-                      aria-label="default input example"
-                    />
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
                   </div>
                 </div>
               </div>
-              <div class="col-3" style="width: 234px; height: 71px">
-                <div class="input-group card-box-info-row-4-component-style">
-                  <div style="display: inline; position: absolute">
-                      <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
+            </div>
+          </div>
+          <!-- row 3 -->
+          <div
+            class="row card-box-info-row"
+            style="display: flex; justify-content: space-between"
+          >
+            <div class="col-md-3" style="width: 196px; height: 71px">
+              <div
+                style="
+                  width: 196px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    หมู่เลือดผู้ป่วย
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm"
+                      style="
+                        margin-left: 0px;
+                        margin-right: 16px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        background-color: rgb(213, 224, 224, 0);
+                        border: rgb(213, 224, 224, 0);
+                        width: 180px;
+                      "
+                      aria-label="Small select example"
                     >
-                      ปริมาตรที่เติม
-                    </p>
-                    <div style="display: flex;height: 24px;">
-                        <input
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3" style="width: 196px; height: 71px">
+              <div
+                style="
+                  width: 196px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    RH
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm"
+                      style="
+                        margin-left: 0px;
+                        margin-right: 16px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        background-color: rgb(213, 224, 224, 0);
+                        border: rgb(213, 224, 224, 0);
+                        width: 180px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3" style="width: 196px; height: 71px">
+              <div
+                style="
+                  width: 196px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    ชนิดของเลือดที่ให้
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm"
+                      style="
+                        margin-left: 0px;
+                        margin-right: 16px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        background-color: rgb(213, 224, 224, 0);
+                        border: rgb(213, 224, 224, 0);
+                        width: 180px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3" style="width: 196px; height: 71px">
+              <div
+                style="
+                  width: 196px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    หมู่เลือดผู้บริจาค
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm"
+                      style="
+                        margin-left: 0px;
+                        margin-right: 16px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        background-color: rgb(213, 224, 224, 0);
+                        border: rgb(213, 224, 224, 0);
+                        width: 180px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3" style="width: 196px; height: 71px">
+              <div
+                style="
+                  width: 196px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    RH
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm"
+                      style="
+                        margin-left: 0px;
+                        margin-right: 16px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        background-color: rgb(213, 224, 224, 0);
+                        border: rgb(213, 224, 224, 0);
+                        width: 180px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- row 4 -->
+          <div
+            class="row card-box-info-row"
+            style="display: flex; justify-content: space-between"
+          >
+            <div class="col-md-3" style="width: 234px; height: 71px">
+              <div class="card-box-info-row-4-component-style">
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    หมายเลขถุงเลือด
+                  </p>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      width: 234px;
+                      margin-left: 0px;
+                      margin-right: 16px;
+                      padding-left: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    aria-label="default input example"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3" style="width: 234px; height: 71px">
+              <div class="input-group card-box-info-row-4-component-style">
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    ปริมาตรที่เติม
+                  </p>
+                  <div style="display: flex; height: 24px">
+                    <input
                       class="form-control typing-box-style"
                       style="
                         width: 200px;
@@ -566,68 +642,168 @@ export default {
                         padding-bottom: 0px;
                       "
                       type="number"
-                      pattern="[0-9]*" 
+                      pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
                       min="0"
                       inputmode="numeric"
                       aria-label="default input example"
                     />
-                    <span class="input-group-text typing-box-style"
-                    style="width: 49px;
-                    padding-left:0px ;
-                    margin-bottom: 2px;
-                    font-weight: 700;
-                    font-size: 12px;
-                    color: #202124;
-                    font-family: 'IBM Plex Sans Thai';
-                    "
-                    > มล.</span>
-                    </div>
-                    
-                    
-                  </div>
-                </div>
-              </div>
-              <div class="col-3" style="width: 590px; height: 71px">
-                <div style="width: 590px;
-                    height: 50px;
-                    background-color: rgb(213, 224, 224, 20%);
-                    position: relative;
-                    border-bottom: 2px solid #d5e0e0;
-                    border-radius: 5px 5px 0px 0px;"
-                  >
-                  <div style="display: inline; position: absolute">
-                    <p
-                      class="fontTopicInfo"
-                      style="margin-left: 16px; margin-top: 7px"
-                    >
-                      ยาที่ใช้ในปัจจุบัน
-                    </p>
-                    <input
-                      class="form-control typing-box-style"
+                    <span
+                      class="input-group-text typing-box-style"
                       style="
-                        width: 590px;
-                        margin-left: 0px;
-                        margin-right: 16px;
-                        padding-left: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
+                        width: 49px;
+                        padding-left: 0px;
+                        margin-bottom: 2px;
+                        font-weight: 700;
+                        font-size: 12px;
+                        color: #202124;
+                        font-family: 'IBM Plex Sans Thai';
                       "
-                      type="text"
-                      aria-label="default input example"
-                    />
+                    >
+                      มล.</span
+                    >
                   </div>
                 </div>
               </div>
             </div>
+            <div class="col-md-6" style="width: 590px; height: 71px">
+              <div
+                style="
+                  width: 590px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                  border-radius: 5px 5px 0px 0px;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    ยาที่ใช้ในปัจจุบัน
+                  </p>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      width: 590px;
+                      margin-left: 0px;
+                      margin-right: 16px;
+                      padding-left: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    aria-label="default input example"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </form>
+          <!-- row 5 -->
+          <div
+            class="row card-box-info-row"
+            style="display: flex; justify-content: space-between"
+          >
+            <div class="col-md-5">
+              <div style="display: flex">
+                <p
+                  class="fontTopicInfo"
+                  style="margin-left: 16px; margin-top: 26.5px; display: block"
+                >
+                  ประวัติการเกิดปฏิกิริยาจากการรับเลือด
+                </p>
+                <div
+                  style="display: block; margin-left: 32px; margin-top: 18px"
+                >
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      value="option1"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="inlineRadio1"
+                      style="margin-top: 2px"
+                      >ไม่มี</label
+                    >
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio2"
+                      value="option2"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="inlineRadio2"
+                      style="margin-top: 2px"
+                      >มี</label
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7" style="width: 751px; height: 71px">
+              <div
+                style="
+                  width: 751px;
+                  height: 50px;
+                  background-color: rgb(213, 224, 224, 20%);
+                  position: relative;
+                  border-bottom: 2px solid #d5e0e0;
+                  border-radius: 5px 5px 0px 0px;
+                "
+              >
+                <div style="display: inline; position: absolute">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    ชนิดของปฏิกิริยา
+                  </p>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      width: 751px;
+                      margin-left: 0px;
+                      margin-right: 16px;
+                      padding-left: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    aria-label="default input example"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="dashed" />
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <style scoped>
+.container {
+  width: fit-content;
+  max-width: calc(100% - 20px);
+  margin: 0 auto;
+  padding: 0 10px;
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Styles for iPad landscape mode */
+  /* Adjust styles as needed for landscape view */
+}
+
 .fontSize_header {
   font-size: 24px;
   font-weight: 700;
@@ -668,7 +844,8 @@ export default {
 }
 
 .card-box-info-style {
-  width: 1134px;
+  margin-top: 16px;
+  width: auto;
   height: 375px;
   border: 0;
 }
@@ -677,7 +854,7 @@ export default {
   height: 71px;
 }
 .card-box-info-row {
-  width: Fixed 1134px;
+  width: Fixed 100%;
   height: 71px;
   display: "flex";
   justify-content: "space-between";
@@ -710,12 +887,16 @@ export default {
 .select-box-style {
   background-color: rgb(213, 224, 224, 0);
   border: rgb(213, 224, 224, 0);
-  width: 312px;
+  width: 296px;
 }
 
 .typing-box-style {
   background-color: rgb(213, 224, 224, 0);
   border: rgb(213, 224, 224, 0);
+  font-family: "Noto Looped Thai";
+  font-weight: 400;
+  font-size: 16px;
+  color: #202124;
 }
 
 .custom-select select {
@@ -737,5 +918,39 @@ export default {
 .form-control:focus {
   background-color: rgb(213, 224, 224, 0%);
   box-shadow: none;
+}
+
+.form-check-input[type="radio"] {
+  border-radius: 3px;
+  border: 3px solid rgba(157, 157, 157, 1);
+}
+.form-check-input:focus {
+  border-radius: 3px;
+  border: 3px solid rgba(157, 157, 157, 1);
+  box-shadow: none;
+  --bs-form-check-bg-image: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFFFFF" width="24px" height="24px"%3e%3cpath d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /%3e%3c/svg%3e');
+}
+
+.form-check-input:checked {
+  background-color: rgba(157, 157, 157, 1);
+  --bs-form-check-bg-image: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFFFFF" width="24px" height="24px"%3e%3cpath d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /%3e%3c/svg%3e');
+}
+.form-check-input:checked[type="radio"] {
+  --bs-form-check-bg-image: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFFFFF" width="24px" height="24px"%3e%3cpath d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /%3e%3c/svg%3e');
+}
+
+.form-check-input {
+  width: 22px;
+  height: 22px;
+}
+
+hr.dashed {
+  border-top: 2px dashed #999;
+  width: 100%;
+  margin-left: 3px;
+}
+.col-md-5 {
+  flex: 0 0 auto;
+  width: 35.8%;
 }
 </style>
