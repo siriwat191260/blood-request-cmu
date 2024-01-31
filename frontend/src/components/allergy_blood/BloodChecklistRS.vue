@@ -36,7 +36,7 @@ export default defineComponent({
   <!-- <div>
         <h1>HELLO WORLD</h1>
     </div> -->
-  <div class="container">
+  <div class="container-md">
     <form>
       <div class="card" style="border: 0px" justify-content: center>
         <div class="row">
@@ -54,8 +54,7 @@ export default defineComponent({
                 <!-- HN value -->
                 <p class="fontInsideBox">
                   <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0 0 0
-                  0 0
+                  &nbsp;&nbsp; 0 0 0 0 0 0
                 </p>
               </div>
             </div>
@@ -74,9 +73,10 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!-- <div class="card card-box-info-style">
+        <!-- row 1 -->
+        <div class="card card-box-info-style">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 vertical-style">
               <div class="card-box-info-row-1-component-style">
                 <Icon
                   icon="bx:calendar-event"
@@ -99,7 +99,7 @@ export default defineComponent({
                       <input
                         class="form-control typing-box-style"
                         style="
-                          width: auto;
+                          width: 20vh;
                           margin-left: 0px;
                           margin-right: 16px;
                           padding-left: 16px;
@@ -116,7 +116,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 vertical-style">
               <div class="card-box-info-row-1-component-style">
                 <Icon
                   icon="bx:alarm"
@@ -139,7 +139,7 @@ export default defineComponent({
                       <input
                         class="form-control typing-box-style"
                         style="
-                          width: auto;
+                          width: 20vh;
                           margin-left: 0px;
                           margin-right: 16px;
                           padding-left: 16px;
@@ -156,72 +156,57 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 vertical-style">
               <div class="card-box-info-row-1-component-style">
-                <Icon
-                  icon="bx:calendar-event"
-                  style="
-                    width: 24px;
-                    height: 24px;
-                    margin-left: 16px;
-                    margin-top: 18px;
-                    padding-right: 0%;
-                  "
-                />
                 <div style="display: inline; position: absolute">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
                   >
-                    วันที่
+                    หอผู้ป่วย
                   </p>
                   <div style="position: relative">
                     <div style="display: inline; position: absolute">
-                      <input
-                        class="form-control typing-box-style"
-                        style="
-                          width: auto;
-                          margin-left: 0px;
-                          margin-right: 16px;
-                          padding-left: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                        "
-                        type="text"
-                        :value="currentDate()"
-                        aria-label="readonly input example"
-                        readonly
-                      />
+                      <div class="custom-select">
+                        <select
+                          class="form-select-sm select-box-style"
+                          style="
+                            /* margin-left: 16px; */
+                            margin-right: 16px;
+                            padding-left: 16px;
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                          "
+                          aria-label="Small select example"
+                        >
+                          <option value="" disabled selected>
+                            กรุณาเลือกข้อมูล
+                          </option>
+                          <option value="1">One</option>
+                          <option value="2">Two</option>
+                          <option value="3">Three</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 vertical-style">
               <div class="card-box-info-row-1-component-style">
-                <Icon
-                  icon="bx:calendar-event"
-                  style="
-                    width: 24px;
-                    height: 24px;
-                    margin-left: 16px;
-                    margin-top: 18px;
-                    padding-right: 0%;
-                  "
-                />
                 <div style="display: inline; position: absolute">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
                   >
-                    วันที่
+                    โทร
                   </p>
                   <div style="position: relative">
                     <div style="display: inline; position: absolute">
                       <input
                         class="form-control typing-box-style"
                         style="
-                          width: auto;
+                          width: 20vh;
                           margin-left: 0px;
                           margin-right: 16px;
                           padding-left: 16px;
@@ -229,7 +214,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        :value="currentDate()"
+                        value="123-456-759"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -239,7 +224,68 @@ export default defineComponent({
               </div>
             </div>
           </div>
-        </div> -->
+          <!-- row 2 -->
+        <div
+          class="row"
+          style="margin-top: 16px;"
+        >
+          <div class="col-md-8">
+            <div class="card-box-info-row-2-component-style">
+              <div style="display: inline; position: absolute">
+                <p
+                  class="fontTopicInfo"
+                  style="margin-left: 16px; margin-top: 7px"
+                >
+                  การวินิจฉัย
+                </p>
+                <input
+                  class="form-control typing-box-style typing-box-size"
+                  style="
+                    margin-left: 0px;
+                    margin-right: 16px;
+                    padding-left: 16px;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+                  "
+                  type="text"
+                  aria-label="default input example"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card-box-info-row-2-component-style">
+              <div style="display: inline; position: absolute;">
+                <p
+                  class="fontTopicInfo"
+                  style="margin-left: 16px; margin-top: 7px"
+                >
+                  แพทย์เจ้าของไข้
+                </p>
+
+                <div class="custom-select2">
+                  <select
+                    class="form-select-sm select-box-style"
+                    style="
+                      margin-left: 0px;
+                      margin-right: 16px;
+                      padding-left: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    aria-label="Small select example"
+                  >
+                    <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
     </form>
   </div>
@@ -250,13 +296,6 @@ export default defineComponent({
   font-weight: 700;
   font-family: "IBM Plex Sans Thai";
 }
-
-@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
-  .fontSize_header {
-    font-size: 20px;
-  }
-}
-
 .fontTopicBox {
   font-family: "IBM Plex Sans Thai";
   font-size: 18px;
@@ -270,6 +309,83 @@ export default defineComponent({
   font-size: 16px;
   font-weight: 400;
   color: #c4c4c4;
+}
+.custom-select select {
+  width: 290px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* background-color: rgba(213, 224, 224, 100%); */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C6.486 2 2 6.486 2 12C2 17.514 6.486 22 12 22C17.514 22 22 17.514 22 12C22 6.486 17.514 2 12 2ZM12 16.414L6.293 10.707L7.707 9.293L12 13.586L16.293 9.293L17.707 10.707L12 16.414Z' fill='%2300BFA5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.custom-select2 select {
+  width: 390px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* background-color: rgba(213, 224, 224, 100%); */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C6.486 2 2 6.486 2 12C2 17.514 6.486 22 12 22C17.514 22 22 17.514 22 12C22 6.486 17.514 2 12 2ZM12 16.414L6.293 10.707L7.707 9.293L12 13.586L16.293 9.293L17.707 10.707L12 16.414Z' fill='%2300BFA5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.typing-box-size {
+    width: 800px;
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
+  .fontSize_header {
+    font-size: 20px;
+  }
+  .fontTopicBox {
+    font-size: 18px;
+  }
+  .fontInsideBox {
+    font-size: 16px;
+  }
+  .container-md {
+    margin-left: 5vh;
+    margin-right: 5vh;
+  }
+  .custom-select select {
+    width: 25vh;
+  }
+  .custom-select2 select {
+    width: 35vh;
+  }
+  .typing-box-size {
+    width: 70vh;
+}
+}
+@media only screen and ((max-device-width: 768px) or (max-device-width: 810px) ) {
+  .fontSize_header {
+    font-size: 20px;
+  }
+  .fontTopicBox {
+    font-size: 18px;
+  }
+  .fontInsideBox {
+    font-size: 16px;
+  }
+  .container-md {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .custom-select select {
+    width: 30vh;
+  }
+  .custom-select2 select {
+    width: 20vh;
+  }
+  .typing-box-size {
+    width: 40vh;
+}
+    .vertical-style{
+        width: 50%;
+        margin-top: 16px;
+    }
 }
 .fontTopicInfo {
   font-family: "IBM Plex Sans Thai";
@@ -314,6 +430,14 @@ export default defineComponent({
   border-bottom: 2px solid #d5e0e0;
   border-radius: 5px 5px 0px 0px;
 }
+.card-box-info-row-2-component-style {
+  width: 100%;
+  height: 50px;
+  background-color: rgb(213, 224, 224, 20%);
+  position: relative;
+  border-bottom: 2px solid #d5e0e0;
+  border-radius: 5px 5px 0px 0px;
+}
 
 .typing-box-style {
   background-color: rgb(213, 224, 224, 0);
@@ -322,6 +446,12 @@ export default defineComponent({
   font-weight: 400;
   font-size: 16px;
   color: #202124;
+}
+
+
+.select-box-style {
+  background-color: rgb(213, 224, 224, 0);
+  border: rgb(213, 224, 224, 0);
 }
 
 .form-select-sm:focus {
