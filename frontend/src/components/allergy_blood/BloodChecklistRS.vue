@@ -1,7 +1,9 @@
 <script>
 import { defineComponent } from "vue";
+import { ref, onBeforeUnmount } from "vue";
 import DropDownSVGVue from "../general/DropDownSVG.vue";
 import { Icon } from "@iconify/vue";
+import { useCurrentTime } from "./useCurrentTime";
 
 export default defineComponent({
   name: "BloodChecklistRS",
@@ -16,13 +18,22 @@ export default defineComponent({
       return date;
     },
     currentTime() {
-      const currentTime = new Date();
+      /* const currentTime = new Date();
       const time =
         currentTime.getHours() +
         ":" +
         currentTime.getMinutes() +
         ":" +
         currentTime.getSeconds();
+      return time; */
+      const { currentTime } = useCurrentTime();
+      console.log(currentTime.value);
+      const time =
+        currentTime.value.getHours() +
+        ":" +
+        currentTime.value.getMinutes() +
+        ":" +
+        currentTime.value.getSeconds();
       return time;
     },
   },
@@ -38,7 +49,8 @@ export default defineComponent({
     </div> -->
   <div class="container-md">
     <form>
-      <div class="card" style="border: 0px" justify-content: center>
+      <div class="card" style="border: 0px; justify-content: center">
+        <!-- header -->
         <div class="row">
           <div class="col-md-6">
             <div style="margin-top: 60px">
@@ -73,21 +85,22 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!-- row 1 -->
         <div class="card card-box-info-style">
+          <!-- row 1 -->
           <div class="row">
-            <div class="col-md-3 vertical-style">
-              <div class="card-box-info-row-1-component-style">
+            <!-- วันที่ -->
+            <div class="col-md-3 vertical-style-50w">
+              <div class="card-box-info-row-component-style">
                 <Icon
                   icon="bx:calendar-event"
                   style="
-                    width: 24px;
-                    height: 24px;
+                    width: 14%;
+                    height: 60%;
                     margin-left: 16px;
                     margin-top: 18px;
                   "
                 />
-                <div style="display: inline; position: absolute">
+                <div style="display: inline; position: absolute; width: 80%">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
@@ -95,14 +108,14 @@ export default defineComponent({
                     วันที่
                   </p>
                   <div style="position: relative">
-                    <div style="display: inline; position: absolute">
+                    <div
+                      style="display: inline; position: absolute; width: 100%"
+                    >
                       <input
                         class="form-control typing-box-style"
                         style="
-                          width: 20vh;
-                          margin-left: 0px;
-                          margin-right: 16px;
                           padding-left: 16px;
+                          padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
@@ -116,18 +129,19 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="col-md-3 vertical-style">
-              <div class="card-box-info-row-1-component-style">
+            <!-- เวลา -->
+            <div class="col-md-3 vertical-style-50w">
+              <div class="card-box-info-row-component-style">
                 <Icon
                   icon="bx:alarm"
                   style="
-                    width: 24px;
-                    height: 24px;
+                    width: 14%;
+                    height: 60%;
                     margin-left: 16px;
                     margin-top: 18px;
                   "
                 />
-                <div style="display: inline; position: absolute">
+                <div style="display: inline; position: absolute; width: 80%">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
@@ -135,14 +149,14 @@ export default defineComponent({
                     เวลา
                   </p>
                   <div style="position: relative">
-                    <div style="display: inline; position: absolute">
+                    <div
+                      style="display: inline; position: absolute; width: 100%"
+                    >
                       <input
                         class="form-control typing-box-style"
                         style="
-                          width: 20vh;
-                          margin-left: 0px;
-                          margin-right: 16px;
                           padding-left: 16px;
+                          padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
@@ -156,45 +170,42 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="col-md-3 vertical-style">
-              <div class="card-box-info-row-1-component-style">
-                <div style="display: inline; position: absolute">
+            <!-- หอผู้ป่วย -->
+            <div class="col-md-3 vertical-style-50w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
                   >
                     หอผู้ป่วย
                   </p>
-                  <div style="position: relative">
-                    <div style="display: inline; position: absolute">
-                      <div class="custom-select">
-                        <select
-                          class="form-select-sm select-box-style"
-                          style="
-                            /* margin-left: 16px; */
-                            margin-right: 16px;
-                            padding-left: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                          "
-                          aria-label="Small select example"
-                        >
-                          <option value="" disabled selected>
-                            กรุณาเลือกข้อมูล
-                          </option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                        </select>
-                      </div>
-                    </div>
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-3 vertical-style">
-              <div class="card-box-info-row-1-component-style">
-                <div style="display: inline; position: absolute">
+            <!-- โทร -->
+            <div class="col-md-3 vertical-style-50w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
@@ -202,14 +213,14 @@ export default defineComponent({
                     โทร
                   </p>
                   <div style="position: relative">
-                    <div style="display: inline; position: absolute">
+                    <div
+                      style="display: inline; position: absolute; width: 100%"
+                    >
                       <input
                         class="form-control typing-box-style"
                         style="
-                          width: 20vh;
-                          margin-left: 0px;
-                          margin-right: 16px;
                           padding-left: 16px;
+                          padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
@@ -225,66 +236,234 @@ export default defineComponent({
             </div>
           </div>
           <!-- row 2 -->
-        <div
-          class="row"
-          style="margin-top: 16px;"
-        >
-          <div class="col-md-8">
-            <div class="card-box-info-row-2-component-style">
-              <div style="display: inline; position: absolute">
-                <p
-                  class="fontTopicInfo"
-                  style="margin-left: 16px; margin-top: 7px"
-                >
-                  การวินิจฉัย
-                </p>
-                <input
-                  class="form-control typing-box-style typing-box-size"
-                  style="
-                    margin-left: 0px;
-                    margin-right: 16px;
-                    padding-left: 16px;
-                    padding-top: 0px;
-                    padding-bottom: 0px;
-                  "
-                  type="text"
-                  aria-label="default input example"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card-box-info-row-2-component-style">
-              <div style="display: inline; position: absolute;">
-                <p
-                  class="fontTopicInfo"
-                  style="margin-left: 16px; margin-top: 7px"
-                >
-                  แพทย์เจ้าของไข้
-                </p>
-
-                <div class="custom-select2">
-                  <select
-                    class="form-select-sm select-box-style"
+          <div class="row" style="margin-top: 16px">
+            <!--การวินิจฉัย-->
+            <div class="col-md-8">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    การวินิจฉัย
+                  </p>
+                  <input
+                    class="form-control typing-box-style"
                     style="
-                      margin-left: 0px;
-                      margin-right: 16px;
                       padding-left: 16px;
+                      padding-right: 16px;
                       padding-top: 0px;
                       padding-bottom: 0px;
                     "
-                    aria-label="Small select example"
+                    type="text"
+                    aria-label="default input example"
+                  />
+                </div>
+              </div>
+            </div>
+            <!--แพทย์เจ้าของไข้-->
+            <div class="col-md-4">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
                   >
-                    <option value="" disabled selected>กรุณาเลือกข้อมูล</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </select>
+                    แพทย์เจ้าของไข้
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+          <!-- row 3 -->
+          <div class="row" style="margin-top: 16px">
+            <!-- หมู่เลือดผู้ป่วย -->
+            <div class="col-md-3 size-col-2point5 vertical-style-33w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    หมู่เลือดผู้ป่วย
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        margin-left: 0px;
+                        margin-right: 0px;
+                        padding-left: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- RH -->
+            <div class="col-md-3 size-col-2point5 vertical-style-33w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    RH
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ชนิดของเลือดที่ให้ -->
+            <div class="col-md-3 size-col-2point5 vertical-style-33w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute; width: 100%">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    ชนิดของเลือดที่ให้
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- หมู่เลือดผู้บริจาค -->
+            <div class="col-md-3 size-col-2point5 vertical-style-33w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute;width: 100%;">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    หมู่เลือดผู้บริจาค
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- RH -->
+            <div class="col-md-3 size-col-2point5 vertical-style-33w">
+              <div class="card-box-info-row-component-style">
+                <div style="display: inline; position: absolute;width: 100%;">
+                  <p
+                    class="fontTopicInfo"
+                    style="margin-left: 16px; margin-top: 7px"
+                  >
+                    RH
+                  </p>
+
+                  <div class="custom-select">
+                    <select
+                      class="form-select-sm select-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      aria-label="Small select example"
+                    >
+                      <option value="" disabled selected>
+                        กรุณาเลือกข้อมูล
+                      </option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </form>
@@ -292,13 +471,13 @@ export default defineComponent({
 </template>
 <style scoped>
 .fontSize_header {
-  font-size: 24px;
+  font-size: 1.7rem;
   font-weight: 700;
   font-family: "IBM Plex Sans Thai";
 }
 .fontTopicBox {
   font-family: "IBM Plex Sans Thai";
-  font-size: 18px;
+  font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
   margin-bottom: 0;
@@ -306,93 +485,39 @@ export default defineComponent({
 }
 .fontInsideBox {
   font-family: "IBM Plex Sans Thai";
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 400;
   color: #c4c4c4;
-}
-.custom-select select {
-  width: 290px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  /* background-color: rgba(213, 224, 224, 100%); */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C6.486 2 2 6.486 2 12C2 17.514 6.486 22 12 22C17.514 22 22 17.514 22 12C22 6.486 17.514 2 12 2ZM12 16.414L6.293 10.707L7.707 9.293L12 13.586L16.293 9.293L17.707 10.707L12 16.414Z' fill='%2300BFA5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-}
-
-.custom-select2 select {
-  width: 390px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  /* background-color: rgba(213, 224, 224, 100%); */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C6.486 2 2 6.486 2 12C2 17.514 6.486 22 12 22C17.514 22 22 17.514 22 12C22 6.486 17.514 2 12 2ZM12 16.414L6.293 10.707L7.707 9.293L12 13.586L16.293 9.293L17.707 10.707L12 16.414Z' fill='%2300BFA5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-}
-
-.typing-box-size {
-    width: 800px;
-}
-@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
-  .fontSize_header {
-    font-size: 20px;
-  }
-  .fontTopicBox {
-    font-size: 18px;
-  }
-  .fontInsideBox {
-    font-size: 16px;
-  }
-  .container-md {
-    margin-left: 5vh;
-    margin-right: 5vh;
-  }
-  .custom-select select {
-    width: 25vh;
-  }
-  .custom-select2 select {
-    width: 35vh;
-  }
-  .typing-box-size {
-    width: 70vh;
-}
-}
-@media only screen and ((max-device-width: 768px) or (max-device-width: 810px) ) {
-  .fontSize_header {
-    font-size: 20px;
-  }
-  .fontTopicBox {
-    font-size: 18px;
-  }
-  .fontInsideBox {
-    font-size: 16px;
-  }
-  .container-md {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .custom-select select {
-    width: 30vh;
-  }
-  .custom-select2 select {
-    width: 20vh;
-  }
-  .typing-box-size {
-    width: 40vh;
-}
-    .vertical-style{
-        width: 50%;
-        margin-top: 16px;
-    }
 }
 .fontTopicInfo {
   font-family: "IBM Plex Sans Thai";
   font-weight: 700;
-  font-size: 12px;
+  font-size: 1rem;
   color: #202124;
   display: inline;
+}
+.custom-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* background-color: rgba(213, 224, 224, 100%); */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C6.486 2 2 6.486 2 12C2 17.514 6.486 22 12 22C17.514 22 22 17.514 22 12C22 6.486 17.514 2 12 2ZM12 16.414L6.293 10.707L7.707 9.293L12 13.586L16.293 9.293L17.707 10.707L12 16.414Z' fill='%2300BFA5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px top 50%;
+}
+
+.size-col-2point5 {
+  width: 20%;
+}
+.container-md {
+    margin-left: auto;
+    margin-right: auto;
+  }
+.card-box-info-style {
+  margin-top: 16px;
+  width: auto;
+  height: 375px;
+  border: 0;
 }
 .card-box-style {
   width: 100%;
@@ -406,23 +531,7 @@ export default defineComponent({
   height: 48px;
   padding: 12px 0px 0px 16px;
 }
-.card-box-info-style {
-  margin-top: 16px;
-  width: auto;
-  height: 375px;
-  border: 0;
-}
-.card-box-info-row {
-  width: 100%;
-  height: 71px;
-  display: "flex";
-  justify-content: "space-between";
-}
-.card-box-info-layout-component-style {
-  width: 20%;
-  height: 71px;
-}
-.card-box-info-row-1-component-style {
+.card-box-info-row-component-style {
   width: 100%;
   height: 50px;
   background-color: rgb(213, 224, 224, 20%);
@@ -430,16 +539,8 @@ export default defineComponent({
   border-bottom: 2px solid #d5e0e0;
   border-radius: 5px 5px 0px 0px;
 }
-.card-box-info-row-2-component-style {
-  width: 100%;
-  height: 50px;
-  background-color: rgb(213, 224, 224, 20%);
-  position: relative;
-  border-bottom: 2px solid #d5e0e0;
-  border-radius: 5px 5px 0px 0px;
-}
-
 .typing-box-style {
+  width: 100%;
   background-color: rgb(213, 224, 224, 0);
   border: rgb(213, 224, 224, 0);
   font-family: "Noto Looped Thai";
@@ -447,13 +548,11 @@ export default defineComponent({
   font-size: 16px;
   color: #202124;
 }
-
-
 .select-box-style {
+  width: 100%;
   background-color: rgb(213, 224, 224, 0);
   border: rgb(213, 224, 224, 0);
 }
-
 .form-select-sm:focus {
   outline: none;
   border-radius: 0px;
@@ -465,4 +564,48 @@ export default defineComponent({
   background-color: rgb(213, 224, 224, 0%);
   box-shadow: none;
 }
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
+  .fontSize_header {
+    font-size: 20px;
+  }
+  .fontTopicBox {
+    font-size: 18px;
+  }
+  .fontTopicInfo{
+    font-size: 14px;
+  }
+  .fontInsideBox {
+    font-size: 14px;
+  }
+  .container-md {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media only screen and ((max-device-width: 768px) or (max-device-width: 810px)) {
+  .fontSize_header {
+    font-size: 20px;
+  }
+  .fontTopicBox {
+    font-size: 18px;
+  }
+  .fontInsideBox {
+    font-size: 16px;
+  }
+  .container-md {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .vertical-style-50w {
+    width: 50%;
+    margin-top: 16px;
+  }
+  .vertical-style-33w {
+    width: 33.33%;
+    margin-bottom: 16px;
+  }
+}
+
+
 </style>
