@@ -34,11 +34,11 @@ export default defineComponent( {
 </script>
 
 <template>
-  <div class="container" style="max-width: Fixed 100%">
-    <form style="width: Fixed 100%">
+  <div class="container">
+    <form>
       <div
         class="card"
-        style="border: 0px; width: Fixed 100%; justify-content: center"
+        style="border: 0px; width: 100%; justify-content: center"
       >
         <!-- Header -->
         <div class="row">
@@ -831,14 +831,14 @@ export default defineComponent( {
   display: inline;
 }
 .card-box-style {
-  width: 210px;
+  width: 100%;
   height: 48px;
   border: 2px solid #dee0e6;
   border-radius: 8px;
   background-color: #fbfbfc;
 }
 .card-box-body-style {
-  width: 210px;
+  width: 100%;
   height: 48px;
   padding: 12px 0px 0px 16px;
 }
@@ -850,17 +850,16 @@ export default defineComponent( {
   border: 0;
 }
 .card-box-info-layout-component-style {
-  width: 234px;
+  width: 23%;
   height: 71px;
 }
 .card-box-info-row {
-  width: Fixed 100%;
   height: 71px;
   display: "flex";
   justify-content: "space-between";
 }
 .card-box-info-row-1-component-style {
-  width: 234px;
+  width: 100%;
   height: 50px;
   background-color: rgb(213, 224, 224, 20%);
   position: relative;
