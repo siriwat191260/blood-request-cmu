@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "1bc92fb9-27a9-4328-8d3d-753702ded0d5",
+		"name": "Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4279073"
+	},
+	"item": [
+		{
+			"name": "jwt",
+			"item": [
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "mis",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"type": "text",
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uid\": \"MIS MED CMU\",\n    \"group\": \"20\",\n\t\"app\":\"VcxS1IxWnFUbGhoTVhCUVdWZHplRmRIV\"\n}"
+								},
+								"url": {
+									"raw": "{{mis_gateway}}/jwt/create",
+									"host": [
+										"{{mis_gateway}}"
+									],
+									"path": [
+										"jwt",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "token_cmu",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"type": "text",
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uid\": \"MIS MED CMU\",\n    \"group\": \"20\",\n\t\"app\":\"kdWVkpzVGs1V01VbzFWbXBKTVdFeFdYZE5WVlpUW\"\n}"
+								},
+								"url": {
+									"raw": "{{mis_gateway}}/jwt/create",
+									"host": [
+										"{{mis_gateway}}"
+									],
+									"path": [
+										"jwt",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "verify",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"app\": \"VcxS1IxWnFUbGhoTVhCUVdWZHplRmRIV\",\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODk4NDQ1MjgsImp0aSI6IjY0YjhmYjMwYTU1ODciLCJpc3MiOiJNRUQgQ01VIiwibmJmIjoxNjg5ODQ0NTI4LCJleHAiOjE2ODk4NTE3MjgsImRhdGEiOnsidWlkIjoiTUlTIE1FRCBDTVUiLCJncm91cCI6IjIwIiwiYXBwIjoiVmN4UzFJeFduRlViR2hvVFZoQ1VWZFdaSHBsUm1SSVYifX0.Mdo1hNOTWH3QGbUcrS5P5vFjh6Sj3TCDKCU1-gBxiUI\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mis_gateway}}/jwt/verify",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"jwt",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTAxODk2NzAsImp0aSI6IjY0YmUzZjY2MmJlMDAiLCJpc3MiOiJNRUQgQ01VIiwibmJmIjoxNjkwMTg5NjcwLCJleHAiOjE2OTAxOTY4NzAsImRhdGEiOnsidWlkIjoiTUlTIE1FRCBDTVUiLCJncm91cCI6IjIwIiwiYXBwIjoiVmN4UzFJeFduRlViR2hvVFZoQ1VWZFdaSHBsUm1SSVYifX0.995_ERPM5Mem2t357V-l_1CeeoKoDZPkmk9SVbbDv_o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mis_gateway}}/jwt/token?from=VcxS1IxWnFUbGhoTVhCUVdWZHplRmRIV",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"jwt",
+								"token"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "VcxS1IxWnFUbGhoTVhCUVdWZHplRmRIV"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "opd",
+			"item": [
+				{
+					"name": "get_patient_in_opd_by_hn",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mis_gateway}}/opd/99-SMI/patient/2803180",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"opd",
+								"99-SMI",
+								"patient",
+								"2803180"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list opd",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mis_gateway}}/opd/all",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"opd",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "person",
+			"item": [
+				{
+					"name": "get_jobid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{mis_gateway}}/person/job",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"person",
+								"job"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_jobname_by_id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{mis_gateway}}/person/job/101-0500-0",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"person",
+								"job",
+								"101-0500-0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "personcmu",
+			"item": [
+				{
+					"name": "add_employee",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Prename\": \"นางสาว\",\r\n    \"FirstName\": \"ชุลีกานต์\",\r\n    \"FirstNameEng\": \"Chuleekan\",\r\n    \"LastName\": \"รุ่งเรือง\",\r\n    \"LastNameEng\": \"Rungruang\",\r\n    \"MiddleName\": \"\",\r\n    \"MiddleNameEng\": \"\",\r\n    \"PersonalID\": \"3514522121223\",\r\n    \"Relegion\": \"พุทธ\",\r\n    \"Nationality\": \"ไทย\",\r\n    \"Sex\": \"หญิง\",\r\n    \"CoupleStatus\": \"โสด\",\r\n    \"BloodType\": \"A\",\r\n    \"BirthDate\": \"2000-07-14\",\r\n    \"Race\": \"ไทย\",\r\n    \"OfficePhone\": \"053943832\",\r\n    \"MobilePhone\": \"0891254545\",\r\n    \"EmailCMU\": \"\",\r\n    \"EmailOther\": \"jeera.k@gmail.com\",\r\n    \"PrenamePosition\": \"นางสาว\",\r\n    \"StudentLoanFlag\": true,\r\n    \"StudentLoanAmount\": 15000,\r\n    \"StudentLoanMajorFlag\": false,\r\n    \"StudentLoanMajorAmount\": 0,\r\n    \"HourseNumber\": \"239\",\r\n    \"Moo\": 1,\r\n    \"Soi\": \"กรรไกรทอง\",\r\n    \"Street\": \"ห้วยแก้ว\",\r\n    \"Province\": \"เชียงใหม่\",\r\n    \"Amphur\": \"พร้าว\",\r\n    \"Tambon\": \"เวียง\",\r\n    \"AddressCountry\": \"THA\",\r\n    \"ZipCode\": \"57150\",\r\n    \"State\": \"\",\r\n    \"Address\": \"\",\r\n    \"EducationLevel\": \"ปริญญาตรี\",\r\n    \"InstituteName\": \"มหาวิทยาลัยเชียงใหม่\",\r\n    \"CertificateName\": \"พยาบาลศาสตรบัณฑิต\",\r\n    \"Major\": \"พยาบาลศาสตร์\",\r\n    \"GraduateYear\": \"2566\",\r\n    \"EducationCountry\": \"ไทย\",\r\n    \"HRPositionNumber\": \"S4150012\",\r\n    \"PositionName\": \"พยาบาล\",\r\n    \"OrganizationWorkName\": \"งานการพยาบาลผู้ป่วยกุมารเวชศาสตร์\",\r\n    \"OrganizationBudgetName\": \"งานการพยาบาลผู้ป่วยกุมารเวชศาสตร์\",\r\n    \"EmployeeAssignDate\": \"2023-07-14\",\r\n    \"EmployeeEndDate\": \"2024-07-14\",\r\n    \"CurrentSalaryRate\": 21750,\r\n    \"EmployeeType\": \"พนักงานชั่วคราว\",\r\n    \"SubEmployeeType\": \"S4 พนักงานส่วนงาน\",\r\n    \"PositionDescription\": \"การจ้างพนักงานมหาวิทยาลัยชั่วคราว(พนักงานส่วนงาน)\",\r\n    \"ReferenceDocument\": \"665/2566ลว.10/07/66\",\r\n    \"ReferenceDocumentType\": \"บรรจุใหม่\",\r\n    \"ReferenceDate\": \"2023-07-14\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mis_gateway}}/personcmu/employee",
+							"host": [
+								"{{mis_gateway}}"
+							],
+							"path": [
+								"personcmu",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

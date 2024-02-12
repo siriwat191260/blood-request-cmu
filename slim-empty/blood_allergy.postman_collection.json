@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "c05375f9-62dc-476a-b8de-c0f5841c4e6b",
+		"name": "blood_allergy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2597676",
+		"_collection_link": "https://cloudy-station-206832.postman.co/workspace/KTB-API~7cfdef92-16e0-43dc-80e0-d8cd04553241/collection/2597676-c05375f9-62dc-476a-b8de-c0f5841c4e6b?action=share&source=collection_link&creator=2597676"
+	},
+	"item": [
+		{
+			"name": "list_blood_transf",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5561073e94ef3311ebd008951601c2a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"hn\":\"1235\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/list_blood_transf.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"list_blood_transf.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "blood_transf_detail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5561073e94ef3311ebd008951601c2a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"blood_transf_id\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/blood_transf_detail.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"blood_transf_detail.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list_user_doctor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5561073e94ef3311ebd008951601c2a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/list_user_doctor.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"list_user_doctor.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list_user_bloodbank",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5561073e94ef3311ebd008951601c2a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/list_user_doctor.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"list_user_doctor.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list_approve",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5561073e94ef3311ebd008951601c2a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/list_approve.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"list_approve.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check_token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\":\"5561073e94ef3311ebd008951601c2a8\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"check_token.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"get_token.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

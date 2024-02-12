@@ -98,13 +98,14 @@ export default defineComponent({
     // Fetch Signs and Symptoms data on component mount
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
-    watch(
+    await this.fetchListBloodTransf();
+    /* watch(
       [() => this.signsAndSymptomsOptions, () => this.reactionCategory],
       ([newSigns, newReaction]) => {
         // This block will run whenever signsAndSymptomsOptions or reactionCategory change
         this.fetchData();
       }
-    );
+    ); */
   },
 
   methods: {
@@ -113,7 +114,7 @@ export default defineComponent({
         const response = await axios.get(
           this.baseURL + "getAllSignsAndSymptoms"
         );
-        this.signsAndSymptomsOptions = response.data.data;
+        this.signsAndSymptomsOptions = response.data;
       } catch (error) {
         console.error("Error fetching Signs and Symptoms data:", error);
       }
@@ -123,9 +124,52 @@ export default defineComponent({
         const response = await axios.get(
           this.baseURL + "getAllReactionCategory"
         );
-        this.reactionCategory = response.data.data;
+        /* console.log(response.data); */
+        this.reactionCategory = response.data;
       } catch (error) {
         console.error("Error fetching Signs and Symptoms data:", error);
+      }
+    },
+    async fetchListBloodTransf() {
+      try {
+        const response = await fetch("blood_allergy.postman_collection.json");
+        const jsonData = await response.json();
+        console.log("jsonData:", jsonData);
+        const token = jsonData.item[0].request.auth.bearer[0].value;
+        console.log("token: ", token);
+        const endpoint = jsonData.item[0].request.url.raw;
+        console.log("endpoint: ", endpoint);
+        const body_blood = JSON.parse(
+          JSON.stringify(jsonData.item[0].request.body.raw)
+        );
+        console.log("body_blood: ", body_blood);
+
+        // Make the request to the API endpoint using the extracted token
+        const apiResponse = await fetch(endpoint, {
+          mode: "no-cors",
+          method: "POST",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Credentials": true,
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: body_blood, // Assuming body_blood is already a JSON string
+        });
+        if (apiResponse.ok) {
+          // Parse the response JSON
+          const result = await apiResponse.json();
+          console.log("result :", result);
+          return result; // Return the result
+        } else {
+          // If the request failed, throw an error
+          throw new Error("API request failed");
+        }
+      } catch (error) {
+        console.log("error: ", error);
+        throw error; // Re-throw the error for further handling
       }
     },
     currentDate() {
@@ -148,13 +192,13 @@ export default defineComponent({
       return time; */
       const { currentTime } = useCurrentTime();
       /* console.log(currentTime.value); */
-      const time =
+      /* const time =
         currentTime.value.getHours() +
         ":" +
         currentTime.value.getMinutes() +
         ":" +
         currentTime.value.getSeconds();
-      return time;
+      return time; */
     },
     handleSubmit() {
       // Handle form submission logic here
@@ -166,7 +210,7 @@ export default defineComponent({
         this.formData.SubmittingTest.isBloodBagReaction === true ? 1 : 0;
       console.log("Form submitted! : ", this.formData);
       /* const cleaningForm = {
-        currentTime : 
+        currentTime :
       } */
     },
     handleIconAddClick() {
@@ -1280,7 +1324,8 @@ export default defineComponent({
                         id="inlineRadio1"
                         value="1"
                         v-model="
-                          formData.BloodTransfusionTest.isCorrectBloodGroupPatient
+                          formData.BloodTransfusionTest
+                            .isCorrectBloodGroupPatient
                         "
                       />
                       <label
@@ -1301,7 +1346,8 @@ export default defineComponent({
                         id="inlineRadio2"
                         value="0"
                         v-model="
-                          formData.BloodTransfusionTest.isCorrectBloodGroupPatient
+                          formData.BloodTransfusionTest
+                            .isCorrectBloodGroupPatient
                         "
                       />
                       <label
@@ -2225,10 +2271,10 @@ export default defineComponent({
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          v-model="formData.SubmittingTest.nurseDateTime"
+                        type="text"
+                        aria-label="default input example"
+                        placeholder="กรุณากรอกข้อมูล"
+                        v-model="formData.SubmittingTest.nurseDateTime"
                       />
                     </div>
                   </div>
@@ -2334,10 +2380,10 @@ export default defineComponent({
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          v-model="formData.SubmittingTest.physicianDateTime"
+                        type="text"
+                        aria-label="default input example"
+                        placeholder="กรุณากรอกข้อมูล"
+                        v-model="formData.SubmittingTest.physicianDateTime"
                       />
                     </div>
                   </div>
@@ -2346,12 +2392,19 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div class="card" style="border:0px;">
-          <div style="display:flex;justify-content: flex-end;gap:2%;">
-            <button class="btn button-style-close" style="margin-top: 32px" >ปิด</button>
-            <button class="btn button-style-save" style="margin-top: 32px" type="submit">บันทึกข้อมูล</button>
+        <div class="card" style="border: 0px">
+          <div style="display: flex; justify-content: flex-end; gap: 2%">
+            <button class="btn button-style-close" style="margin-top: 32px">
+              ปิด
+            </button>
+            <button
+              class="btn button-style-save"
+              style="margin-top: 32px"
+              type="submit"
+            >
+              บันทึกข้อมูล
+            </button>
           </div>
-          
         </div>
       </div>
     </form>
@@ -2537,11 +2590,11 @@ hr.dashed {
 }
 
 .button-style-save {
- width: 16%;
- height: 44px;
- border-radius: 100px;
- background-color: rgba(0, 191, 165, 1);
- font-family: "IBM Plex Sans Thai";
+  width: 16%;
+  height: 44px;
+  border-radius: 100px;
+  background-color: rgba(0, 191, 165, 1);
+  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
@@ -2551,16 +2604,21 @@ hr.dashed {
 }
 
 .button-style-save:hover {
-  background-color: rgba(0, 191, 165, 0.8); /* Darker background color on hover */
+  background-color: rgba(
+    0,
+    191,
+    165,
+    0.8
+  ); /* Darker background color on hover */
   color: rgba(255, 255, 255, 0.9); /* Slightly lighter text color on hover */
 }
 .button-style-close {
- width: 16%;
- height: 44px;
- border-radius: 100px;
- background-color: transparent;
- border: 2px solid rgba(0, 191, 165, 1);
- font-family: "IBM Plex Sans Thai";
+  width: 16%;
+  height: 44px;
+  border-radius: 100px;
+  background-color: transparent;
+  border: 2px solid rgba(0, 191, 165, 1);
+  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
