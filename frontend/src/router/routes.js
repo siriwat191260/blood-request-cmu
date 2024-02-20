@@ -2,11 +2,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../components/Home.vue';
 import BloodChecklist from '../components/allergy_blood/BloodChecklist.vue';
-import BloodChecklistRS from '../components/allergy_blood/BloodChecklistRS.vue';
+import TransfusionForm from '../components/allergy_blood/TransfusionForm.vue';
 
 const routes = [
   { path: '/', component: BloodChecklist, name: 'blood-checklist' },
-  { path: '/blood-checklist-rs', component: BloodChecklistRS, name: 'blood-checklist-rs' },
+  { path: '/transfusion-form', component: TransfusionForm, name: 'TransfusionForm' },
   // Add more routes as needed
 ];
 

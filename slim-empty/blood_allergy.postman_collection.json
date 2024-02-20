@@ -128,6 +128,40 @@
 			"response": []
 		},
 		{
+			"name": "list_user_nurse",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5561073e94ef3311ebd008951601c2a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://iservice.med.cmu.ac.th/gateway/bb/list_user_nurse.php",
+					"protocol": "http",
+					"host": [
+						"iservice",
+						"med",
+						"cmu",
+						"ac",
+						"th"
+					],
+					"path": [
+						"gateway",
+						"bb",
+						"list_user_nurse.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "list_user_bloodbank",
 			"request": {
 				"auth": {

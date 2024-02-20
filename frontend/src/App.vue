@@ -3,7 +3,7 @@ import '@fontsource/ibm-plex-sans-thai';
 import HelloWorld from './components/HelloWorld.vue'
 import BloodChecklist from './components/allergy_blood/BloodChecklist.vue';
 import Home from './components/Home.vue'
-import RS from './components/allergy_blood/BloodChecklistRS.vue'
+import RS from './components/allergy_blood/TransfusionForm.vue'
 
 
 </script>

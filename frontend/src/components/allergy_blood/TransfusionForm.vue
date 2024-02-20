@@ -5,9 +5,12 @@ import DropDownSVGVue from "../general/DropDownSVG.vue";
 import { Icon } from "@iconify/vue";
 import { useCurrentTime } from "./useCurrentTime";
 import axios from "axios";
+import { watch } from "vue";
+import $ from "jquery";
+import "jquery-autocomplete";
 
 export default defineComponent({
-  name: "BloodChecklistRS",
+  name: "TransfusionForm",
   data() {
     return {
       formData: {
@@ -18,10 +21,7 @@ export default defineComponent({
         TXN: "",
         pt_type: "",
         createdDate: "" || new Date(),
-        wardObject: {
-          ward: "",
-          wardcode: "",
-        },
+        ward: "",
         phoneNumber: "",
         diagnosis: "",
         primaryPhysicianName: "",
@@ -45,6 +45,7 @@ export default defineComponent({
           isCorrectBloodGroupDonor: "",
           isCorrectBloodGroupPatient: "",
         },
+        //Vital Signs
         VitalSigns: {
           beforeReactionTime: "",
           beforeReactionTemp: "",
@@ -67,19 +68,9 @@ export default defineComponent({
           physicianName: "",
           physicianDateTime: "",
         },
-        //Vital Signs
+        DetailRecordIn24Hrs: [],
       },
       placeholderOption: { label: "กรุณาเลือกข้อมูล" },
-      selectOptionsWard: [
-        { ward: "ward 1", wardcode: "1" },
-        { ward: "ward 2", wardcode: "2" },
-        { ward: "ward 3", wardcode: "3" },
-      ],
-      selectOptionsPrimaryPhysicianName: [
-        "นพ.สมศักดิ์",
-        "พญ.สมศรี",
-        "นพ.สมบูรณ์",
-      ],
       selectOptionsBloodGroup: ["A", "B", "O", "AB"],
       selectOptionsRh: ["Rh+", "Rh-"],
       selectOptionsBloodComponent: [
@@ -92,22 +83,86 @@ export default defineComponent({
       reactionCategory: [],
       //config this for change baseURL path
       baseURL: "http://localhost:8000/",
+      blood_tranf_detail: {},
+      searchTerm: "",
+      items: ["siriwat", "siri"],
+      userDoctor: {},
+      userNurse: {},
+      showResults: false,
+      showResultsDoctor: false,
+      showResultsNurse: false,
+      beforeReactionBPSectionOne: "",
+      beforeReactionBPSectionTwo: "",
+      afterReactionBPSectionOne: "",
+      afterReactionBPSectionTwo: "",
+      beforeReactionTimeSectionOne: "",
+      beforeReactionTimeSectionTwo: "",
+      afterReactionTimeSectionOne: "",
+      afterReactionTimeSectionTwo: "",
     };
   },
   async mounted() {
     // Fetch Signs and Symptoms data on component mount
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
-    await this.fetchListBloodTransf();
-    /* watch(
+    /* await this.fetchBlood_transf_detail(); */
+    await this.fetchBlood_tranf_detail();
+    await this.fetchUserDoctor();
+    await this.fetchUserNurse();
+    /* await this.fetchListBloodTransf2(); */
+    watch(
       [() => this.signsAndSymptomsOptions, () => this.reactionCategory],
       ([newSigns, newReaction]) => {
         // This block will run whenever signsAndSymptomsOptions or reactionCategory change
-        this.fetchData();
+        this.fetchSignsAndSymptoms();
+        this.fetchReactionCategory();
+        this.fetchBlood_tranf_detail();
+        this.fetchUserDoctor();
+        this.fetchUserNurse();
       }
-    ); */
+    );
   },
-
+  computed: {
+    filteredItems() {
+      return (role) => {
+        if (role === "doctor") {
+          const list_user_doctor = this.userDoctor.filter((doctor) =>
+            doctor.name
+              .toLowerCase()
+              .includes(
+                this.formData.SubmittingTest.physicianName.toLowerCase()
+              )
+          );
+          const names = list_user_doctor.map((doctor) => doctor.name);
+          return names;
+        } else if (role === "nurse") {
+          const list_user_nurse = this.userNurse.filter((nurse) =>
+            nurse.name
+              .toLowerCase()
+              .includes(this.formData.SubmittingTest.nurseName.toLowerCase())
+          );
+          const names = list_user_nurse.map((nurse) => nurse.name);
+          return names;
+        }
+      };
+    },
+    inputWidth() {
+      return (category) => {
+      // Calculate width based on input values
+      if (category === "beforeTime" && this.beforeReactionTimeSectionOne && this.beforeReactionTimeSectionTwo) {
+        return '25%'; // Set the width to 50% if both inputs are completed
+      } else if(category === "beforeBP" && this.beforeReactionBPSectionOne && this.beforeReactionBPSectionTwo){
+        return '25%';
+      } else if(category === "afterTime" && this.afterReactionTimeSectionOne && this.afterReactionTimeSectionTwo){
+        return '25%';
+      } else if(category === "afterBP" && this.afterReactionBPSectionOne && this.afterReactionBPSectionTwo){
+        return '25%';
+      } else {
+        return '100%'; // Set the width to 100% initially or if only one input is completed
+      }
+      }
+    }
+  },
   methods: {
     async fetchSignsAndSymptoms() {
       try {
@@ -130,47 +185,39 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
-    async fetchListBloodTransf() {
+    async fetchBlood_tranf_detail() {
       try {
-        const response = await fetch("blood_allergy.postman_collection.json");
-        const jsonData = await response.json();
-        console.log("jsonData:", jsonData);
-        const token = jsonData.item[0].request.auth.bearer[0].value;
-        console.log("token: ", token);
-        const endpoint = jsonData.item[0].request.url.raw;
-        console.log("endpoint: ", endpoint);
-        const body_blood = JSON.parse(
-          JSON.stringify(jsonData.item[0].request.body.raw)
-        );
-        console.log("body_blood: ", body_blood);
-
-        // Make the request to the API endpoint using the extracted token
-        const apiResponse = await fetch(endpoint, {
-          mode: "no-cors",
-          method: "POST",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Credentials": true,
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: body_blood, // Assuming body_blood is already a JSON string
-        });
-        if (apiResponse.ok) {
-          // Parse the response JSON
-          const result = await apiResponse.json();
-          console.log("result :", result);
-          return result; // Return the result
-        } else {
-          // If the request failed, throw an error
-          throw new Error("API request failed");
-        }
+        const response = await axios.get(this.baseURL + "getBloodTransfDetail");
+        /* console.log(response.data); */
+        this.blood_tranf_detail = response.data;
       } catch (error) {
-        console.log("error: ", error);
-        throw error; // Re-throw the error for further handling
+        console.error("Error fetching Signs and Symptoms data:", error);
       }
+    },
+    async fetchUserDoctor() {
+      try {
+        const response = await axios.get(this.baseURL + "getUserDoctor");
+        /* console.log(response.data); */
+        this.userDoctor = response.data;
+      } catch (error) {
+        console.error("Error fetching Signs and Symptoms data:", error);
+      }
+    },
+    async fetchUserNurse() {
+      try {
+        const response = await axios.get(this.baseURL + "getUserNurse");
+        /* console.log(response.data); */
+        this.userNurse = response.data;
+      } catch (error) {
+        console.error("Error fetching Signs and Symptoms data:", error);
+      }
+    },
+    restrictInput() {
+      // Remove any non-numeric characters
+      this.beforeReactionBPSectionOne = this.beforeReactionBPSectionOne.replace(
+        /[^0-9]/g,
+        ""
+      );
     },
     currentDate() {
       const current = new Date();
@@ -192,13 +239,45 @@ export default defineComponent({
       return time; */
       const { currentTime } = useCurrentTime();
       /* console.log(currentTime.value); */
-      /* const time =
+      const time =
         currentTime.value.getHours() +
         ":" +
         currentTime.value.getMinutes() +
         ":" +
         currentTime.value.getSeconds();
-      return time; */
+      return time;
+    },
+    parseDate(date_time) {
+      const date_time_TypeDateTime = new Date(date_time);
+      const date = date_time_TypeDateTime.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      return date;
+    },
+    parseTime(date_time) {
+      const dateTime = new Date(date_time);
+      const hours = dateTime.getHours().toString().padStart(2, "0");
+      const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+      const time = `${hours}:${minutes}`;
+      return time;
+    },
+    handleInput(role) {
+      console.log("role :", role);
+      if (role === "doctor") {
+        this.showResultsDoctor = true;
+      } else if (role === "nurse") {
+        this.showResultsNurse = true;
+      }
+    },
+    selectDoctor(item) {
+      this.formData.SubmittingTest.physicianName = item;
+      this.showResultsDoctor = false;
+    },
+    selectNurse(item) {
+      this.formData.SubmittingTest.nurseName = item;
+      this.showResultsNurse = false;
     },
     handleSubmit() {
       // Handle form submission logic here
@@ -212,9 +291,6 @@ export default defineComponent({
       /* const cleaningForm = {
         currentTime :
       } */
-    },
-    handleIconAddClick() {
-      console.log("Add");
     },
   },
   components: {
@@ -239,6 +315,7 @@ export default defineComponent({
               </p>
             </div>
           </div>
+          <!-- HN -->
           <div class="col-md-3">
             <p class="fontTopicBox">HN</p>
             <div class="card card-box-style">
@@ -246,11 +323,12 @@ export default defineComponent({
                 <!-- HN value -->
                 <p class="fontInsideBox">
                   <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
-                  &nbsp;&nbsp; 0 0 0 0 0 0
+                  &nbsp; {{ blood_tranf_detail.hn }}
                 </p>
               </div>
             </div>
           </div>
+          <!-- ชื่อผู้ป่วย -->
           <div class="col-md-3">
             <div>
               <p class="fontTopicBox">ชื่อผู้ป่วย</p>
@@ -258,7 +336,10 @@ export default defineComponent({
                 <div class="card-body card-box-body-style">
                   <p class="fontInsideBox">
                     <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
-                    &nbsp;Name
+                    &nbsp;
+                    {{
+                      blood_tranf_detail.name + " " + blood_tranf_detail.lname
+                    }}
                   </p>
                 </div>
               </div>
@@ -269,7 +350,7 @@ export default defineComponent({
           <div class="row">
             <!-- row 1 -->
             <!-- วันที่ -->
-            <div class="col-md-3 vertical-style-50w">
+            <div class="col-md-3">
               <div class="card-box-info-row-component-style">
                 <Icon
                   icon="bx:calendar-event"
@@ -311,7 +392,7 @@ export default defineComponent({
               </div>
             </div>
             <!-- เวลา -->
-            <div class="col-md-3 vertical-style-50w">
+            <div class="col-md-3">
               <div class="card-box-info-row-component-style">
                 <Icon
                   icon="bx:alarm"
@@ -352,48 +433,39 @@ export default defineComponent({
               </div>
             </div>
             <!-- หอผู้ป่วย -->
-            <div class="col-md-3 vertical-style-50w">
+            <div class="col-md-3">
               <div class="card-box-info-row-component-style">
-                <div style="display: inline; position: absolute; width: 100%">
+                <div style="display: inline; position: absolute; width: 80%">
                   <p
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
                   >
                     หอผู้ป่วย
                   </p>
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.wardObject"
+                  <div style="position: relative">
+                    <div
+                      style="display: inline; position: absolute; width: 100%"
                     >
-                      <option
-                        :value="{ ward: '', wardcode: '' }"
-                        disabled
-                        selected
-                      >
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsWard"
-                        :key="option.wardcode"
-                        :value="option"
-                      >
-                        {{ option.ward }}
-                      </option>
-                    </select>
+                      <input
+                        class="form-control typing-box-style"
+                        style="
+                          padding-left: 16px;
+                          padding-right: 16px;
+                          padding-top: 0px;
+                          padding-bottom: 0px;
+                        "
+                        type="text"
+                        :value="blood_tranf_detail.ward"
+                        aria-label="readonly input example"
+                        readonly
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <!-- โทร -->
-            <div class="col-md-3 vertical-style-50w">
+            <div class="col-md-3">
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
                   <p
@@ -415,7 +487,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        value="123-456-759"
+                        :value="blood_tranf_detail.tell"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -426,7 +498,7 @@ export default defineComponent({
             </div>
             <!-- row 2 -->
             <!--การวินิจฉัย-->
-            <div class="col-md-8 mt16 mb16 vertical-style-100w">
+            <div class="col-md-8 mt16">
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
                   <p
@@ -444,9 +516,9 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    v-model="formData.diagnosis"
+                    :value="blood_tranf_detail.diag"
                     aria-label="default input example"
-                    placeholder="กรุณากรอกข้อมูล"
+                    readonly
                   />
                 </div>
               </div>
@@ -461,31 +533,19 @@ export default defineComponent({
                   >
                     แพทย์เจ้าของไข้
                   </p>
-
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.primaryPhysicianName"
-                    >
-                      <option value="" disabled selected>
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsPrimaryPhysicianName"
-                        :key="option"
-                        :value="option"
-                      >
-                        {{ option }}
-                      </option>
-                    </select>
-                  </div>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      padding-left: 16px;
+                      padding-right: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    :value="blood_tranf_detail.doctor"
+                    aria-label="default input example"
+                    readonly
+                  />
                 </div>
               </div>
             </div>
@@ -500,32 +560,19 @@ export default defineComponent({
                   >
                     หมู่เลือดผู้ป่วย
                   </p>
-
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        margin-left: 0px;
-                        margin-right: 0px;
-                        padding-left: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.bloodGroup_Patient"
-                    >
-                      <option value="" disabled selected>
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsBloodGroup"
-                        :key="option"
-                        :value="option"
-                      >
-                        {{ option }}
-                      </option>
-                    </select>
-                  </div>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      padding-left: 16px;
+                      padding-right: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    :value="blood_tranf_detail.blood_grp"
+                    aria-label="default input example"
+                    readonly
+                  />
                 </div>
               </div>
             </div>
@@ -540,30 +587,19 @@ export default defineComponent({
                     RH
                   </p>
 
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.Rh_Patient"
-                    >
-                      <option value="" disabled selected>
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsRh"
-                        :key="option"
-                        :value="option"
-                      >
-                        {{ option }}
-                      </option>
-                    </select>
-                  </div>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      padding-left: 16px;
+                      padding-right: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    :value="blood_tranf_detail.blood_rh"
+                    aria-label="default input example"
+                    readonly
+                  />
                 </div>
               </div>
             </div>
@@ -578,30 +614,19 @@ export default defineComponent({
                     ชนิดของเลือดที่ให้
                   </p>
 
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.blood_component"
-                    >
-                      <option value="" disabled selected>
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsBloodComponent"
-                        :key="option"
-                        :value="option"
-                      >
-                        {{ option }}
-                      </option>
-                    </select>
-                  </div>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      padding-left: 16px;
+                      padding-right: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    :value="blood_tranf_detail.product"
+                    aria-label="default input example"
+                    readonly
+                  />
                 </div>
               </div>
             </div>
@@ -616,30 +641,19 @@ export default defineComponent({
                     หมู่เลือดผู้บริจาค
                   </p>
 
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.bloodGroup_Donor"
-                    >
-                      <option value="" disabled selected>
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsBloodGroup"
-                        :key="option"
-                        :value="option"
-                      >
-                        {{ option }}
-                      </option>
-                    </select>
-                  </div>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      padding-left: 16px;
+                      padding-right: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    :value="blood_tranf_detail.pack_blood_grp"
+                    aria-label="default input example"
+                    readonly
+                  />
                 </div>
               </div>
             </div>
@@ -654,30 +668,19 @@ export default defineComponent({
                     RH
                   </p>
 
-                  <div class="custom-select">
-                    <select
-                      class="form-select-sm select-box-style"
-                      style="
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                      "
-                      aria-label="Small select example"
-                      v-model="formData.Rh_Patient"
-                    >
-                      <option value="" disabled selected>
-                        {{ placeholderOption.label }}
-                      </option>
-                      <option
-                        v-for="option in selectOptionsRh"
-                        :key="option"
-                        :value="option"
-                      >
-                        {{ option }}
-                      </option>
-                    </select>
-                  </div>
+                  <input
+                    class="form-control typing-box-style"
+                    style="
+                      padding-left: 16px;
+                      padding-right: 16px;
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                    "
+                    type="text"
+                    :value="blood_tranf_detail.pack_blood_rh"
+                    aria-label="default input example"
+                    readonly
+                  />
                 </div>
               </div>
             </div>
@@ -692,6 +695,7 @@ export default defineComponent({
                   >
                     หมายเลขถุงเลือด
                   </p>
+
                   <input
                     class="form-control typing-box-style"
                     style="
@@ -700,20 +704,17 @@ export default defineComponent({
                       padding-top: 0px;
                       padding-bottom: 0px;
                     "
-                    type="number"
-                    pattern="[0-9]*"
-                    onkeypress="return event.charCode != 45"
-                    min="0"
+                    type="text"
+                    :value="blood_tranf_detail.packid"
                     aria-label="default input example"
-                    placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.Rh_Patient"
+                    readonly
                   />
                 </div>
               </div>
             </div>
             <!-- ปริมาตรที่เติม -->
             <div class="col-md-3 mt16 vertical-style-50w">
-              <div class="input-group card-box-info-row-component-style">
+              <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
                   <p
                     class="fontTopicInfo"
@@ -730,12 +731,9 @@ export default defineComponent({
                         padding-top: 0px;
                         padding-bottom: 0px;
                       "
-                      type="number"
-                      pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      type="text"
+                      :value="blood_tranf_detail.vol"
                       aria-label="default input example"
-                      v-model="formData.volume"
                     />
                     <span
                       class="input-group-text"
@@ -744,7 +742,7 @@ export default defineComponent({
                         width: 10%;
                         padding-left: 0px;
                         margin-right: 16px;
-                        margin-bottom: 2px;
+                        margin-bottom: 1px;
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
@@ -786,7 +784,7 @@ export default defineComponent({
             <!--row 5 -->
             <!-- ประวัติการเกิดปฏิกิริยาการรับเลือด มีหรือไม่ -->
             <div
-              class="col-md-3 size-col-4point5 mt16 size-col-43w vertical-style-100w"
+              class="col-md-5 size-col-4point5 mt16 size-col-43w vertical-style-100w"
             >
               <div style="display: flex">
                 <p
@@ -795,7 +793,7 @@ export default defineComponent({
                 >
                   ประวัติการเกิดปฏิกิริยาจากการรับเลือด
                 </p>
-                <div
+                <!-- <div
                   style="display: block; margin-left: 32px; margin-top: 18px"
                 >
                   <div class="form-check form-check-inline">
@@ -822,6 +820,42 @@ export default defineComponent({
                       id="inlineRadio2"
                       value="1"
                       v-model="formData.isReactionHistory"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="inlineRadio2"
+                      style="margin-top: 2px"
+                      >มี</label
+                    >
+                  </div>
+                </div> -->
+                <div
+                  style="display: block; margin-left: 32px; margin-top: 22px"
+                >
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="isReactionHistory"
+                      id="inlineRadio1"
+                      value="0"
+                      v-model="formData.BloodTransfusionTest.isReactionHistory"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="inlineRadio1"
+                      style="margin-top: 2px"
+                      >ไม่มี</label
+                    >
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="isReactionHistory"
+                      id="inlineRadio2"
+                      value="1"
+                      v-model="formData.BloodTransfusionTest.isReactionHistory"
                     />
                     <label
                       class="form-check-label"
@@ -1401,19 +1435,45 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input
-                        class="form-control typing-box-style"
-                        style="
-                          padding-left: 16px;
-                          padding-right: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                        "
-                        type="text"
-                        aria-label="readonly input example"
-                        placeholder="กรุณากรอกข้อมูล"
-                        v-model="formData.VitalSigns.beforeReactionTime"
-                      />
+                      <div style="display: flex; height: 24px;">
+                        <input
+                          class="form-control typing-box-style"
+                          style="
+                            padding-left: 16px;
+                            padding-right: 16px;
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                            width: 100%; 
+                            text-align: center;
+                          "
+                          :style="{ width: inputWidth('beforeTime') }"
+                          type="text"
+                          aria-label="default input example"
+                          placeholder="กรุณากรอกข้อมูล"
+                          required
+                          v-model="beforeReactionTimeSectionOne"
+                          @input="restrictInput"
+                        />
+                        <p class="fontTopicInfo" style="margin-top: 2px">:</p>
+                        <input
+                          class="form-control typing-box-style"
+                          style="
+                            padding-left: 16px;
+                            padding-right: 16px;
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                            width: 100%;
+                            text-align: center;
+                          "
+                           :style="{ width: inputWidth('beforeTime') }"
+                          type="text"
+                          aria-label="default input example"
+                          placeholder="กรุณากรอกข้อมูล"
+                          required
+                          v-model="beforeReactionTimeSectionTwo"
+                          @input="restrictInput"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1466,7 +1526,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <!-- ก่อนเกิดปฏิกิริยา BP-->
+            <!-- ก่อนเกิดปฏิกิริยา B.P.-->
             <div class="col-md-3 mt16 size-col-2point5">
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
@@ -1474,27 +1534,53 @@ export default defineComponent({
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
                   >
-                    BP
+                    B.P.
                   </p>
-                  <input
-                    class="form-control typing-box-style"
-                    style="
-                      padding-left: 16px;
-                      padding-right: 16px;
-                      padding-top: 0px;
-                      padding-bottom: 0px;
-                    "
-                    type="text"
-                    aria-label="default input example"
-                    placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.VitalSigns.beforeReactionBP"
-                  />
+                  <div style="display: flex; height: 24px">
+                    <input
+                      class="form-control typing-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        width: 100%;
+                        text-align: center;
+                      "
+                      :style="{ width: inputWidth('beforeBP') }"
+                      type="text"
+                      aria-label="default input example"
+                      placeholder="กรุณากรอกข้อมูล"
+                      required
+                      v-model="beforeReactionBPSectionOne"
+                      @input="restrictInput"
+                    />
+                    <p class="fontTopicInfo" style="margin-top: 2px">/</p>
+                    <input
+                      class="form-control typing-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        width: 100%;
+                        text-align: center;
+                      "
+                      :style="{ width: inputWidth('beforeBP') }"
+                      type="text"
+                      aria-label="default input example"
+                      placeholder="กรุณากรอกข้อมูล"
+                      required
+                      v-model="beforeReactionBPSectionTwo"
+                      @input="restrictInput"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
             <!-- ก่อนเกิดปฏิกิริยา Pulse-->
             <div class="col-md-3 mt16 size-col-2point5">
-              <div class="card-box-info-row-component-style">
+              <div class="input-group card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
                   <p
                     class="fontTopicInfo"
@@ -1502,19 +1588,24 @@ export default defineComponent({
                   >
                     Pulse
                   </p>
-                  <input
-                    class="form-control typing-box-style"
-                    style="
-                      padding-left: 16px;
-                      padding-right: 16px;
-                      padding-top: 0px;
-                      padding-bottom: 0px;
-                    "
-                    type="text"
-                    aria-label="default input example"
-                    placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.VitalSigns.beforeReactionPulse"
-                  />
+                  <div style="display: flex; height: 24px">
+                    <input
+                      class="form-control typing-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      type="number"
+                      pattern="[0-9]*"
+                      onkeypress="return event.charCode != 45"
+                      min="0"
+                      aria-label="default input example"
+                      placeholder="กรุณากรอกข้อมูล"
+                      v-model="formData.VitalSigns.beforeReactionPulse"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1550,19 +1641,45 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input
-                        class="form-control typing-box-style"
-                        style="
-                          padding-left: 16px;
-                          padding-right: 16px;
-                          padding-top: 0px;
-                          padding-bottom: 0px;
-                        "
-                        type="text"
-                        aria-label="readonly input example"
-                        placeholder="กรุณากรอกข้อมูล"
-                        v-model="formData.VitalSigns.afterReactionTime"
-                      />
+                    <div style="display: flex; height: 24px;">
+                        <input
+                          class="form-control typing-box-style"
+                          style="
+                            padding-left: 16px;
+                            padding-right: 16px;
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                            width: 100%; 
+                            text-align: center;
+                          "
+                          :style="{ width: inputWidth('afterTime') }"
+                          type="text"
+                          aria-label="default input example"
+                          placeholder="กรุณากรอกข้อมูล"
+                          required
+                          v-model="afterReactionTimeSectionOne"
+                          @input="restrictInput"
+                        />
+                        <p class="fontTopicInfo" style="margin-top: 2px">:</p>
+                        <input
+                          class="form-control typing-box-style"
+                          style="
+                            padding-left: 16px;
+                            padding-right: 16px;
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                            width: 100%;
+                            text-align: center;
+                          "
+                           :style="{ width: inputWidth('afterTime') }"
+                          type="text"
+                          aria-label="default input example"
+                          placeholder="กรุณากรอกข้อมูล"
+                          required
+                          v-model="afterReactionTimeSectionTwo"
+                          @input="restrictInput"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1615,7 +1732,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <!-- หลังเกิดปฏิกิริยา BP-->
+            <!-- หลังเกิดปฏิกิริยา B.P.-->
             <div class="col-md-3 mt16 size-col-2point5">
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
@@ -1623,27 +1740,53 @@ export default defineComponent({
                     class="fontTopicInfo"
                     style="margin-left: 16px; margin-top: 7px"
                   >
-                    BP
+                    B.P.
                   </p>
-                  <input
-                    class="form-control typing-box-style"
-                    style="
-                      padding-left: 16px;
-                      padding-right: 16px;
-                      padding-top: 0px;
-                      padding-bottom: 0px;
-                    "
-                    type="text"
-                    aria-label="default input example"
-                    placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.VitalSigns.afterReactionBP"
-                  />
+                  <div style="display: flex; height: 24px">
+                    <input
+                      class="form-control typing-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        width: 100%;
+                        text-align: center;
+                      "
+                      :style="{ width: inputWidth('afterBP') }"
+                      type="text"
+                      aria-label="default input example"
+                      placeholder="กรุณากรอกข้อมูล"
+                      required
+                      v-model="afterReactionBPSectionOne"
+                      @input="restrictInput"
+                    />
+                    <p class="fontTopicInfo" style="margin-top: 2px">/</p>
+                    <input
+                      class="form-control typing-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        width: 100%;
+                        text-align: center;
+                      "
+                      :style="{ width: inputWidth('afterBP') }"
+                      type="text"
+                      aria-label="default input example"
+                      placeholder="กรุณากรอกข้อมูล"
+                      required
+                      v-model="afterReactionBPSectionTwo"
+                      @input="restrictInput"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
             <!-- หลังเกิดปฏิกิริยา Pulse-->
             <div class="col-md-3 mt16 size-col-2point5">
-              <div class="card-box-info-row-component-style">
+              <div class="input-group card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
                   <p
                     class="fontTopicInfo"
@@ -1651,19 +1794,24 @@ export default defineComponent({
                   >
                     Pulse
                   </p>
-                  <input
-                    class="form-control typing-box-style"
-                    style="
-                      padding-left: 16px;
-                      padding-right: 16px;
-                      padding-top: 0px;
-                      padding-bottom: 0px;
-                    "
-                    type="text"
-                    aria-label="default input example"
-                    placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.VitalSigns.afterReactionPulse"
-                  />
+                  <div style="display: flex; height: 24px">
+                    <input
+                      class="form-control typing-box-style"
+                      style="
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                      "
+                      type="number"
+                      pattern="[0-9]*"
+                      onkeypress="return event.charCode != 45"
+                      min="0"
+                      aria-label="default input example"
+                      placeholder="กรุณากรอกข้อมูล"
+                      v-model="formData.VitalSigns.afterReactionPulse"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1768,25 +1916,28 @@ export default defineComponent({
           <div class="row">
             <div class="col-md-12">
               <p class="fontTopicBox" style="margin-top: 8px">
-                บันทึกรายละเอียดในกรณีที่มีการเติมเลือดมาก่อน ภายใน 24 ชั่วโมง<!-- <Icon
-                  @click="handleIconAddClick"
-                  icon="material-symbols:add-circle-outline"
-                  width="24"
-                  height="24"
-                  style="margin-left: 16px; margin-bottom: 3px; color: #3c3c3c"
-                /> -->
+                บันทึกรายละเอียดในกรณีที่มีการเติมเลือดมาก่อน ภายใน 24 ชั่วโมง
               </p>
             </div>
             <div class="accordion mt16" id="accordionPanelsStayOpenExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+              <div
+                class="accordion-item"
+                v-for="(
+                  blood_transf24, index
+                ) in blood_tranf_detail.list_blood_transf24"
+                :key="index"
+              >
+                <h2
+                  class="accordion-header"
+                  :id="'panelsStayOpen-heading' + index"
+                >
                   <button
-                    class="accordion-button"
+                    class="accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#panelsStayOpen-collapseOne"
-                    aria-expanded="true"
-                    aria-controls="panelsStayOpen-collapseOne"
+                    :data-bs-target="'#panelsStayOpen-collapse' + index"
+                    aria-expanded="false"
+                    :aria-controls="'panelsStayOpen-collapse' + index"
                   >
                     <div
                       style="
@@ -1796,21 +1947,21 @@ export default defineComponent({
                         margin-top: 8px;
                       "
                     >
-                      <p class="fontTopicInfo" style="">
+                      <p class="fontTopicInfo">
                         <Icon
                           icon="healthicons:blood-bag"
                           width="24"
                           height="24"
                         />
-                        หมายเลขถุงเลือด : 11234567
+                        หมายเลขถุงเลือด : {{ blood_transf24.packid }}
                       </p>
                     </div>
                   </button>
                 </h2>
                 <div
-                  id="panelsStayOpen-collapseOne"
-                  class="accordion-collapse collapse show"
-                  aria-labelledby="panelsStayOpen-headingOne"
+                  :id="'panelsStayOpen-collapse' + index"
+                  class="accordion-collapse collapse"
+                  :aria-labelledby="'panelsStayOpen-heading' + index"
                 >
                   <div class="accordion-body">
                     <div class="row">
@@ -1828,33 +1979,22 @@ export default defineComponent({
                               class="fontTopicInfo"
                               style="margin-left: 16px; margin-top: 7px"
                             >
-                              ชนิดเลือด
+                              ชนิดของเลือด
                             </p>
 
-                            <div class="custom-select">
-                              <select
-                                class="form-select-sm select-box-style"
-                                style="
-                                  padding-left: 16px;
-                                  padding-right: 16px;
-                                  padding-top: 0px;
-                                  padding-bottom: 0px;
-                                "
-                                aria-label="Small select example"
-                                v-model="formData.blood_component"
-                              >
-                                <option value="" disabled selected>
-                                  {{ placeholderOption.label }}
-                                </option>
-                                <option
-                                  v-for="option in selectOptionsBloodComponent"
-                                  :key="option"
-                                  :value="option"
-                                >
-                                  {{ option }}
-                                </option>
-                              </select>
-                            </div>
+                            <input
+                              class="form-control typing-box-style"
+                              style="
+                                padding-left: 16px;
+                                padding-right: 16px;
+                                padding-top: 0px;
+                                padding-bottom: 0px;
+                              "
+                              type="text"
+                              :value="blood_transf24.product"
+                              aria-label="default input example"
+                              readonly
+                            />
                           </div>
                         </div>
                       </div>
@@ -1900,8 +2040,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  name=""
-                                  :value="currentDate()"
+                                  :value="parseDate(blood_transf24.dtm)"
                                   aria-label="readonly input example"
                                   readonly
                                 />
@@ -1952,7 +2091,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  value="15:30"
+                                  :value="parseTime(blood_transf24.dtm)"
                                   aria-label="default input example"
                                 />
                               </div>
@@ -2002,7 +2141,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  value="16:30"
+                                  :value="parseTime(blood_transf24.dtm_off)"
                                   aria-label="default input example"
                                 />
                               </div>
@@ -2019,14 +2158,14 @@ export default defineComponent({
                             style="
                               display: inline;
                               position: absolute;
-                              width: 80%;
+                              width: 100%;
                             "
                           >
                             <p
                               class="fontTopicInfo"
                               style="margin-left: 16px; margin-top: 7px"
                             >
-                              ปริมาตรที่ให้
+                              ปริมาตรที่เติม
                             </p>
                             <div style="display: flex; height: 24px">
                               <input
@@ -2037,12 +2176,9 @@ export default defineComponent({
                                   padding-top: 0px;
                                   padding-bottom: 0px;
                                 "
-                                type="number"
-                                pattern="[0-9]*"
-                                onkeypress="return event.charCode != 45"
-                                min="0"
+                                type="text"
+                                :value="blood_transf24.vol"
                                 aria-label="default input example"
-                                v-model="formData.volume"
                               />
                               <span
                                 class="input-group-text"
@@ -2050,8 +2186,8 @@ export default defineComponent({
                                   border: 0px;
                                   width: 10%;
                                   padding-left: 0px;
-                                  /* margin-right: 16px; */
-                                  margin-bottom: 2px;
+                                  margin-right: 16px;
+                                  margin-bottom: 1px;
                                   font-weight: 700;
                                   font-size: 0.9rem;
                                   color: #202124;
@@ -2192,10 +2328,26 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
+                    @input="handleInput('nurse')"
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.SubmittingTest.nurseName"
                   />
+                  <ul
+                    v-if="
+                      showResultsNurse &&
+                      formData.SubmittingTest.nurseName.length >= 1
+                    "
+                    class="autocomplete-results"
+                  >
+                    <li
+                      v-for="(item, index) in filteredItems('nurse')"
+                      :key="index"
+                      @click="selectNurse(item)"
+                    >
+                      {{ item }}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -2231,9 +2383,10 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        aria-label="default input example"
-                        placeholder="กรุณากรอกข้อมูล"
-                        v-model="formData.SubmittingTest.nurseDateTime"
+                        name=""
+                        :value="currentDate()"
+                        aria-label="readonly input example"
+                        readonly
                       />
                     </div>
                   </div>
@@ -2272,9 +2425,10 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        aria-label="default input example"
-                        placeholder="กรุณากรอกข้อมูล"
-                        v-model="formData.SubmittingTest.nurseDateTime"
+                        name=""
+                        :value="currentTime()"
+                        aria-label="readonly input example"
+                        readonly
                       />
                     </div>
                   </div>
@@ -2301,10 +2455,26 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
+                    @input="handleInput('doctor')"
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.SubmittingTest.physicianName"
                   />
+                  <ul
+                    v-if="
+                      showResultsDoctor &&
+                      formData.SubmittingTest.physicianName.length >= 1
+                    "
+                    class="autocomplete-results"
+                  >
+                    <li
+                      v-for="(item, index) in filteredItems('doctor')"
+                      :key="index"
+                      @click="selectDoctor(item)"
+                    >
+                      {{ item }}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -2340,9 +2510,10 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        aria-label="default input example"
-                        placeholder="กรุณากรอกข้อมูล"
-                        v-model="formData.SubmittingTest.physicianDateTime"
+                        name=""
+                        :value="currentDate()"
+                        aria-label="readonly input example"
+                        readonly
                       />
                     </div>
                   </div>
@@ -2381,9 +2552,10 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        aria-label="default input example"
-                        placeholder="กรุณากรอกข้อมูล"
-                        v-model="formData.SubmittingTest.physicianDateTime"
+                        name=""
+                        :value="currentTime()"
+                        aria-label="readonly input example"
+                        readonly
                       />
                     </div>
                   </div>
@@ -2392,7 +2564,7 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div class="card" style="border: 0px">
+        <div class="card" style="border: 0px; margin-bottom: 32px">
           <div style="display: flex; justify-content: flex-end; gap: 2%">
             <button class="btn button-style-close" style="margin-top: 32px">
               ปิด
@@ -2427,8 +2599,8 @@ export default defineComponent({
 .fontInsideBox {
   font-family: "IBM Plex Sans Thai";
   font-size: 1.1rem;
-  font-weight: 400;
-  color: #c4c4c4;
+  font-weight: 800;
+  color: #000000;
 }
 .fontTopicInfo {
   font-family: "IBM Plex Sans Thai";
@@ -2631,6 +2803,31 @@ hr.dashed {
   background-color: rgba(255, 59, 48, 1); /* Light background color on hover */
   color: rgba(255, 255, 255, 1); /* Darker text color on hover */
 }
+
+.autocomplete-results {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 2px solid #d5e0e0;
+  border-bottom: none;
+  border-top: none;
+  position: absolute;
+  z-index: 999; /* Ensure it appears above other elements */
+}
+
+.autocomplete-results li {
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 2px solid #d5e0e0;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.autocomplete-results li:hover {
+  background-color: rgb(247 247 247);
+}
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
   .fontSize_header {
     font-size: 20px;
@@ -2689,9 +2886,6 @@ hr.dashed {
   .vertical-style-100w {
     width: 100%;
     margin-bottom: 16px;
-  }
-  .mt16 {
-    margin-top: 0px;
   }
   .mb16 {
     margin-bottom: 16px;
