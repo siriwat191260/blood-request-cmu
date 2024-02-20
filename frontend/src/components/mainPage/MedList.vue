@@ -1,4 +1,5 @@
 <script>
+import { Icon } from "@iconify/vue";
 export default {
     name: "MedList",
     props: {
@@ -68,8 +69,17 @@ export default {
         },
         goToLastPage() {
             this.currentPage = this.totalPages;
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+        },
+        changePath() {
+            this.$router.push('/blood-checklist-rs');
         }
-    }
+    },
+    components: {
+        Icon
+    },
 };
 </script>
 
@@ -89,22 +99,47 @@ export default {
         </nav>
         <div class="container-md">
             <div class="card" style="border: 0px; justify-content: center; margin: 30px 0px;">
-                <p class="fontSize_header">
-                    ประวัติการรับเลือดทั้งหมด
-                </p>
+                <p class="fontSize_header">ประวัติการรับเลือดทั้งหมด</p>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th @click="sortBy('date')">วันที่</th>
-                        <th @click="sortBy('time')">เวลา</th>
-                        <th @click="sortBy('bloodBagNum')">หมายเลขถุงเลือด</th>
-                        <th @click="sortBy('name')">ชื่อ-สกุล</th>
-                        <th @click="sortBy('HN')">HN</th>
-                        <th @click="sortBy('status')">สถานะ</th>
-                        <th @click="sortBy('transfusion')">Transfusion</th>
-                        <th @click="sortBy('reaction')">Transfusion reaction</th>
-                        <th @click="sortBy('approve')">Approve</th>
+                        <th @click="sortBy('date')">วันที่
+                            <i v-if="sortByField === 'date'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('time')">เวลา
+                            <i v-if="sortByField === 'time'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('bloodBagNum')">หมายเลขถุงเลือด
+                            <i v-if="sortByField === 'bloodBagNum'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('name')">ชื่อ-สกุล
+                            <i v-if="sortByField === 'name'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('HN')">HN
+                            <i v-if="sortByField === 'HN'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('status')">สถานะ
+                            <i v-if="sortByField === 'status'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('transfusion')">Transfusion
+                            <i v-if="sortByField === 'transfusion'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('reaction')">Transfusion reaction
+                            <i v-if="sortByField === 'reaction'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('approve')">Approve
+                            <i v-if="sortByField === 'approve'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -118,8 +153,18 @@ export default {
                         <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
                         <td v-else class="wait"> ไม่มีปฏิกิริยา</td>
 
-                        <td v-if="row.transfusion === 0" class="done">เพิ่ม</td>
-                        <td v-else> ฟอร์มนำส่งตรวจ</td>
+                        <td v-if="row.transfusion === 0" class="add">
+                            <button @click="changePath">
+                                <Icon icon="material-symbols:note-add-outline" style="
+                                    width: 20%;
+                                    height: 60%;
+                                    margin-right: 6px;
+                                    color: #008E76;
+                                    " />
+                                <p class="done">เพิ่มฟอร์ม</p>
+                            </button>
+                        </td>
+                        <td v-else>ฟอร์มนำส่งตรวจ</td>
 
                         <td v-if="row.reaction === 1" class="wait">รายงานการตรวจ</td>
                         <td v-else-if="row.reaction === 2">รายงานการตรวจ</td>
@@ -128,7 +173,6 @@ export default {
                         <td v-if="row.status === 1" class="wait">รอ</td>
                         <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
                         <td v-else>-</td>
-
                     </tr>
                 </tbody>
             </table>
@@ -140,7 +184,17 @@ export default {
                 </div>
                 <div class="right">
                     <button @click="goToFirstPage" :disabled="currentPage === 1">First</button>
-                    <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+                    <button @click="prevPage" :disabled="currentPage === 1">
+                        <Icon icon="ion:arrow-back" style="
+                            width: 150%;
+                            height: 100%;
+                        " />
+                    </button>
+                    <span v-for="pageNumber in totalPages" :key="pageNumber">
+                        <button @click="goToPage(pageNumber)" :class="{ active: currentPage === pageNumber }">
+                            {{ pageNumber }}
+                        </button>
+                    </span>
                     <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
                     <button @click="goToLastPage" :disabled="currentPage === totalPages">Last</button>
                 </div>
@@ -158,7 +212,7 @@ export default {
 
 p {
     font-family: "IBM Plex Sans Thai";
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #4F4F4F;
     margin: 0%;
 }
@@ -169,10 +223,6 @@ p {
     font-weight: 700;
     color: black;
     display: contents;
-}
-
-.fontInfo {
-    font-size: 0.8rem;
 }
 
 .wait {
@@ -207,13 +257,19 @@ p {
     align-items: center;
 }
 
+.add {
+    display: flex;
+    align-items: center;
+    border: 0
+}
+
 button {
     background-color: transparent;
     color: #4F4F4F;
     border: none;
     cursor: pointer;
     font-family: "IBM Plex Sans Thai";
-    font-size: 1rem;
+    font-size: 0.8rem;
     margin: 0%;
 }
 
