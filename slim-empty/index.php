@@ -40,6 +40,21 @@ $app->group('/v1', function () use ($app) {
 });
 
 $app->group('/trasfusion-form', function () use ($app) {
+    $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+    // Prepare cURL request to get token
+    $ch1 = curl_init($getTokenEndpoint);
+    curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+    $apiResponse = curl_exec($ch1);
+
+    // Check for errors in obtaining token
+    if (curl_errno($ch1)) {
+        throw new Exception("cURL request failed: " . curl_error($ch1));
+    }
+    curl_close($ch1);
+
+    // Decode the response to get token
+    $result = json_decode($apiResponse, true);
+    $token = $result['v']['token'];
     $app->get('/getAllReactionCategory', function (Request $request, Response $response, $args) {
         $p = $args;
         $p['method'] = 'ReactionCategory';
@@ -129,27 +144,10 @@ $app->group('/trasfusion-form', function () use ($app) {
             return $response->withStatus(500);
         }
     });
-    $app->get('/getUserDoctor', function (Request $request, Response $response, array $args) {
+    $app->get('/getUserDoctor', function (Request $request, Response $response, array $args) use ($token) {
         try {
-            // Fetch the JSON file content
-            $jsonContent = file_get_contents("C:\Users\Acer\bloodbank_js\blood_request\slim-empty\blood_allergy.postman_collection.json");
-            $jsonData = json_decode($jsonContent, true);
-            // Find blood_transf_detail item
-            $doctor = null;
-            foreach ($jsonData['item'] as $item) {
-                if ($item['name'] === 'list_user_doctor') {
-                    $doctor = $item;
-                    break;
-                }
-            }
-
-            if (!$doctor) {
-                throw new Exception("Blood transfusion detail item not found");
-            }
-
             // Extract token and endpoint
-            $token = $doctor['request']['auth']['bearer'][0]['value'];
-            $endpoint = $doctor['request']['url']['raw'];
+            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_user_doctor.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
@@ -189,27 +187,10 @@ $app->group('/trasfusion-form', function () use ($app) {
             return $response->withStatus(500);
         }
     });
-    $app->get('/getUserNurse', function (Request $request, Response $response, array $args) {
+    $app->get('/getUserNurse', function (Request $request, Response $response, array $args) use ($token) {
         try {
-            // Fetch the JSON file content
-            $jsonContent = file_get_contents("C:\Users\Acer\bloodbank_js\blood_request\slim-empty\blood_allergy.postman_collection.json");
-            $jsonData = json_decode($jsonContent, true);
-            // Find blood_transf_detail item
-            $nurses = null;
-            foreach ($jsonData['item'] as $item) {
-                if ($item['name'] === 'list_user_nurse') {
-                    $nurses = $item;
-                    break;
-                }
-            }
 
-            if (!$nurses) {
-                throw new Exception("Blood transfusion detail item not found");
-            }
-
-            // Extract token and endpoint
-            $token = $nurses['request']['auth']['bearer'][0]['value'];
-            $endpoint = $nurses['request']['url']['raw'];
+            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_user_nurse.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
