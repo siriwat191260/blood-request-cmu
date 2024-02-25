@@ -693,6 +693,10 @@ class Uri implements UriInterface
      */
     protected function filterQuery($query)
     {
+        if ($query === null) {
+            return '';
+        }
+    
         return preg_replace_callback(
             '/(?:[^a-zA-Z0-9_\-\.~!\$&\'\(\)\*\+,;=%:@\/\?]+|%(?![A-Fa-f0-9]{2}))/',
             function ($match) {
@@ -701,6 +705,7 @@ class Uri implements UriInterface
             $query
         );
     }
+    
 
     /********************************************************************************
      * Fragment

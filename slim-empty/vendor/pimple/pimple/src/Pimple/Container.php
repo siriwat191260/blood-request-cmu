@@ -71,14 +71,10 @@ class Container implements \ArrayAccess
      *
      * @throws \RuntimeException Prevent override of a frozen service
      */
-    public function offsetSet($id, $value)
+    public function offsetSet($offset, $value): void
     {
-        if (isset($this->frozen[$id])) {
-            throw new \RuntimeException(sprintf('Cannot override frozen service "%s".', $id));
-        }
-
-        $this->values[$id] = $value;
-        $this->keys[$id] = true;
+        $this->values[$offset] = $value;
+        $this->keys[$offset] = true;
     }
 
     /**
@@ -90,6 +86,7 @@ class Container implements \ArrayAccess
      *
      * @throws \InvalidArgumentException if the identifier is not defined
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($id)
     {
         if (!isset($this->keys[$id])) {
@@ -125,6 +122,7 @@ class Container implements \ArrayAccess
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($id)
     {
         return isset($this->keys[$id]);
@@ -135,6 +133,7 @@ class Container implements \ArrayAccess
      *
      * @param string $id The unique identifier for the parameter or object
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($id)
     {
         if (isset($this->keys[$id])) {
