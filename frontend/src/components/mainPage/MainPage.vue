@@ -65,7 +65,7 @@ export default defineComponent({
   methods:{
         async fetchListBloodTransf() {
         try {
-            const response = await axios.get(this.baseURL + "trasfusion-form/getBloodTransfWithTRForm");
+            const response = await axios.get(this.baseURL + "getListBloodTransf");
             console.log(" response.data", response.data)
             this.listBloodTranf = response.data;
             } catch (error) {

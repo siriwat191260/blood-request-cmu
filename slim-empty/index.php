@@ -101,6 +101,31 @@ $app->group('/v1', function () use ($app) {
     });
 });
 
+$app->get('/getListBloodTransf', function (Request $request, Response $response, array $args) {
+    try {
+        $ListBloodValue = getListBloodTransf();
+
+        foreach ($ListBloodValue as &$bloodTransfRecord) {
+            $hn = $bloodTransfRecord['hn'];
+            $trFormRecords = TR_Form($hn);
+
+            if (!empty($trFormRecords)) {
+                $bloodTransfRecord['TRForm'] = 1;
+            } else {
+                $bloodTransfRecord['TRForm'] = 0;
+            }
+        }
+
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($ListBloodValue));
+        return $response;
+    } catch (Exception $error) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+        return $response->withStatus(500);
+    }
+});
+
 $app->group('/trasfusion-form', function () use ($app) {
     $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
     // Prepare cURL request to get token
@@ -127,32 +152,6 @@ $app->group('/trasfusion-form', function () use ($app) {
         $func->preCall($p);
         $rs = $func->callMethod($p);
         return $rs;
-    });
-    $app->get('/getBloodTransfWithTRForm', function (Request $request, Response $response, array $args) use ($app) {
-        try {
-            $ListBloodValue = getListBloodTransf();
-    
-            foreach ($ListBloodValue as &$bloodTransfRecord) {
-                $hn = $bloodTransfRecord['hn'];
-                // Call TR_Form function to get TR_Form records
-                $trFormRecords = TR_Form($hn);
-    
-                if (!empty($trFormRecords)) {
-                    $bloodTransfRecord['TRForm'] = 1;
-                    // Assuming you want to assign all TRReport values
-                } else {
-                    $bloodTransfRecord['TRForm'] = 0;
-                }
-            }
-    
-            $response = $response->withHeader('Content-Type', 'application/json');
-            $response->getBody()->write(json_encode($ListBloodValue));
-            return $response;
-        } catch (Exception $error) {
-            $response = $response->withHeader('Content-Type', 'application/json');
-            $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
-            return $response->withStatus(500);
-        }
     });
 
     $app->get('/getAllSignsAndSymptoms', function (Request $request, Response $response, $args) {
@@ -418,25 +417,18 @@ $app->get('/getToken', function (Request $request, Response $response, array $ar
     }
 });
 
-$app->get('/getListBloodTransf', function (Request $request, Response $response, array $args) use ($app) {
+$app->get('/getListBloodTransIService', function (Request $request, Response $response, array $args) {
     try {
-        // Call the function to get the list of blood transfusions
         $ListBloodValue = getListBloodTransf();
-
-        // Process the check token response as needed
-        // For example, you can return it as the response from this endpoint
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($ListBloodValue));
         return $response;
     } catch (Exception $error) {
-        // Handle errors
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
         return $response->withStatus(500);
     }
 });
-
-
 
 $app->run();
 
