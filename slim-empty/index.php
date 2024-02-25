@@ -62,33 +62,37 @@ $app->group('/trasfusion-form', function () use ($app) {
         $rs = $func->callMethod($p);
         return $rs;
     });
-    $app->get('/getBloodTransfDetail', function (Request $request, Response $response, array $args) {
+    $app->post('/getBloodTransfDetail', function (Request $request, Response $response, array $args) {
         try {
-            // Fetch the JSON file content
-            $jsonContent = file_get_contents("C:\Users\Acer\bloodbank_js\blood_request\slim-empty\blood_allergy.postman_collection.json");
-            $jsonData = json_decode($jsonContent, true);
-            // Find blood_transf_detail item
-            $bloodTransfDetail = null;
-            foreach ($jsonData['item'] as $item) {
-                if ($item['name'] === 'blood_transf_detail') {
-                    $bloodTransfDetail = $item;
-                    break;
-                }
-            }
+            $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
 
-            if (!$bloodTransfDetail) {
-                throw new Exception("Blood transfusion detail item not found");
+            // Prepare cURL request to get token
+            $ch1 = curl_init($getTokenEndpoint);
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            $apiResponse = curl_exec($ch1);
+
+            // Check for errors in obtaining token
+            if (curl_errno($ch1)) {
+                throw new Exception("cURL request failed: " . curl_error($ch1));
             }
+            curl_close($ch1);
+
+            // Decode the response to get token
+            $result = json_decode($apiResponse, true);
+            $token = $result['v']['token'];
+            $requestData = $request->getParsedBody();
+            $bloodTransfId = $requestData['blood_transf_id'];
+            $requestData = [
+                "blood_transf_id" => $bloodTransfId
+            ];
 
             // Extract token and endpoint
-            $token = $bloodTransfDetail['request']['auth']['bearer'][0]['value'];
-            $endpoint = $bloodTransfDetail['request']['url']['raw'];
-            $bodyBlood = json_decode($bloodTransfDetail['request']['body']['raw'], true);
+            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/blood_transf_detail.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($bodyBlood));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Authorization: Bearer ' . $token,

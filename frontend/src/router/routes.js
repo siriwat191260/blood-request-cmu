@@ -7,7 +7,7 @@ import MainPage from '../components/mainPage/MainPage.vue';
 
 const routes = [
   { path: '/', component: BloodChecklist, name: 'blood-checklist' },
-  { path: '/transfusion-form', component: TransfusionForm, name: 'transfusion-form' },
+  { path: '/transfusion-form/:id', component: TransfusionForm, name: 'transfusion-form' },
   { path: '/mainBloodChecklist', component: MainPage, name: 'MainPage' },
   // Add more routes as needed
 ];

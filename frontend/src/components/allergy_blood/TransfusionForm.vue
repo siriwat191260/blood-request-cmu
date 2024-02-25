@@ -110,9 +110,11 @@ export default defineComponent({
   },
   async mounted() {
     // Fetch Signs and Symptoms data on component mount
+    const blood_transf_id = this.$route.params.id;
+    /* this.blood_transf_id = this.$route.params.id; */
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
-    await this.fetchBlood_tranf_detail();
+    await this.fetchBlood_transf_detail(blood_transf_id);
     await this.fetchUserDoctor();
     await this.fetchUserNurse();
     watch(
@@ -190,13 +192,12 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
-    async fetchBlood_tranf_detail() {
+    async fetchBlood_transf_detail(blood_transf_id) {
       try {
-        const response = await axios.get(this.baseURL + "trasfusion-form/getBloodTransfDetail");
-        /* console.log(response.data); */
+        const response = await axios.post(this.baseURL + "trasfusion-form/getBloodTransfDetail",{ "blood_transf_id" : blood_transf_id });
         this.blood_tranf_detail = response.data;
       } catch (error) {
-        console.error("Error fetching Signs and Symptoms data:", error);
+        console.error("Error fetching Blood Transfusion Detail data:", error);
       }
     },
     async fetchUserDoctor() {
@@ -766,42 +767,6 @@ export default defineComponent({
                 >
                   ประวัติการเกิดปฏิกิริยาจากการรับเลือด
                 </p>
-                <!-- <div
-                  style="display: block; margin-left: 32px; margin-top: 18px"
-                >
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="history_reaction_transfusion"
-                      id="inlineRadio1"
-                      value="0"
-                      v-model="formData.isReactionHistory"
-                    />
-                    <label
-                      class="form-check-label"
-                      for="inlineRadio1"
-                      style="margin-top: 2px"
-                      >ไม่มี</label
-                    >
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="history_reaction_transfusion"
-                      id="inlineRadio2"
-                      value="1"
-                      v-model="formData.isReactionHistory"
-                    />
-                    <label
-                      class="form-check-label"
-                      for="inlineRadio2"
-                      style="margin-top: 2px"
-                      >มี</label
-                    >
-                  </div>
-                </div> -->
                 <div
                   style="display: block; margin-left: 32px; margin-top: 22px"
                 >
@@ -1404,7 +1369,7 @@ export default defineComponent({
                   >
                     เวลา
                   </p>
-                  <div style="position: relative">
+                  <!-- <div style="position: relative">
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
@@ -1447,6 +1412,23 @@ export default defineComponent({
                           @input="restrictInput"
                         />
                       </div>
+                    </div>
+                  </div> -->
+                  <div style="position: relative">
+                    <div
+                      style="display: inline; position: absolute; width: 100%"
+                    >
+                      <input class="form-control typing-box-style"
+                        style="
+                          padding-left: 16px;
+                          padding-right: 16px;
+                          padding-top: 0px;
+                          padding-bottom: 0px;
+                        "
+                        type="time"
+                        v-model="formData.VitalSigns.beforeReactionTime"
+                        aria-label="readonly input example"
+                        >
                     </div>
                   </div>
                 </div>
@@ -1610,7 +1592,7 @@ export default defineComponent({
                   >
                     เวลา
                   </p>
-                  <div style="position: relative">
+                  <!-- <div style="position: relative">
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
@@ -1653,6 +1635,23 @@ export default defineComponent({
                           @input="restrictInput"
                         />
                       </div>
+                    </div>
+                  </div> -->
+                  <div style="position: relative">
+                    <div
+                      style="display: inline; position: absolute; width: 100%"
+                    >
+                      <input class="form-control typing-box-style"
+                        style="
+                          padding-left: 16px;
+                          padding-right: 16px;
+                          padding-top: 0px;
+                          padding-bottom: 0px;
+                        "
+                        type="time"
+                        v-model="formData.VitalSigns.afterReactionTime"
+                        aria-label="readonly input example"
+                        >
                     </div>
                   </div>
                 </div>
