@@ -1,5 +1,6 @@
 <script>
 import { Icon } from "@iconify/vue";
+import { parseDate,parseTime } from "../general/dateUtils"
 export default {
     name: "MedList",
     props: {
@@ -75,7 +76,9 @@ export default {
         },
         changePath() {
             this.$router.push('/blood-checklist-rs');
-        }
+        },
+        parseDate,
+        parseTime
     },
     components: {
         Icon
@@ -144,11 +147,11 @@ export default {
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in displayedRows" :key="index">
-                        <td>{{ row.date }}</td>
-                        <td>{{ row.time }}</td>
-                        <td>{{ row.bloodBagNum }}</td>
-                        <td>{{ row.name }}</td>
-                        <td>{{ row.HN }}</td>
+                        <td>{{ parseDate(row.dtm) }}</td>
+                        <td>{{ parseTime(row.dtm) }}</td>
+                        <td>{{ row.packid }}</td>
+                        <td>{{ row.ttl + " " + row.name + " " + row.lname }}</td>
+                        <td>{{ row.hn }}</td>
                         <td v-if="row.status === 1" class="wait">รอ</td>
                         <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
                         <td v-else class="wait"> ไม่มีปฏิกิริยา</td>

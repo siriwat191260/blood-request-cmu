@@ -2,6 +2,7 @@
 import { defineComponent } from "vue";
 import BloodBankList from "./BloodBankList.vue"
 import MedList from "./MedList.vue";
+import axios from "axios";
 
 export default defineComponent({
   name: "MainPage",
@@ -53,8 +54,24 @@ export default defineComponent({
         { id: 3, date: "1/1/2024", time: "12:22", bloodBagNum: 36, name: "บรรจง ยุทธจักร", HN: "2803589", transfusion: 2, reaction: 2, approve: 2, status: 2 },
         { id: 3, date: "1/1/2024", time: "12:22", bloodBagNum: 37, name: "บรรจง ยุทธจักร", HN: "2803589", transfusion: 2, reaction: 2, approve: 2, status: 2 },
         { id: 3, date: "1/1/2024", time: "12:22", bloodBagNum: 38, name: "บรรจง ยุทธจักร", HN: "2803589", transfusion: 2, reaction: 2, approve: 2, status: 2 },
-      ]
+      ],
+      baseURL: "http://localhost:8000/",
+      listBloodTranf: []
     };
+  },
+  async mounted(){
+    await this.fetchListBloodTransf();
+  },
+  methods:{
+        async fetchListBloodTransf() {
+        try {
+            const response = await axios.get(this.baseURL + "getListBloodTransf");
+            console.log(" response.data", response.data)
+            this.listBloodTranf = response.data;
+            } catch (error) {
+                console.error("Error fetching List Blood Transfusion data:", error);
+            }
+        },
   },
   components: {
     BloodBankList,
@@ -65,8 +82,8 @@ export default defineComponent({
 
 <template>
   <div>
-    <med-list v-if="userInfo.userRole === 'med'" :userInfo="userInfo" :tableData="data" />
-    <blood-bank-list v-else-if="userInfo.userRole === 'bloodbank'" :userInfo="userInfo" :tableData="data" />
+    <med-list v-if="userInfo.userRole === 'med'" :userInfo="userInfo" :tableData="listBloodTranf" />
+    <blood-bank-list v-else-if="userInfo.userRole === 'bloodbank'" :userInfo="userInfo" :tableData="listBloodTranf" />
     <!-- <template-not-found v-else /> -->
   </div>
 </template>

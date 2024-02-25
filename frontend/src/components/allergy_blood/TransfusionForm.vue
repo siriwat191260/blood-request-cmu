@@ -3,7 +3,8 @@ import { defineComponent } from "vue";
 import { ref, onBeforeUnmount } from "vue";
 import DropDownSVGVue from "../general/DropDownSVG.vue";
 import { Icon } from "@iconify/vue";
-import { useCurrentTime } from "./useCurrentTime";
+import { useCurrentTime } from "../general/useCurrentTime";
+import { parseDate, parseTime, currentDate, currentTime } from "../general/dateUtils";
 import axios from "axios";
 import { watch } from "vue";
 import $ from "jquery";
@@ -88,7 +89,6 @@ export default defineComponent({
       items: ["siriwat", "siri"],
       userDoctor: {},
       userNurse: {},
-      showResults: false,
       showResultsDoctor: false,
       showResultsNurse: false,
       beforeReactionBPSectionOne: "",
@@ -99,17 +99,22 @@ export default defineComponent({
       beforeReactionTimeSectionTwo: "",
       afterReactionTimeSectionOne: "",
       afterReactionTimeSectionTwo: "",
+      nurseDate: new Date().toISOString().split('T')[0],
+      nurseTime: this.parseTime(new Date()),
+      physicianDate: new Date().toISOString().split('T')[0],
+      physicianTime: this.parseTime(new Date()),
+      SignsAndSymptomsOthersObject: {
+        isOthers : ""
+      }
     };
   },
   async mounted() {
     // Fetch Signs and Symptoms data on component mount
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
-    /* await this.fetchBlood_transf_detail(); */
     await this.fetchBlood_tranf_detail();
     await this.fetchUserDoctor();
     await this.fetchUserNurse();
-    /* await this.fetchListBloodTransf2(); */
     watch(
       [() => this.signsAndSymptomsOptions, () => this.reactionCategory],
       ([newSigns, newReaction]) => {
@@ -167,7 +172,7 @@ export default defineComponent({
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
-          this.baseURL + "getAllSignsAndSymptoms"
+          this.baseURL + "trasfusion-form/getAllSignsAndSymptoms"
         );
         this.signsAndSymptomsOptions = response.data;
       } catch (error) {
@@ -177,7 +182,7 @@ export default defineComponent({
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
-          this.baseURL + "getAllReactionCategory"
+          this.baseURL + "trasfusion-form/getAllReactionCategory"
         );
         /* console.log(response.data); */
         this.reactionCategory = response.data;
@@ -187,7 +192,7 @@ export default defineComponent({
     },
     async fetchBlood_tranf_detail() {
       try {
-        const response = await axios.get(this.baseURL + "getBloodTransfDetail");
+        const response = await axios.get(this.baseURL + "trasfusion-form/getBloodTransfDetail");
         /* console.log(response.data); */
         this.blood_tranf_detail = response.data;
       } catch (error) {
@@ -196,7 +201,7 @@ export default defineComponent({
     },
     async fetchUserDoctor() {
       try {
-        const response = await axios.get(this.baseURL + "getUserDoctor");
+        const response = await axios.get(this.baseURL + "trasfusion-form/getUserDoctor");
         /* console.log(response.data); */
         this.userDoctor = response.data;
       } catch (error) {
@@ -205,7 +210,7 @@ export default defineComponent({
     },
     async fetchUserNurse() {
       try {
-        const response = await axios.get(this.baseURL + "getUserNurse");
+        const response = await axios.get(this.baseURL + "trasfusion-form/getUserNurse");
         /* console.log(response.data); */
         this.userNurse = response.data;
       } catch (error) {
@@ -219,50 +224,10 @@ export default defineComponent({
         ""
       );
     },
-    currentDate() {
-      const current = new Date();
-      const date = current.toLocaleDateString("th-TH", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      return date;
-    },
-    currentTime() {
-      /* const currentTime = new Date();
-      const time =
-        currentTime.getHours() +
-        ":" +
-        currentTime.getMinutes() +
-        ":" +
-        currentTime.getSeconds();
-      return time; */
-      const { currentTime } = useCurrentTime();
-      /* console.log(currentTime.value); */
-      const time =
-        currentTime.value.getHours() +
-        ":" +
-        currentTime.value.getMinutes() +
-        ":" +
-        currentTime.value.getSeconds();
-      return time;
-    },
-    parseDate(date_time) {
-      const date_time_TypeDateTime = new Date(date_time);
-      const date = date_time_TypeDateTime.toLocaleDateString("th-TH", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      return date;
-    },
-    parseTime(date_time) {
-      const dateTime = new Date(date_time);
-      const hours = dateTime.getHours().toString().padStart(2, "0");
-      const minutes = dateTime.getMinutes().toString().padStart(2, "0");
-      const time = `${hours}:${minutes}`;
-      return time;
-    },
+    currentDate,
+    currentTime,
+    parseDate,
+    parseTime,
     handleInput(role) {
       console.log("role :", role);
       if (role === "doctor") {
@@ -292,6 +257,14 @@ export default defineComponent({
         currentTime :
       } */
     },
+  },
+  watch: {
+    'SignsAndSymptomsOthersObject.isOthers': function(newVal, oldVal) {
+      if( newVal !== 1 ){
+          this.formData.SignsAndSymptomsObject.Others  = "";
+      }
+      
+    }
   },
   components: {
     DropDownSVGVue,
@@ -1826,7 +1799,7 @@ export default defineComponent({
             </p>
           </div>
           <!-- Signs and Symptoms Name-->
-          <div class="row">
+          <div  v-if="signsAndSymptomsOptions !== null" class="row">
             <div
               class="col-md-4"
               v-for="(SignsAndSymptoms, index) in signsAndSymptomsOptions"
@@ -1844,7 +1817,7 @@ export default defineComponent({
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="inlineCheckbox1"
+                    id="'inlineCheckbox' + index"
                     :value="SignsAndSymptoms.idSignsAndSymtomsName"
                     v-model="
                       formData.SignsAndSymptomsObject.SignsAndSymptomsSelected
@@ -1853,13 +1826,13 @@ export default defineComponent({
                   <label
                     style="margin-top: 2px"
                     class="form-check-label"
-                    for="inlineCheckbox1"
+                    for="'inlineCheckbox' + index"
                     >{{ SignsAndSymptoms.name }}</label
                   >
                 </div>
               </div>
               <div
-                v-if="index === signsAndSymptomsOptions.length - 1"
+                v-if="index === signsAndSymptomsOptions.length - 1 && formData.SignsAndSymptomsObject.SignsAndSymptomsSelected.includes(SignsAndSymptoms.idSignsAndSymtomsName)" 
                 style="width: 100%"
               >
                 <div
@@ -2374,20 +2347,18 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input
-                        class="form-control typing-box-style"
+                      <input class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                        type="text"
-                        name=""
-                        :value="currentDate()"
+                        type="date"
+                        v-model="nurseDate"
                         aria-label="readonly input example"
-                        readonly
-                      />
+                        id="birthdaytime" name="birthdaytime"
+                        >
                     </div>
                   </div>
                 </div>
@@ -2416,20 +2387,18 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input
-                        class="form-control typing-box-style"
+                    <input class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                        type="text"
-                        name=""
-                        :value="currentTime()"
+                        type="time"
+                        v-model="nurseTime"
                         aria-label="readonly input example"
-                        readonly
-                      />
+                        id="birthdaytime" name="birthdaytime"
+                        >
                     </div>
                   </div>
                 </div>
@@ -2501,20 +2470,18 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input
-                        class="form-control typing-box-style"
+                    <input class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                        type="text"
-                        name=""
-                        :value="currentDate()"
+                        type="date"
+                        v-model="physicianDate"
                         aria-label="readonly input example"
-                        readonly
-                      />
+                        id="birthdaytime" name="birthdaytime"
+                        >
                     </div>
                   </div>
                 </div>
@@ -2543,20 +2510,18 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input
-                        class="form-control typing-box-style"
+                      <input class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
-                        type="text"
-                        name=""
-                        :value="currentTime()"
+                        type="time"
+                        v-model="physicianTime"
                         aria-label="readonly input example"
-                        readonly
-                      />
+                        id="birthdaytime" name="birthdaytime"
+                        >
                     </div>
                   </div>
                 </div>
@@ -2899,3 +2864,4 @@ hr.dashed {
   }
 }
 </style>
+../general/useCurrentTime
