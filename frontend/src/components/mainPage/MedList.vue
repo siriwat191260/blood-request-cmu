@@ -156,16 +156,12 @@ export default {
                         <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
                         <td v-else class="wait"> ไม่มีปฏิกิริยา</td>
 
-                        <td v-if="row.transfusion === 0" class="add">
-                            <button @click="changePath">
-                                <Icon icon="material-symbols:note-add-outline" style="
-                                    width: 20%;
-                                    height: 60%;
-                                    margin-right: 6px;
-                                    color: #008E76;
-                                    " />
+                        <td v-if="row.transfusion === 0" @click="changePath">
+                            <div class="add">
+                                <Icon icon="material-symbols:note-add-outline" class="icon-add" />
                                 <p class="done">เพิ่มฟอร์ม</p>
-                            </button>
+                            </div>
+
                         </td>
                         <td v-else>ฟอร์มนำส่งตรวจ</td>
 
@@ -186,20 +182,37 @@ export default {
                     </p>
                 </div>
                 <div class="right">
-                    <button @click="goToFirstPage" :disabled="currentPage === 1">First</button>
-                    <button @click="prevPage" :disabled="currentPage === 1">
-                        <Icon icon="ion:arrow-back" style="
-                            width: 150%;
-                            height: 100%;
-                        " />
+                    <button @click="goToFirstPage">
+                        <Icon icon="bx:arrow-to-left" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === 1 ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
+                    <button @click="prevPage">
+                        <Icon icon="bx:left-arrow-alt" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === 1 ? '#9D9D9D' : 'orange'
+                        }" />
                     </button>
                     <span v-for="pageNumber in totalPages" :key="pageNumber">
-                        <button @click="goToPage(pageNumber)" :class="{ active: currentPage === pageNumber }">
-                            {{ pageNumber }}
+                        <button @click="goToPage(pageNumber)" :style="{
+                            fontWeight: 1000,
+                            color: currentPage === pageNumber ? '#9D9D9D' : 'black'
+                        }">{{ pageNumber }}
                         </button>
                     </span>
-                    <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-                    <button @click="goToLastPage" :disabled="currentPage === totalPages">Last</button>
+                    <button @click="nextPage">
+                        <Icon icon="bx:right-arrow-alt" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === totalPages ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
+                    <button @click="goToLastPage">
+                        <Icon icon="bx:arrow-to-right" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === totalPages ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
                 </div>
             </div>
         </div>
@@ -263,7 +276,11 @@ p {
 .add {
     display: flex;
     align-items: center;
-    border: 0
+    border: 0;
+}
+
+.add:hover {
+    cursor: pointer;
 }
 
 button {
@@ -312,5 +329,35 @@ th {
 .pagination button {
     margin-right: 5px;
     cursor: pointer;
+}
+
+.disabled .icon {
+    color: gray;
+    /* Color when button is disabled */
+}
+
+.active {
+    color: red;
+    /* Change color as needed */
+}
+
+.icon-add {
+    width: 15%;
+    height: 100%;
+    margin-right: 6px;
+    color: #008E76;
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
+    .icon-add {
+        width: 20%;
+    }
+}
+
+@media only screen and ((max-device-width: 768px) or (max-device-width: 810px)) {
+    .icon-add {
+        width: 27%;
+        margin-right: 3px;
+    }
 }
 </style>
