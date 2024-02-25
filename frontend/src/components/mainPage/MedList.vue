@@ -156,7 +156,7 @@ export default {
                         <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
                         <td v-else class="wait"> ไม่มีปฏิกิริยา</td>
 
-                        <td v-if="!row.transfusion" @click="addTransFusionForm(row.blood_transf_id)">
+                        <td v-if="!row.TRForm" @click="addTransFusionForm(row.blood_transf_id)">
                             <div class="add">
                                 <Icon icon="material-symbols:note-add-outline" class="icon-add" />
                                 <p class="done">เพิ่มฟอร์ม</p>
