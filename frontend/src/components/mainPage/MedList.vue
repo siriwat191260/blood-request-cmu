@@ -212,11 +212,11 @@ export default {
                                 <p class="done">เพิ่มฟอร์ม</p>
                             </div>
                         </td>
-                        <td v-else-if="row.TRForm === 100" @click="editTransFusionForm(row.idTR_Form)">ฟอร์มนำส่งตรวจ</td>
-                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait">ฟอร์มนำส่งตรวจ</td>
+                        <td v-else-if="row.TRForm === 100" @click="editTransFusionForm(row.idTR_Form)" class="click">ฟอร์มนำส่งตรวจ</td>
+                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait click">ฟอร์มนำส่งตรวจ {{ row.TRForm }}%</td>
 
                         <td v-if="!row.TRForm" class="wait">-</td>
-                        <td v-else-if="row.TRReport === 100" @click="getTransFusionReport(row.idTR_Report)">รายงานการตรวจ</td>
+                        <td v-else-if="row.TRReport === 100" @click="getTransFusionReport(row.idTR_Report)" class="click">รายงานการตรวจ</td>
                         <td v-else class="wait">รายงานการตรวจ</td>
 
                         <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"
@@ -226,7 +226,7 @@ export default {
                                 <p class="done">เพิ่ม review</p>
                             </div>
                         </td>
-                        <td v-else-if="row.approve === 1" class="done" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
+                        <td v-else-if="row.approve === 1" class="done click" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
                         <td v-else class="wait">รอ</td>
                     </tr>
                 </tbody>
@@ -334,8 +334,11 @@ p {
     align-items: center;
     border: 0;
 }
-
 .add:hover {
+    cursor: pointer;
+}
+
+.click:hover {
     cursor: pointer;
 }
 

@@ -91,10 +91,10 @@ export default {
             this.$router.push(`/edit-transfusion-report/${id}`);
         },
         getApprove(id) {
-            this.$router.push(`/approve/${id}`);
+            this.$router.push(`/get-approve/${id}`);
         },
         addApprove(id) {
-            this.$router.push(`/add-approve/${id}`);
+            this.$router.push(`/approve/${id}`);
         },
         parseDate,
         parseTime,
@@ -182,7 +182,7 @@ export default {
                         <td v-if="row.approve === 2" class="done">สำเร็จ</td>
                         <td v-else class="wait"> รอ</td>
 
-                        <td v-if="row.TRForm" @click="getTransFusionForm(row.idTR_Form)">
+                        <td v-if="row.TRForm" @click="getTransFusionForm(row.idTR_Form)" class="click">
                             ฟอร์มนำส่งตรวจ </td>
                         <td v-else class="wait">ฟอร์มนำส่งตรวจ</td>
 
@@ -192,10 +192,10 @@ export default {
                                 <p class="done">เพิ่มรายงาน</p>
                             </div>
                         </td>
-                        <td v-else-if="row.TRReport === 100" @click="editTransFusionReport(row.idTR_Report)">รายงานการตรวจ</td>
+                        <td v-else-if="row.TRReport === 100" @click="editTransFusionReport(row.idTR_Report)" class="click">รายงานการตรวจ</td>
                         <td v-else-if="!row.TRForm">-</td>
-                        <td v-else class="wait" @click="editTransFusionReport(row.idTR_Report)">รายงานการตรวจ</td>
-                        
+                        <td v-else class="wait click" @click="editTransFusionReport(row.idTR_Report)" >รายงานการตรวจ {{ row.TRForm }}%</td>
+
                         <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"
                             @click="addApprove(row.idTR_Report)">
                             <div class="add">
@@ -203,7 +203,7 @@ export default {
                                 <p class="done">เพิ่ม review</p>
                             </div>
                         </td>
-                        <td v-else-if="row.approve === 1" class="done" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
+                        <td v-else-if="row.approve === 1" class="done click" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
                         <td v-else class="wait">รอ</td>
                     </tr>
                 </tbody>
@@ -326,8 +326,10 @@ p {
     align-items: center;
     border: 0;
 }
-
 .add:hover {
+    cursor: pointer;
+}
+.click:hover {
     cursor: pointer;
 }
 

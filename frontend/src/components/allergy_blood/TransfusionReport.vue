@@ -2,7 +2,8 @@
 import { defineComponent } from "vue";
 import DropDownSVGVue from "../general/DropDownSVG.vue";
 import { Icon } from "@iconify/vue";
-import { useCurrentTime } from "../general/useCurrentTime";
+import { parseDate, parseTime } from "../general/dateUtils"
+import axios from "axios";
 
 export default defineComponent({
     name: "TransfusionReport",
@@ -10,18 +11,18 @@ export default defineComponent({
         return {
             formData: {
                 // TR_Report 
-                firstName: "บรรจง",
-                lastName: "ยุทธจักร",
-                HN: "2803589",
-                createdDate: "24/2/2024",
-                createdTime: "00:12",
-                ward: "ward1",
-                bloodGroup_Patient: "o",
-                blood_component: "เม็ดเลือด",
-                bloodGroup_Donor: "o",
-                bloodBagNumber: "1234",
-                primaryPhysicianName: "a",
-                witness: "b",
+                firstName: "",
+                lastName: "",
+                HN: "",
+                createdDate: "",
+                createdTime: "",
+                ward: "",
+                bloodGroup_Patient: "",
+                blood_component: "",
+                bloodGroup_Donor: "",
+                bloodBagNumber: "",
+                primaryPhysicianName: "",
+                witness: "",
             },
             BloodBagCharacteristic: {
                 //BloodBagCharacteristic
@@ -45,9 +46,49 @@ export default defineComponent({
             { idIndicatiorName: 8, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
             { idIndicatiorName: 9, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
             ],
+            userInfo: [],
+            tr_form: [],
+            baseURL: "http://localhost:8000/",
         };
     },
+    async mounted() {
+        const idTR_Form = this.$route.params.id;
+        await this.fetchUser();
+        await this.fetchTRForm(idTR_Form);
+    },
     methods: {
+        importData() {
+            this.formData.firstName = this.tr_form[0].firstName
+            this.formData.lastName = this.tr_form[0].lastName
+            this.formData.HN = this.tr_form[0].HN
+            this.formData.createdDate = parseDate(this.tr_form[0].createdDate)
+            this.formData.createdTime = parseTime(this.tr_form[0].createdDate)
+            this.formData.ward = this.tr_form[0].ward
+            this.formData.bloodGroup_Patient = this.tr_form[0].bloodGroup_Patient
+            this.formData.blood_component = this.tr_form[0].blood_component
+            this.formData.bloodGroup_Donor = this.tr_form[0].bloodGroup_Donor
+            this.formData.bloodBagNumber = this.tr_form[0].bloodBagNumber
+            this.formData.primaryPhysicianName = this.tr_form[0].primaryPhysicianName
+        },
+        async fetchUser() {
+            try {
+                const response = await axios.get(this.baseURL + "getUserLogin");
+                console.log(" response.data", response.data)
+                this.userInfo = response.data;
+            } catch (error) {
+                console.error("Error fetching List Blood Transfusion data:", error);
+            }
+        },
+        async fetchTRForm(idTR_Form) {
+            try {
+                const response = await axios.get(this.baseURL + "get-transfusion-form/" + idTR_Form);
+                console.log(" response.data", response.data)
+                this.tr_form = response.data;
+                this.importData()
+            } catch (error) {
+                console.error("Error fetching List Blood Transfusion data:", error);
+            }
+        },
         currentDate() {
             const current = new Date();
             const date = current.toLocaleDateString("th-TH", {
@@ -57,16 +98,8 @@ export default defineComponent({
             });
             return date;
         },
-        currentTime() {
-            const { currentTime } = useCurrentTime();
-            const time =
-                currentTime.value.getHours() +
-                ":" +
-                currentTime.value.getMinutes() +
-                ":" +
-                currentTime.value.getSeconds();
-            return time;
-        },
+        parseDate,
+        parseTime,
         handleSubmit() {
             console.log("Form submitted! : ", this.formData);
             console.log("Form submitted! : ", this.BloodBagCharacteristic);
@@ -728,7 +761,7 @@ export default defineComponent({
                                         padding-left: 16px;
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " type="text" :value="currentTime()" aria-label="readonly input example"
+                                        " type="text"  aria-label="readonly input example"
                                         readonly />
                                 </div>
                             </div>

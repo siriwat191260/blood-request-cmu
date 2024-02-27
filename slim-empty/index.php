@@ -449,6 +449,31 @@ $app->group('/trasfusion-form', function () use ($app) {
         }
     });
 });
+
+$app->get('/get-transfusion-form/{id}', function (Request $request, Response $response, $args) {
+    $p = $args;
+    $p['method'] = 'TRForm';
+    $p['controller_name'] = 'bloodbank';
+
+    $func = new Middleware(['controller' => $p['controller_name']]);
+    $func->response = $response;
+    $func->preCall($p);
+    $rs = $func->callMethod($p);
+    return $rs;
+});
+
+$app->get('/get-transfusion-report/{id}', function (Request $request, Response $response, $args) {
+    $p = $args;
+    $p['method'] = 'TRReport';
+    $p['controller_name'] = 'bloodbank';
+
+    $func = new Middleware(['controller' => $p['controller_name']]);
+    $func->response = $response;
+    $func->preCall($p);
+    $rs = $func->callMethod($p);
+    return $rs;
+});
+
 $app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
     try {
         $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
@@ -456,7 +481,7 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         //Doctor ID : 1254,6523
         //BloodBank ID : 7895
         //Nurse ID : 451236
-        $idUser = "451236";
+        $idUser = "7895";
         $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
         // Prepare cURL request to get token
