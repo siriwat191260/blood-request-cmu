@@ -11,7 +11,8 @@ error_reporting(E_ALL);
 cors();
 // $cors = new \Cors;
 
-function getListBloodTransf() {
+function getListBloodTransf()
+{
     $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
     $getListBloodTransfEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_blood_transf.php";
     $body = json_encode(array("hn" => "1235"));
@@ -36,14 +37,18 @@ function getListBloodTransf() {
     curl_setopt($ch2, CURLOPT_POST, 1);
     curl_setopt($ch2, CURLOPT_POSTFIELDS, $body);
     curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch2, CURLOPT_HTTPHEADER, array(
-        'Authorization: Bearer ' . $token,
-        'Content-Type: application/json',
-        'Access-Control-Allow-Origin: *',
-        'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
-        'Access-Control-Allow-Headers: Content-Type',
-        'Access-Control-Allow-Credentials: true',
-    ));
+    curl_setopt(
+        $ch2,
+        CURLOPT_HTTPHEADER,
+        array(
+            'Authorization: Bearer ' . $token,
+            'Content-Type: application/json',
+            'Access-Control-Allow-Origin: *',
+            'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+            'Access-Control-Allow-Headers: Content-Type',
+            'Access-Control-Allow-Credentials: true',
+        )
+    );
     $listBloodTransf = curl_exec($ch2);
 
     // Check for errors in checking token validity
@@ -56,17 +61,33 @@ function getListBloodTransf() {
     return $resultListBloodTransf['v'];
 }
 
-function TR_Form($hn){
+function getTableData($tableName, $hn, $bloodBagNumber)
+{
+    $conn_db = new PDOConnect('db');
+    $con_db = $conn_db->Open();
 
-    $conn_db=new PDOConnect('db');
-    $con_db=$conn_db->Open();
-
-    $sql = "SELECT * FROM blood_request.TR_Form WHERE HN = :hn";
+    $sql = "SELECT * FROM $tableName WHERE HN = :hn AND bloodBagNumber = :bloodBagNumber";
     $stmt = $con_db->prepare($sql);
     $stmt->bindValue(":hn", $hn, PDO::PARAM_STR);
+    $stmt->bindValue(":bloodBagNumber", $bloodBagNumber, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
+    return $result;
+}
+
+function getApprove($idTR_Report)
+{
+    $conn_db = new PDOConnect('db');
+    $con_db = $conn_db->Open();
+
+    $sql = "SELECT * FROM TransfusionMedicalDirectorReview 
+    WHERE idTR_Report = :idTR_Report";
+    $stmt = $con_db->prepare($sql);
+    $stmt->bindValue(":idTR_Report", $idTR_Report, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     return $result;
 }
 
@@ -107,17 +128,67 @@ $app->get('/getListBloodTransf', function (Request $request, Response $response,
 
         foreach ($ListBloodValue as &$bloodTransfRecord) {
             $hn = $bloodTransfRecord['hn'];
-            $trFormRecords = TR_Form($hn);
+            $packid = $bloodTransfRecord['packid'];
+            $trForm = getTableData("TR_Form", $hn, $packid);
+            $trReport = getTableData("TR_Report", $hn, $packid);
+            $bloodTransfRecord['TRForm'] = null;
+            $bloodTransfRecord['TRReport'] = null;
+            $bloodTransfRecord['approve'] = null;
 
-            if (!empty($trFormRecords)) {
-                $bloodTransfRecord['TRForm'] = 1;
-            } else {
-                $bloodTransfRecord['TRForm'] = 0;
+            if (!empty($trForm)) {
+                $bloodTransfRecord['TRForm'] = $trForm[0]['status'];
+                $bloodTransfRecord['idTR_Form'] = $trForm[0]['idTR_Form'];
+
+                if (!empty($trReport)) {
+                    $bloodTransfRecord['TRReport'] = $trReport[0]['status'];
+                    $bloodTransfRecord['idTR_Report'] = $trReport[0]['idTR_Report'];
+                    if (!empty(getApprove($trReport[0]['idTR_Report']))) {
+                        $bloodTransfRecord['approve'] = 1;
+                    }
+                }
+            }
+        }
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($ListBloodValue));
+        return $response;
+    } catch (Exception $error) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+        return $response->withStatus(500);
+    }
+});
+
+$app->get('/getListReaction', function (Request $request, Response $response, array $args) {
+    try {
+        $ListBloodValue = getListBloodTransf();
+        $rst = [];
+        foreach ($ListBloodValue as &$bloodTransfRecord) {
+            $hn = $bloodTransfRecord['hn'];
+            $packid = $bloodTransfRecord['packid'];
+            $trForm = getTableData("TR_Form", $hn, $packid);
+            $trReport = getTableData("TR_Report", $hn, $packid);
+            $bloodTransfRecord['TRForm'] = null;
+            $bloodTransfRecord['TRReport'] = null;
+            $bloodTransfRecord['approve'] = null;
+
+            //find complete tr_form
+            if (!empty($trForm)) {
+                $bloodTransfRecord['TRForm'] = $trForm[0]['status'];
+                $bloodTransfRecord['idTR_Form'] = $trForm[0]['idTR_Form'];
+
+                if (!empty($trReport)) {
+                    $bloodTransfRecord['TRReport'] = $trReport[0]['status'];
+                    $bloodTransfRecord['idTR_Report'] = $trReport[0]['idTR_Report'];
+                    if (!empty(getApprove($trReport[0]['idTR_Report']))) {
+                        $bloodTransfRecord['approve'] = 1;
+                    }
+                }
+                $rst[] = $bloodTransfRecord;
             }
         }
 
         $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($ListBloodValue));
+        $response->getBody()->write(json_encode($rst));
         return $response;
     } catch (Exception $error) {
         $response = $response->withHeader('Content-Type', 'application/json');
@@ -197,14 +268,17 @@ $app->group('/trasfusion-form', function () use ($app) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization: Bearer ' . $token,
-                'Content-Type: application/json',
-                'Access-Control-Allow-Origin: *',
-                'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
-                'Access-Control-Allow-Headers: Content-Type',
-                'Access-Control-Allow-Credentials: true',
-            )
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array(
+                    'Authorization: Bearer ' . $token,
+                    'Content-Type: application/json',
+                    'Access-Control-Allow-Origin: *',
+                    'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+                    'Access-Control-Allow-Headers: Content-Type',
+                    'Access-Control-Allow-Credentials: true',
+                )
             );
 
             // Execute the request
@@ -242,14 +316,17 @@ $app->group('/trasfusion-form', function () use ($app) {
             $ch = curl_init($endpoint);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization: Bearer ' . $token,
-                'Content-Type: application/json',
-                'Access-Control-Allow-Origin: *',
-                'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
-                'Access-Control-Allow-Headers: Content-Type',
-                'Access-Control-Allow-Credentials: true',
-            )
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array(
+                    'Authorization: Bearer ' . $token,
+                    'Content-Type: application/json',
+                    'Access-Control-Allow-Origin: *',
+                    'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+                    'Access-Control-Allow-Headers: Content-Type',
+                    'Access-Control-Allow-Credentials: true',
+                )
             );
 
             // Execute the request
@@ -286,14 +363,64 @@ $app->group('/trasfusion-form', function () use ($app) {
             $ch = curl_init($endpoint);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization: Bearer ' . $token,
-                'Content-Type: application/json',
-                'Access-Control-Allow-Origin: *',
-                'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
-                'Access-Control-Allow-Headers: Content-Type',
-                'Access-Control-Allow-Credentials: true',
-            )
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array(
+                    'Authorization: Bearer ' . $token,
+                    'Content-Type: application/json',
+                    'Access-Control-Allow-Origin: *',
+                    'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+                    'Access-Control-Allow-Headers: Content-Type',
+                    'Access-Control-Allow-Credentials: true',
+                )
+            );
+
+            // Execute the request
+            $apiResponse = curl_exec($ch);
+
+            // Check for errors
+            if (curl_errno($ch)) {
+                throw new Exception("cURL request failed: " . curl_error($ch));
+            }
+
+            // Close cURL resource
+            curl_close($ch);
+
+            // Decode the response
+            $result = json_decode($apiResponse, true);
+
+            // Process $result as needed
+            $response = $response->withHeader('Content-Type', 'application/json');
+            $response->getBody()->write(json_encode($result));
+            return $response;
+        } catch (Exception $error) {
+            $response = $response->withHeader('Content-Type', 'application/json');
+            $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+
+            return $response->withStatus(500);
+        }
+    });
+    $app->get('/getUserApprove', function (Request $request, Response $response, array $args) use ($token) {
+        try {
+
+            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_approve.php";
+
+            // Prepare cURL request
+            $ch = curl_init($endpoint);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array(
+                    'Authorization: Bearer ' . $token,
+                    'Content-Type: application/json',
+                    'Access-Control-Allow-Origin: *',
+                    'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+                    'Access-Control-Allow-Headers: Content-Type',
+                    'Access-Control-Allow-Credentials: true',
+                )
             );
 
             // Execute the request
@@ -325,11 +452,11 @@ $app->group('/trasfusion-form', function () use ($app) {
 $app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
     try {
         $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
-        //Approve ID : 9325
-        //Doctor ID : 1254
+        //Approve ID : 1254,6523
+        //Doctor ID : 1254,6523
         //BloodBank ID : 7895
         //Nurse ID : 451236
-        $idUser = "1254";
+        $idUser = "451236";
         $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
         // Prepare cURL request to get token
@@ -352,13 +479,16 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         curl_setopt($ch2, CURLOPT_POST, 1);
         curl_setopt($ch2, CURLOPT_POSTFIELDS, json_encode($token));
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch2, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Access-Control-Allow-Origin: *',
-            'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
-            'Access-Control-Allow-Headers: Content-Type',
-            'Access-Control-Allow-Credentials: true',
-        )
+        curl_setopt(
+            $ch2,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Access-Control-Allow-Origin: *',
+                'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+                'Access-Control-Allow-Headers: Content-Type',
+                'Access-Control-Allow-Credentials: true',
+            )
         );
         $checkTokenResponse = curl_exec($ch2);
 

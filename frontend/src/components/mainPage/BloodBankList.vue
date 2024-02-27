@@ -1,4 +1,6 @@
 <script>
+import { Icon } from "@iconify/vue";
+import { parseDate, parseTime } from "../general/dateUtils"
 export default {
     name: "MedList",
     props: {
@@ -6,14 +8,18 @@ export default {
         tableData: {
             type: Array,
             required: true
-        }
+        },
+        userApprove: {
+            type: Array,
+            required: true
+        },
     },
     data() {
         return {
             sortByField: '',
             sortDirection: 'asc',
             currentPage: 1,
-            rowsPerPage: 13
+            rowsPerPage: 13,
         }
     },
     computed: {
@@ -68,8 +74,42 @@ export default {
         },
         goToLastPage() {
             this.currentPage = this.totalPages;
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+        },
+        getTransFusionForm(id) {
+            this.$router.push(`/get-transfusion-form/${id}`);
+        },
+        getTransFusionReport(id) {
+            this.$router.push(`/get-transfusion-report/${id}`);
+        },
+        addTransFusionReport(id) {
+            this.$router.push(`/transfusion-report/${id}`);
+        },
+        editTransFusionReport(id) {
+            this.$router.push(`/edit-transfusion-report/${id}`);
+        },
+        getApprove(id) {
+            this.$router.push(`/approve/${id}`);
+        },
+        addApprove(id) {
+            this.$router.push(`/add-approve/${id}`);
+        },
+        parseDate,
+        parseTime,
+        isUserApproved() {
+            for (let i = 0; i < this.userApprove.length; i++) {
+                if (this.userApprove[i].id && this.userApprove[i].id.toString() === this.userInfo.s_uid) {
+                    return true
+                }
+            }
+            return false;
         }
-    }
+    },
+    components: {
+        Icon
+    },
 };
 </script>
 
@@ -81,54 +121,90 @@ export default {
             </div>
             <div class="right">
                 <div v-if="userInfo" class="user-info">
-                    <p>{{ userInfo.title + " " + userInfo.firstName + " " + userInfo.lastName }}</p>
-                    <p>{{ userInfo.roleName }}</p>
+                    <p>{{ userInfo.name }}</p>
+                    <p>{{ userInfo.role }}</p>
                 </div>
                 <!-- <button v-if="userInfo" @click="logout">Logout</button> -->
             </div>
         </nav>
         <div class="container-md">
             <div class="card" style="border: 0px; justify-content: center; margin: 30px 0px;">
-                <p class="fontSize_header">
-                    ประวัติการรับเลือดทั้งหมด
-                </p>
+                <p class="fontSize_header">การเกิดปฏิกิริยาจากการรับเลือดทั้งหมด</p>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th @click="sortBy('date')">วันที่</th>
-                        <th @click="sortBy('time')">เวลา</th>
-                        <th @click="sortBy('bloodBagNum')">หมายเลขถุงเลือด</th>
-                        <th @click="sortBy('name')">ชื่อ-สกุล</th>
-                        <th @click="sortBy('HN')">HN</th>
-                        <th @click="sortBy('status')">สถานะ</th>
-                        <th @click="sortBy('transfusion')">Transfusion</th>
-                        <th @click="sortBy('reaction')">Transfusion reaction</th>
-                        <th @click="sortBy('approve')">Approve</th>
+                        <th @click="sortBy('date')">วันที่
+                            <i v-if="sortByField === 'date'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('time')">เวลา
+                            <i v-if="sortByField === 'time'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('bloodBagNum')">หมายเลขถุงเลือด
+                            <i v-if="sortByField === 'bloodBagNum'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('name')">ชื่อ-สกุล
+                            <i v-if="sortByField === 'name'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('HN')">HN
+                            <i v-if="sortByField === 'HN'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('status')">สถานะ
+                            <i v-if="sortByField === 'status'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('transfusion')">Transfusion
+                            <i v-if="sortByField === 'transfusion'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('reaction')">Transfusion reaction
+                            <i v-if="sortByField === 'reaction'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
+                        <th @click="sortBy('approve')">Approve
+                            <i v-if="sortByField === 'approve'"
+                                :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in displayedRows" :key="index">
-                        <td>{{ row.date }}</td>
-                        <td>{{ row.time }}</td>
-                        <td>{{ row.bloodBagNum }}</td>
-                        <td>{{ row.name }}</td>
-                        <td>{{ row.HN }}</td>
-                        <td v-if="row.status === 1" class="wait">รอ</td>
-                        <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
-                        <td v-else class="wait"> ไม่มีปฏิกิริยา</td>
+                        <td>{{ parseDate(row.dtm) }}</td>
+                        <td>{{ parseTime(row.dtm) }}</td>
+                        <td>{{ row.packid }}</td>
+                        <td>{{ row.ttl + " " + row.name + " " + row.lname }}</td>
+                        <td>{{ row.hn }}</td>
+                        <td v-if="row.approve === 2" class="done">สำเร็จ</td>
+                        <td v-else class="wait"> รอ</td>
 
-                        <td v-if="row.transfusion === 0" class="done">เพิ่ม</td>
-                        <td v-else> ฟอร์มนำส่งตรวจ</td>
+                        <td v-if="row.TRForm" @click="getTransFusionForm(row.idTR_Form)">
+                            ฟอร์มนำส่งตรวจ </td>
+                        <td v-else class="wait">ฟอร์มนำส่งตรวจ</td>
 
-                        <td v-if="row.reaction === 1" class="wait">รายงานการตรวจ</td>
-                        <td v-else-if="row.reaction === 2">รายงานการตรวจ</td>
-                        <td v-else>-</td>
-
-                        <td v-if="row.status === 1" class="wait">รอ</td>
-                        <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
-                        <td v-else>-</td>
-
+                        <td v-if="!row.TRReport" @click="addTransFusionReport(row.idTR_Form)">
+                            <div class="add">
+                                <Icon icon="material-symbols:note-add-outline" class="icon-add" />
+                                <p class="done">เพิ่มรายงาน</p>
+                            </div>
+                        </td>
+                        <td v-else-if="row.TRReport === 100" @click="editTransFusionReport(row.idTR_Report)">รายงานการตรวจ</td>
+                        <td v-else-if="!row.TRForm">-</td>
+                        <td v-else class="wait" @click="editTransFusionReport(row.idTR_Report)">รายงานการตรวจ</td>
+                        
+                        <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"
+                            @click="addApprove(row.idTR_Report)">
+                            <div class="add">
+                                <Icon icon="material-symbols:note-add-outline" class="icon-add" />
+                                <p class="done">เพิ่ม review</p>
+                            </div>
+                        </td>
+                        <td v-else-if="row.approve === 1" class="done" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
+                        <td v-else class="wait">รอ</td>
                     </tr>
                 </tbody>
             </table>
@@ -139,10 +215,52 @@ export default {
                     </p>
                 </div>
                 <div class="right">
-                    <button @click="goToFirstPage" :disabled="currentPage === 1">First</button>
-                    <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
-                    <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-                    <button @click="goToLastPage" :disabled="currentPage === totalPages">Last</button>
+                    <button @click="goToFirstPage">
+                        <Icon icon="bx:arrow-to-left" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === 1 ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
+                    <button @click="prevPage">
+                        <Icon icon="bx:left-arrow-alt" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === 1 ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
+                    <span>
+                        <button v-if="currentPage - 2 > 0" @click="goToPage(currentPage - 2)"
+                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
+                            {{ currentPage - 2 }}
+                        </button>
+                        <button v-if="(currentPage - 1) > 0" @click="prevPage"
+                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
+                            {{ currentPage - 1 }}
+                        </button>
+                        <button @click="goToPage(currentPage)" :style="{ fontWeight: 1000, color: 'black' }">
+                            {{ currentPage }}
+                        </button>
+                        <button v-if="currentPage < totalPages" @click="nextPage"
+                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
+                            {{ currentPage + 1 }}
+                        </button>
+                        <button v-if="currentPage + 1 < totalPages" @click="goToPage(currentPage + 1)"
+                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
+                            {{ currentPage + 2 }}
+                        </button>
+                    </span>
+
+                    <button @click="nextPage">
+                        <Icon icon="bx:right-arrow-alt" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === totalPages ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
+                    <button @click="goToLastPage">
+                        <Icon icon="bx:arrow-to-right" :style="{
+                            width: '150%', height: '100%',
+                            color: currentPage === totalPages ? '#9D9D9D' : 'orange'
+                        }" />
+                    </button>
                 </div>
             </div>
         </div>
@@ -158,7 +276,7 @@ export default {
 
 p {
     font-family: "IBM Plex Sans Thai";
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #4F4F4F;
     margin: 0%;
 }
@@ -169,10 +287,6 @@ p {
     font-weight: 700;
     color: black;
     display: contents;
-}
-
-.fontInfo {
-    font-size: 0.8rem;
 }
 
 .wait {
@@ -207,13 +321,23 @@ p {
     align-items: center;
 }
 
+.add {
+    display: flex;
+    align-items: center;
+    border: 0;
+}
+
+.add:hover {
+    cursor: pointer;
+}
+
 button {
     background-color: transparent;
     color: #4F4F4F;
     border: none;
     cursor: pointer;
     font-family: "IBM Plex Sans Thai";
-    font-size: 1rem;
+    font-size: 0.8rem;
     margin: 0%;
 }
 
@@ -253,5 +377,35 @@ th {
 .pagination button {
     margin-right: 5px;
     cursor: pointer;
+}
+
+.disabled .icon {
+    color: gray;
+    /* Color when button is disabled */
+}
+
+.active {
+    color: red;
+    /* Change color as needed */
+}
+
+.icon-add {
+    width: 15%;
+    height: 100%;
+    margin-right: 6px;
+    color: #008E76;
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
+    .icon-add {
+        width: 20%;
+    }
+}
+
+@media only screen and ((max-device-width: 768px) or (max-device-width: 810px)) {
+    .icon-add {
+        width: 27%;
+        margin-right: 3px;
+    }
 }
 </style>

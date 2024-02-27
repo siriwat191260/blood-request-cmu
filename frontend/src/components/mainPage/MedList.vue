@@ -1,6 +1,6 @@
 <script>
 import { Icon } from "@iconify/vue";
-import { parseDate,parseTime } from "../general/dateUtils"
+import { parseDate, parseTime } from "../general/dateUtils"
 export default {
     name: "MedList",
     props: {
@@ -8,7 +8,11 @@ export default {
         tableData: {
             type: Array,
             required: true
-        }
+        },
+        userApprove: {
+            type: Array,
+            required: true
+        },
     },
     data() {
         return {
@@ -54,6 +58,28 @@ export default {
                 this.sortByField = field;
                 this.sortDirection = 'asc';
             }
+            if (field === 'approve') {
+                valA = valA === null ? 0 : valA;
+                valB = valB === null ? 0 : valB;
+            }
+
+            if (typeof this.sortedRows[0][field] === 'string') {
+                this.sortedRows.sort((a, b) => {
+                    const valA = a[field].toLowerCase();
+                    const valB = b[field].toLowerCase();
+                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            } else {
+                this.sortedRows.sort((a, b) => {
+                    const valA = a[field];
+                    const valB = b[field];
+                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
         },
         nextPage() {
             if (this.currentPage < this.totalPages) {
@@ -77,8 +103,31 @@ export default {
         addTransFusionForm(id) {
             this.$router.push(`/transfusion-form/${id}`);
         },
+        getTransFusionForm(id) {
+            this.$router.push(`/get-transfusion-form/${id}`);
+        },
+        editTransFusionForm(id) {
+            this.$router.push(`/edit-transfusion-form/${id}`);
+        },
+        getTransFusionReport(id) {
+            this.$router.push(`/get-transfusion-report/${id}`);
+        },
+        getApprove(id) {
+            this.$router.push(`/approve/${id}`);
+        },
+        addApprove(id) {
+            this.$router.push(`/add-approve/${id}`);
+        },
         parseDate,
-        parseTime
+        parseTime,
+        isUserApproved() {
+            for (let i = 0; i < this.userApprove.length; i++) {
+                if (this.userApprove[i].id && this.userApprove[i].id.toString() === this.userInfo.s_uid) {
+                    return true
+                }
+            }
+            return false;
+        }
     },
     components: {
         Icon
@@ -94,8 +143,8 @@ export default {
             </div>
             <div class="right">
                 <div v-if="userInfo" class="user-info">
-                    <p>{{ userInfo.title + " " + userInfo.firstName + " " + userInfo.lastName }}</p>
-                    <p>{{ userInfo.roleName }}</p>
+                    <p>{{ userInfo.name }}</p>
+                    <p>{{ userInfo.role }}</p>
                 </div>
                 <!-- <button v-if="userInfo" @click="logout">Logout</button> -->
             </div>
@@ -111,20 +160,21 @@ export default {
                             <i v-if="sortByField === 'date'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('time')">เวลา
+                        <th @click="sortBy('time')">
+                            เวลา
                             <i v-if="sortByField === 'time'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('bloodBagNum')">หมายเลขถุงเลือด
-                            <i v-if="sortByField === 'bloodBagNum'"
+                        <th @click="sortBy('packid')">หมายเลขถุงเลือด
+                            <i v-if="sortByField === 'packid'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
                         <th @click="sortBy('name')">ชื่อ-สกุล
                             <i v-if="sortByField === 'name'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('HN')">HN
-                            <i v-if="sortByField === 'HN'"
+                        <th @click="sortBy('hn')">HN
+                            <i v-if="sortByField === 'hn'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
                         <th @click="sortBy('status')">สถานะ
@@ -152,26 +202,32 @@ export default {
                         <td>{{ row.packid }}</td>
                         <td>{{ row.ttl + " " + row.name + " " + row.lname }}</td>
                         <td>{{ row.hn }}</td>
-                        <td v-if="row.status === 1" class="wait">รอ</td>
-                        <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
-                        <td v-else class="wait"> ไม่มีปฏิกิริยา</td>
+                        <td v-if="!row.TRForm" class="wait">ไม่มีปฏิกิริยา</td>
+                        <td v-else-if="row.approve === 2" class="done">สำเร็จ</td>
+                        <td v-else class="wait">รอ</td>
 
                         <td v-if="!row.TRForm" @click="addTransFusionForm(row.blood_transf_id)">
                             <div class="add">
                                 <Icon icon="material-symbols:note-add-outline" class="icon-add" />
                                 <p class="done">เพิ่มฟอร์ม</p>
                             </div>
-
                         </td>
-                        <td v-else>ฟอร์มนำส่งตรวจ</td>
+                        <td v-else-if="row.TRForm === 100" @click="editTransFusionForm(row.idTR_Form)">ฟอร์มนำส่งตรวจ</td>
+                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait">ฟอร์มนำส่งตรวจ</td>
 
-                        <td v-if="row.reaction === 1" class="wait">รายงานการตรวจ</td>
-                        <td v-else-if="row.reaction === 2">รายงานการตรวจ</td>
-                        <td v-else>-</td>
+                        <td v-if="!row.TRForm" class="wait">-</td>
+                        <td v-else-if="row.TRReport === 100" @click="getTransFusionReport(row.idTR_Report)">รายงานการตรวจ</td>
+                        <td v-else class="wait">รายงานการตรวจ</td>
 
-                        <td v-if="row.status === 1" class="wait">รอ</td>
-                        <td v-else-if="row.status === 2" class="done">สำเร็จ</td>
-                        <td v-else>-</td>
+                        <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"
+                            @click="addApprove(row.idTR_Report)">
+                            <div class="add">
+                                <Icon icon="material-symbols:note-add-outline" class="icon-add" />
+                                <p class="done">เพิ่ม review</p>
+                            </div>
+                        </td>
+                        <td v-else-if="row.approve === 1" class="done" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
+                        <td v-else class="wait">รอ</td>
                     </tr>
                 </tbody>
             </table>
