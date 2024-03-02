@@ -224,7 +224,6 @@ $app->group('/trasfusion-form', function () use ($app) {
         $rs = $func->callMethod($p);
         return $rs;
     });
-
     $app->get('/getAllSignsAndSymptoms', function (Request $request, Response $response, $args) {
         $p = $args;
         $p['method'] = 'SignsAndSymptomsName';
@@ -474,6 +473,27 @@ $app->get('/get-transfusion-report/{id}', function (Request $request, Response $
     return $rs;
 });
 
+$app->post('/submitting_transfusion_form', function (Request $request, Response $response, $args) {
+        // Get the raw JSON data from the request body
+        $formData = $request->getBody()->getContents();
+
+        // Parse the JSON data into an associative array
+        $p = json_decode($formData, true);
+
+         // Check if JSON decoding was successful
+        if ($p === null) {
+            $response->getBody()->write(json_encode(['error' => 'Error decoding JSON data']));
+            return $response->withStatus(400);
+        }
+    $p['method'] = 'TRForm_Insert';
+    $p['controller_name'] = 'bloodbank';
+    $func = new Middleware(['controller' => $p['controller_name']]);
+    $func->response = $response;
+    $func->preCall($p);
+    $rs = $func->callMethod($p);
+    return $rs;  
+});
+
 $app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
     try {
         $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
@@ -481,7 +501,7 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         //Doctor ID : 1254,6523
         //BloodBank ID : 7895
         //Nurse ID : 451236
-        $idUser = "7895";
+        $idUser = "451236";
         $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
         // Prepare cURL request to get token
@@ -583,6 +603,29 @@ $app->get('/getListBloodTransIService', function (Request $request, Response $re
         $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
         return $response->withStatus(500);
     }
+});
+
+$app->put('/submitting_transfusion_form/{id}/update', function (Request $request, Response $response, $args) {
+    // Get the raw JSON data from the request body
+    $id = $args;
+    $formData = $request->getBody()->getContents();
+
+    // Parse the JSON data into an associative array
+    $p = json_decode($formData, true);
+    $p['id'] = $id;
+
+     // Check if JSON decoding was successful
+    if ($p === null) {
+        $response->getBody()->write(json_encode(['error' => 'Error decoding JSON data']));
+        return $response->withStatus(400);
+    }
+    $p['method'] = 'TRForm_Update';
+    $p['controller_name'] = 'bloodbank';
+    $func = new Middleware(['controller' => $p['controller_name']]);
+    $func->response = $response;
+    $func->preCall($p);
+    $rs = $func->callMethod($p);
+    return $rs;  
 });
 
 $app->run();

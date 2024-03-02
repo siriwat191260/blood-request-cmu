@@ -1,41 +1,50 @@
 <script>
 import { defineComponent } from "vue";
-import { ref, onBeforeUnmount } from "vue";
-import DropDownSVGVue from "../general/DropDownSVG.vue";
 import { Icon } from "@iconify/vue";
 import { useCurrentTime } from "../general/useCurrentTime";
-import { parseDate, parseTime, currentDate, currentTime } from "../general/dateUtils";
+import {
+  parseDate,
+  parseTime,
+  currentDate,
+  currentTime,
+} from "../general/dateUtils";
 import axios from "axios";
 import { watch } from "vue";
-import $ from "jquery";
-import "jquery-autocomplete";
+
+
 
 export default defineComponent({
   name: "TransfusionForm",
   data() {
     return {
+      // TR_Form Section
       formData: {
-        // TR_Form Section
-        firstName: "",
-        lastName: "",
-        HN: "",
-        TXN: "",
-        pt_type: "",
-        createdDate: "" || new Date(),
-        ward: "",
-        phoneNumber: "",
-        diagnosis: "",
-        primaryPhysicianName: "",
-        bloodGroup_Patient: "",
-        Rh_Patient: "",
-        blood_component: "",
-        bloodGroup_Donor: "",
-        Rh_Donor: "",
-        bloodBagNumber: "",
-        volume: "",
-        medicationHistory: "",
-        isReactionHistory: "",
-        reactionCategory: "",
+        // Patient Info
+        PatientInfo: {
+          title: "",
+          firstName: "",
+          lastName: "",
+          HN: "",
+          //ค่าอะไร ? id?
+          TXN: "",
+          //ค่าอะไร ?
+          pt_type: "",
+          createdDate: "" || new Date(),
+          ward: "",
+          phoneNumber: "",
+          diagnosis: "",
+          primaryPhysicianName: "",
+          bloodGroup_Patient: "",
+          Rh_Patient: "",
+          blood_component: "",
+          bloodGroup_Donor: "",
+          Rh_Donor: "",
+          bloodBagNumber: "",
+          volume: "",
+          medicationHistory: "",
+          isReactionHistory: "",
+          reactionCategory: "",
+        },
         //BloodTransfusionTest
         BloodTransfusionTest: {
           isCorrectPatientName: "",
@@ -57,55 +66,46 @@ export default defineComponent({
           afterReactionBP: "",
           afterReactionPulse: "",
         },
+        //SignsAndSymptoms
         SignsAndSymptomsObject: {
-          SignsAndSymptomsSelected: [],
-          Others: "",
+          idSignsAndSymptomsName: [],
+          Other: "",
         },
+        //SubmittingTest
         SubmittingTest: {
-          isBloodSample: 0,
-          isBloodBagReaction: 0,
+          isBloodSample: "",
+          isBloodBagReaction: "",
           nurseName: "",
           nurseDateTime: "",
           physicianName: "",
           physicianDateTime: "",
         },
-        DetailRecordIn24Hrs: [],
+        DetailRecordIn24Hrs: {},
       },
       placeholderOption: { label: "กรุณาเลือกข้อมูล" },
-      selectOptionsBloodGroup: ["A", "B", "O", "AB"],
-      selectOptionsRh: ["Rh+", "Rh-"],
-      selectOptionsBloodComponent: [
-        "Red Blood Cell",
-        "Platelet ",
-        "Plasma ",
-        "Cryoprecipitate ",
-      ],
       signsAndSymptomsOptions: [],
       reactionCategory: [],
       //config this for change baseURL path
       baseURL: "http://localhost:8000/",
       blood_tranf_detail: {},
-      searchTerm: "",
-      items: ["siriwat", "siri"],
       userDoctor: {},
       userNurse: {},
+      //toggle check find name Doctor, Nurse
       showResultsDoctor: false,
       showResultsNurse: false,
+      //BP.
       beforeReactionBPSectionOne: "",
       beforeReactionBPSectionTwo: "",
       afterReactionBPSectionOne: "",
       afterReactionBPSectionTwo: "",
-      beforeReactionTimeSectionOne: "",
-      beforeReactionTimeSectionTwo: "",
-      afterReactionTimeSectionOne: "",
-      afterReactionTimeSectionTwo: "",
-      nurseDate: new Date().toISOString().split('T')[0],
+      //nurse doctor DateTime
+      nurseDate: new Date().toISOString().split("T")[0],
       nurseTime: this.parseTime(new Date()),
-      physicianDate: new Date().toISOString().split('T')[0],
+      physicianDate: new Date().toISOString().split("T")[0],
       physicianTime: this.parseTime(new Date()),
-      SignsAndSymptomsOthersObject: {
-        isOthers : ""
-      }
+      SignsAndSymptomsOtherObject: {
+        isOther: "",
+      },
     };
   },
   async mounted() {
@@ -155,20 +155,30 @@ export default defineComponent({
     },
     inputWidth() {
       return (category) => {
-      // Calculate width based on input values
-      if (category === "beforeTime" && this.beforeReactionTimeSectionOne && this.beforeReactionTimeSectionTwo) {
-        return '25%'; // Set the width to 50% if both inputs are completed
-      } else if(category === "beforeBP" && this.beforeReactionBPSectionOne && this.beforeReactionBPSectionTwo){
-        return '25%';
-      } else if(category === "afterTime" && this.afterReactionTimeSectionOne && this.afterReactionTimeSectionTwo){
-        return '25%';
-      } else if(category === "afterBP" && this.afterReactionBPSectionOne && this.afterReactionBPSectionTwo){
-        return '25%';
-      } else {
-        return '100%'; // Set the width to 100% initially or if only one input is completed
-      }
-      }
-    }
+        // Calculate width based on input values
+        if (
+          category === "beforeBP" &&
+          this.beforeReactionBPSectionOne &&
+          this.beforeReactionBPSectionTwo
+        ) {
+          return "25%";
+        } else if (
+          category === "afterTime" &&
+          this.afterReactionTimeSectionOne &&
+          this.afterReactionTimeSectionTwo
+        ) {
+          return "25%";
+        } else if (
+          category === "afterBP" &&
+          this.afterReactionBPSectionOne &&
+          this.afterReactionBPSectionTwo
+        ) {
+          return "25%";
+        } else {
+          return "100%"; // Set the width to 100% initially or if only one input is completed
+        }
+      };
+    },
   },
   methods: {
     async fetchSignsAndSymptoms() {
@@ -189,46 +199,73 @@ export default defineComponent({
         /* console.log(response.data); */
         this.reactionCategory = response.data;
       } catch (error) {
-        console.error("Error fetching Signs and Symptoms data:", error);
+        console.error("Error fetching Reaction Category data:", error);
       }
     },
     async fetchBlood_transf_detail(blood_transf_id) {
       try {
-        const response = await axios.post(this.baseURL + "trasfusion-form/getBloodTransfDetail",{ "blood_transf_id" : blood_transf_id });
+        const response = await axios.post(
+          this.baseURL + "trasfusion-form/getBloodTransfDetail",
+          { blood_transf_id: blood_transf_id }
+        );
         this.blood_tranf_detail = response.data;
+        this.formData.PatientInfo.title = response.data.ttl;
+        this.formData.PatientInfo.firstName = response.data.name;
+        this.formData.PatientInfo.lastName = response.data.lname;
+        this.formData.PatientInfo.HN = response.data.hn;
+        this.formData.PatientInfo.TXN = response.data.blood_transf_id;
+        this.formData.PatientInfo.ward = response.data.ward;
+        this.formData.PatientInfo.phoneNumber = response.data.tell;
+        this.formData.PatientInfo.diagnosis = response.data.diag;
+        this.formData.PatientInfo.primaryPhysicianName = response.data.doctor;
+        this.formData.PatientInfo.bloodGroup_Patient = response.data.blood_grp;
+        this.formData.PatientInfo.Rh_Patient = response.data.blood_rh;
+        this.formData.PatientInfo.blood_component = response.data.product;
+        this.formData.PatientInfo.bloodGroup_Donor =
+          response.data.pack_blood_grp;
+        this.formData.PatientInfo.Rh_Donor = response.data.pack_blood_rh;
+        this.formData.PatientInfo.bloodBagNumber = response.data.packid;
+        this.formData.PatientInfo.volume = response.data.vol;
+        this.formData.DetailRecordIn24Hrs = response.data.list_blood_transf24;
+        //create variable for input radio isReaction
+        this.formData.DetailRecordIn24Hrs.map((data) => {
+          data.isReaction = "";
+        });
+        console.log(
+          "formData.DetailRecordIn24Hrs :",
+          this.formData.DetailRecordIn24Hrs
+        );
       } catch (error) {
         console.error("Error fetching Blood Transfusion Detail data:", error);
       }
     },
     async fetchUserDoctor() {
       try {
-        const response = await axios.get(this.baseURL + "trasfusion-form/getUserDoctor");
+        const response = await axios.get(
+          this.baseURL + "trasfusion-form/getUserDoctor"
+        );
         /* console.log(response.data); */
         this.userDoctor = response.data;
       } catch (error) {
-        console.error("Error fetching Signs and Symptoms data:", error);
+        console.error("Error fetching User Doctor data:", error);
       }
     },
     async fetchUserNurse() {
       try {
-        const response = await axios.get(this.baseURL + "trasfusion-form/getUserNurse");
+        const response = await axios.get(
+          this.baseURL + "trasfusion-form/getUserNurse"
+        );
         /* console.log(response.data); */
         this.userNurse = response.data;
       } catch (error) {
-        console.error("Error fetching Signs and Symptoms data:", error);
+        console.error("Error fetching User Nurse data:", error);
       }
-    },
-    restrictInput() {
-      // Remove any non-numeric characters
-      this.beforeReactionBPSectionOne = this.beforeReactionBPSectionOne.replace(
-        /[^0-9]/g,
-        ""
-      );
     },
     currentDate,
     currentTime,
     parseDate,
     parseTime,
+    //find name of doctor and nurse
     handleInput(role) {
       console.log("role :", role);
       if (role === "doctor") {
@@ -245,30 +282,108 @@ export default defineComponent({
       this.formData.SubmittingTest.nurseName = item;
       this.showResultsNurse = false;
     },
-    handleSubmit() {
-      // Handle form submission logic here
-      // You can access form data and perform any validation or API calls
-      // If there are errors, you can log them or take appropriate actions
-      this.formData.SubmittingTest.isBloodSample =
-        this.formData.SubmittingTest.isBloodSample === true ? 1 : 0;
-      this.formData.SubmittingTest.isBloodBagReaction =
-        this.formData.SubmittingTest.isBloodBagReaction === true ? 1 : 0;
-      console.log("Form submitted! : ", this.formData);
-      /* const cleaningForm = {
-        currentTime :
-      } */
+    // config this path for hostipal
+    // go back to previous page 
+    navigateToPreviousPage(){
+      this.$router.push(`/mainBloodChecklist`);
+      console.log("click")
+    },
+    //cleansing form
+    async handleSubmit(formData) {
+      try{
+        const { PatientInfo, BloodTransfusionTest, VitalSigns, SignsAndSymptomsObject, SubmittingTest, DetailRecordIn24Hrs } = formData;
+        const beforeReactionBPSectionOne = this.beforeReactionBPSectionOne;
+        const beforeReactionBPSectionTwo = this.beforeReactionBPSectionTwo;
+        const afterReactionBPSectionOne = this.afterReactionBPSectionOne;
+        const afterReactionBPSectionTwo = this.afterReactionBPSectionTwo;
+        // Nurse DateTime
+        const nurseDateTime = new Date(`${this.nurseDate} ${this.nurseTime}`);
+
+        // Physician DateTime
+        const physicianDateTime = new Date(`${this.physicianDate} ${this.physicianTime}`);
+
+      //cleansing form
+      const cleasingFormData = {
+        PatientInfo: {
+          title: PatientInfo && PatientInfo.title ? PatientInfo.title : null,
+          firstName: PatientInfo && PatientInfo.firstName ? PatientInfo.firstName : null,
+          lastName: PatientInfo && PatientInfo.lastName ? PatientInfo.lastName : null,
+          HN: PatientInfo && PatientInfo.HN ? PatientInfo.HN : null,
+          //ค่าอะไร ? id?
+          TXN: PatientInfo && PatientInfo.TXN ? PatientInfo.TXN : null,
+          //ค่าอะไร ?
+          /* pt_type: PatientInfo && PatientInfo ? PatientInfo.: null, */
+          createdDate: new Date(),
+          ward: PatientInfo && PatientInfo.ward ? PatientInfo.ward : null,
+          phoneNumber: PatientInfo && PatientInfo.phoneNumber ? PatientInfo.phoneNumber : null,
+          diagnosis: PatientInfo && PatientInfo.diagnosis ? PatientInfo.diagnosis : null,
+          primaryPhysicianName: PatientInfo && PatientInfo.primaryPhysicianName ? PatientInfo.primaryPhysicianName : null,
+          bloodGroup_Patient: PatientInfo && PatientInfo.bloodGroup_Patient ? PatientInfo.bloodGroup_Patient : null,
+          Rh_Patient: PatientInfo && PatientInfo.Rh_Patient ? PatientInfo.Rh_Patient : null,
+          blood_component: PatientInfo && PatientInfo.blood_component ? PatientInfo.blood_component : null,
+          bloodGroup_Donor: PatientInfo && PatientInfo.bloodGroup_Donor ? PatientInfo.bloodGroup_Donor : null,
+          Rh_Donor: PatientInfo && PatientInfo.Rh_Donor ? PatientInfo.Rh_Donor : null,
+          bloodBagNumber: PatientInfo && PatientInfo.bloodBagNumber ? PatientInfo.bloodBagNumber : null,
+          volume: PatientInfo && PatientInfo.volume ? PatientInfo.volume : null,
+          medicationHistory: PatientInfo && PatientInfo.medicationHistory ? PatientInfo.medicationHistory : null,
+          isReactionHistory: PatientInfo && PatientInfo.isReactionHistory ? PatientInfo.isReactionHistory : null,
+          reactionCategory: PatientInfo && PatientInfo.reactionCategory ? PatientInfo.reactionCategory : null,
+        },
+        BloodTransfusionTest: {
+          isCorrectPatientName: BloodTransfusionTest && BloodTransfusionTest.isCorrectPatientName ? BloodTransfusionTest.isCorrectPatientName : "",
+          isWithin24hrsFever: BloodTransfusionTest && BloodTransfusionTest.isWithin24hrsFever ? BloodTransfusionTest.isWithin24hrsFever : "",
+          isCorrectBloodComponent: BloodTransfusionTest && BloodTransfusionTest.isCorrectBloodComponent ? BloodTransfusionTest.isCorrectBloodComponent : "",
+          isCorrectBloodTransfusionRec: BloodTransfusionTest && BloodTransfusionTest.isCorrectBloodTransfusionRec ? BloodTransfusionTest.isCorrectBloodTransfusionRec : "",
+          isCorrectBloodBagNumber: BloodTransfusionTest && BloodTransfusionTest.isCorrectBloodBagNumber ? BloodTransfusionTest.isCorrectBloodBagNumber : "",
+          isCorrectBloodGroupDonor: BloodTransfusionTest && BloodTransfusionTest.isCorrectBloodGroupDonor ? BloodTransfusionTest.isCorrectBloodGroupDonor : "",
+          isCorrectBloodGroupPatient: BloodTransfusionTest && BloodTransfusionTest.isCorrectBloodGroupPatient ? BloodTransfusionTest.isCorrectBloodGroupPatient : "",
+        },
+        VitalSigns: {
+          beforeReactionTime: VitalSigns && VitalSigns.beforeReactionTime ? VitalSigns.beforeReactionTime : "",
+          beforeReactionTemp: VitalSigns && VitalSigns.beforeReactionTemp ? VitalSigns.beforeReactionTemp : "",
+          beforeReactionBP: VitalSigns && beforeReactionBPSectionOne && beforeReactionBPSectionTwo ? `${beforeReactionBPSectionOne}/${beforeReactionBPSectionTwo}` : "",
+          beforeReactionPulse: VitalSigns && VitalSigns.beforeReactionPulse ? VitalSigns.beforeReactionPulse : "",
+          afterReactionTime: VitalSigns && VitalSigns.afterReactionTime ? VitalSigns.afterReactionTime : "",
+          afterReactionTemp: VitalSigns && VitalSigns.afterReactionTemp ? VitalSigns.afterReactionTemp : "",
+          afterReactionBP: VitalSigns && afterReactionBPSectionOne && afterReactionBPSectionTwo ? `${afterReactionBPSectionOne}/${afterReactionBPSectionTwo}` : "",
+          afterReactionPulse: VitalSigns && VitalSigns.afterReactionPulse ? VitalSigns.afterReactionPulse : "",
+        },
+        SignsAndSymptomsObject: {
+          idSignsAndSymptomsName: SignsAndSymptomsObject && SignsAndSymptomsObject.idSignsAndSymptomsName ? SignsAndSymptomsObject.idSignsAndSymptomsName : [],
+          Other: SignsAndSymptomsObject && SignsAndSymptomsObject.Other ? SignsAndSymptomsObject.Other : null,
+        },
+        SubmittingTest: {
+          isBloodSample: SubmittingTest && SubmittingTest.isBloodSample === true ? 1 : SubmittingTest.isBloodSample === false ? 0 : null,
+          isBloodBagReaction: SubmittingTest && SubmittingTest.isBloodBagReaction === true ? 1 : SubmittingTest.isBloodSample === false ? 0 : null,
+          nurseName: SubmittingTest && SubmittingTest.nurseName ? SubmittingTest.nurseName : null,
+          nurseDateTime: SubmittingTest && nurseDateTime ? nurseDateTime : null,
+          physicianName:  SubmittingTest && SubmittingTest.physicianName ? SubmittingTest.physicianName : null,
+          physicianDateTime: SubmittingTest && physicianDateTime ? physicianDateTime : null,
+        },
+        DetailRecordIn24Hrs : DetailRecordIn24Hrs ? DetailRecordIn24Hrs : {}
+      }
+      
+      console.log("Form submitted! : ", formData);
+      console.log("cleasingFormData submitted! : ", cleasingFormData);
+      const response = await axios.post(
+          this.baseURL + "submitting_transfusion_form",
+          { formData: cleasingFormData }
+        );
+      console.log("Form submitted successfully!", response.data);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        // Handle error if necessary
+      }
     },
   },
   watch: {
-    'SignsAndSymptomsOthersObject.isOthers': function(newVal, oldVal) {
-      if( newVal !== 1 ){
-          this.formData.SignsAndSymptomsObject.Others  = "";
+    "SignsAndSymptomsOtherObject.isOther": function (newVal, oldVal) {
+      if (newVal !== 1) {
+        this.formData.SignsAndSymptomsObject.Other = "";
       }
-      
-    }
+    },
   },
   components: {
-    DropDownSVGVue,
     Icon,
   },
 });
@@ -278,7 +393,7 @@ export default defineComponent({
         <h1>HELLO WORLD</h1>
     </div> -->
   <div class="container-md">
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit(formData)">
       <div class="card" style="border: 0px; justify-content: center">
         <!-- header -->
         <div class="row">
@@ -297,7 +412,7 @@ export default defineComponent({
                 <!-- HN value -->
                 <p class="fontInsideBox">
                   <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
-                  &nbsp; {{ blood_tranf_detail.hn }}
+                  &nbsp; {{ formData.PatientInfo.HN }}
                 </p>
               </div>
             </div>
@@ -312,7 +427,11 @@ export default defineComponent({
                     <i class="fa-regular fa-id-card" style="color: #00bfa5"></i>
                     &nbsp;
                     {{
-                      blood_tranf_detail.name + " " + blood_tranf_detail.lname
+                      formData.PatientInfo.title +
+                      " " +
+                      formData.PatientInfo.firstName +
+                      " " +
+                      formData.PatientInfo.lastName
                     }}
                   </p>
                 </div>
@@ -388,6 +507,7 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
+                      <!--value is "currentTime()" -->
                       <input
                         class="form-control typing-box-style"
                         style="
@@ -397,7 +517,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        :value="currentTime()"
+                        :value="12"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -429,7 +549,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        :value="blood_tranf_detail.ward"
+                        :value="formData.PatientInfo.ward"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -461,7 +581,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        :value="blood_tranf_detail.tell"
+                        :value="formData.PatientInfo.phoneNumber"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -490,7 +610,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.diag"
+                    :value="formData.PatientInfo.diagnosis"
                     aria-label="default input example"
                     readonly
                   />
@@ -516,7 +636,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.doctor"
+                    :value="formData.PatientInfo.primaryPhysicianName"
                     aria-label="default input example"
                     readonly
                   />
@@ -543,7 +663,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.blood_grp"
+                    :value="formData.PatientInfo.bloodGroup_Patient"
                     aria-label="default input example"
                     readonly
                   />
@@ -570,7 +690,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.blood_rh"
+                    :value="formData.PatientInfo.Rh_Patient"
                     aria-label="default input example"
                     readonly
                   />
@@ -597,7 +717,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.product"
+                    :value="formData.PatientInfo.blood_component"
                     aria-label="default input example"
                     readonly
                   />
@@ -624,7 +744,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.pack_blood_grp"
+                    :value="formData.PatientInfo.bloodGroup_Donor"
                     aria-label="default input example"
                     readonly
                   />
@@ -651,7 +771,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.pack_blood_rh"
+                    :value="formData.PatientInfo.Rh_Donor"
                     aria-label="default input example"
                     readonly
                   />
@@ -679,7 +799,7 @@ export default defineComponent({
                       padding-bottom: 0px;
                     "
                     type="text"
-                    :value="blood_tranf_detail.packid"
+                    :value="formData.PatientInfo.bloodBagNumber"
                     aria-label="default input example"
                     readonly
                   />
@@ -706,7 +826,7 @@ export default defineComponent({
                         padding-bottom: 0px;
                       "
                       type="text"
-                      :value="blood_tranf_detail.vol"
+                      :value="formData.PatientInfo.volume"
                       aria-label="default input example"
                     />
                     <span
@@ -750,7 +870,7 @@ export default defineComponent({
                     type="text"
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.medicationHistory"
+                    v-model="formData.PatientInfo.medicationHistory"
                   />
                 </div>
               </div>
@@ -775,13 +895,13 @@ export default defineComponent({
                       class="form-check-input"
                       type="radio"
                       name="isReactionHistory"
-                      id="inlineRadio1"
+                      id="isReactionHistory1"
                       value="0"
-                      v-model="formData.BloodTransfusionTest.isReactionHistory"
+                      v-model="formData.PatientInfo.isReactionHistory"
                     />
                     <label
                       class="form-check-label"
-                      for="inlineRadio1"
+                      for="isReactionHistory1"
                       style="margin-top: 2px"
                       >ไม่มี</label
                     >
@@ -791,13 +911,13 @@ export default defineComponent({
                       class="form-check-input"
                       type="radio"
                       name="isReactionHistory"
-                      id="inlineRadio2"
+                      id="isReactionHistory2"
                       value="1"
-                      v-model="formData.BloodTransfusionTest.isReactionHistory"
+                      v-model="formData.PatientInfo.isReactionHistory"
                     />
                     <label
                       class="form-check-label"
-                      for="inlineRadio2"
+                      for="isReactionHistory2"
                       style="margin-top: 2px"
                       >มี</label
                     >
@@ -806,7 +926,7 @@ export default defineComponent({
               </div>
             </div>
             <!-- ชนิดของปฏิกิริยา -->
-            <div
+            <div v-if="formData.PatientInfo.isReactionHistory === '1'"
               class="col-md-7 size-col-7point5 mt16 size-col-57w vertical-style-100w"
             >
               <div class="card-box-info-row-component-style">
@@ -828,7 +948,7 @@ export default defineComponent({
                     type="text"
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
-                    v-model="formData.reactionCategory"
+                    v-model="formData.PatientInfo.reactionCategory"
                   />
                 </div>
               </div>
@@ -877,7 +997,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectPatientName"
-                        id="inlineRadio1"
+                        id="isCorrectPatientName1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectPatientName
@@ -885,7 +1005,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isCorrectPatientName1"
                         style="margin-top: 2px"
                         >ถูกต้อง</label
                       >
@@ -898,7 +1018,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectPatientName"
-                        id="inlineRadio2"
+                        id="isCorrectPatientName2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectPatientName
@@ -906,7 +1026,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isCorrectPatientName2"
                         style="margin-top: 2px"
                         >ไม่ถูกต้อง</label
                       >
@@ -945,7 +1065,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isWithin24hrsFever"
-                        id="inlineRadio1"
+                        id="isWithin24hrsFever1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
@@ -953,7 +1073,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isWithin24hrsFever1"
                         style="margin-top: 2px"
                         >มีไข้</label
                       >
@@ -966,7 +1086,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isWithin24hrsFever"
-                        id="inlineRadio2"
+                        id="isWithin24hrsFever2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
@@ -974,7 +1094,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isWithin24hrsFever2"
                         style="margin-top: 2px"
                         >ไม่มีไข้</label
                       >
@@ -1015,7 +1135,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodComponent"
-                        id="inlineRadio1"
+                        id="isCorrectBloodComponent1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
@@ -1023,7 +1143,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isCorrectBloodComponent1"
                         style="margin-top: 2px"
                         >ถูกต้อง</label
                       >
@@ -1036,7 +1156,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodComponent"
-                        id="inlineRadio2"
+                        id="isCorrectBloodComponent2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
@@ -1044,7 +1164,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isCorrectBloodComponent2"
                         style="margin-top: 2px"
                         >ไม่ถูกต้อง</label
                       >
@@ -1083,7 +1203,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodTransfusionRec"
-                        id="inlineRadio1"
+                        id="isCorrectBloodTransfusionRec1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest
@@ -1092,7 +1212,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isCorrectBloodTransfusionRec1"
                         style="margin-top: 2px"
                         >ถูกต้อง</label
                       >
@@ -1105,7 +1225,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodTransfusionRec"
-                        id="inlineRadio2"
+                        id="isCorrectBloodTransfusionRec2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest
@@ -1114,7 +1234,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isCorrectBloodTransfusionRec2"
                         style="margin-top: 2px"
                         >ไม่ถูกต้อง</label
                       >
@@ -1155,7 +1275,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodBagNumber"
-                        id="inlineRadio1"
+                        id="isCorrectBloodBagNumber1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
@@ -1163,7 +1283,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isCorrectBloodBagNumber1"
                         style="margin-top: 2px"
                         >ถูกต้อง</label
                       >
@@ -1176,7 +1296,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodBagNumber"
-                        id="inlineRadio2"
+                        id="isCorrectBloodBagNumber2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
@@ -1184,7 +1304,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isCorrectBloodBagNumber2"
                         style="margin-top: 2px"
                         >ไม่ถูกต้อง</label
                       >
@@ -1223,7 +1343,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodGroupDonor"
-                        id="inlineRadio1"
+                        id="isCorrectBloodGroupDonor1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
@@ -1231,7 +1351,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isCorrectBloodGroupDonor1"
                         style="margin-top: 2px"
                         >ถูกต้อง</label
                       >
@@ -1244,7 +1364,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodGroupDonor"
-                        id="inlineRadio2"
+                        id="isCorrectBloodGroupDonor2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
@@ -1252,7 +1372,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isCorrectBloodGroupDonor2"
                         style="margin-top: 2px"
                         >ไม่ถูกต้อง</label
                       >
@@ -1293,7 +1413,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodGroupPatient"
-                        id="inlineRadio1"
+                        id="isCorrectBloodGroupPatient1"
                         value="1"
                         v-model="
                           formData.BloodTransfusionTest
@@ -1302,7 +1422,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio1"
+                        for="isCorrectBloodGroupPatient1"
                         style="margin-top: 2px"
                         >ถูกต้อง</label
                       >
@@ -1315,7 +1435,7 @@ export default defineComponent({
                         class="form-check-input"
                         type="radio"
                         name="isCorrectBloodGroupPatient"
-                        id="inlineRadio2"
+                        id="isCorrectBloodGroupPatient2"
                         value="0"
                         v-model="
                           formData.BloodTransfusionTest
@@ -1324,7 +1444,7 @@ export default defineComponent({
                       />
                       <label
                         class="form-check-label"
-                        for="inlineRadio2"
+                        for="isCorrectBloodGroupPatient2"
                         style="margin-top: 2px"
                         >ไม่ถูกต้อง</label
                       >
@@ -1418,7 +1538,8 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input class="form-control typing-box-style"
+                      <input
+                        class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
@@ -1428,7 +1549,7 @@ export default defineComponent({
                         type="time"
                         v-model="formData.VitalSigns.beforeReactionTime"
                         aria-label="readonly input example"
-                        >
+                      />
                     </div>
                   </div>
                 </div>
@@ -1503,12 +1624,13 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('beforeBP') }"
-                      type="text"
+                      type="number"
+                      pattern="[0-9]*"
+                      onkeypress="return event.charCode != 45"
+                      min="0"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
-                      required
                       v-model="beforeReactionBPSectionOne"
-                      @input="restrictInput"
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1522,12 +1644,13 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('beforeBP') }"
-                      type="text"
+                      type="number"
+                      pattern="[0-9]*"
+                      onkeypress="return event.charCode != 45"
+                      min="0"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
-                      required
                       v-model="beforeReactionBPSectionTwo"
-                      @input="restrictInput"
                     />
                   </div>
                 </div>
@@ -1641,7 +1764,8 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input class="form-control typing-box-style"
+                      <input
+                        class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
@@ -1651,7 +1775,7 @@ export default defineComponent({
                         type="time"
                         v-model="formData.VitalSigns.afterReactionTime"
                         aria-label="readonly input example"
-                        >
+                      />
                     </div>
                   </div>
                 </div>
@@ -1726,12 +1850,13 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('afterBP') }"
-                      type="text"
+                      type="number"
+                      pattern="[0-9]*"
+                      onkeypress="return event.charCode != 45"
+                      min="0"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
-                      required
                       v-model="afterReactionBPSectionOne"
-                      @input="restrictInput"
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1745,12 +1870,13 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('afterBP') }"
-                      type="text"
+                      type="number"
+                      pattern="[0-9]*"
+                      onkeypress="return event.charCode != 45"
+                      min="0"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
-                      required
                       v-model="afterReactionBPSectionTwo"
-                      @input="restrictInput"
                     />
                   </div>
                 </div>
@@ -1798,7 +1924,7 @@ export default defineComponent({
             </p>
           </div>
           <!-- Signs and Symptoms Name-->
-          <div  v-if="signsAndSymptomsOptions !== null" class="row">
+          <div v-if="signsAndSymptomsOptions !== null" class="row">
             <div
               class="col-md-4"
               v-for="(SignsAndSymptoms, index) in signsAndSymptomsOptions"
@@ -1816,22 +1942,27 @@ export default defineComponent({
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="'inlineCheckbox' + index"
+                    :id="'inlineCheckbox' + index"
                     :value="SignsAndSymptoms.idSignsAndSymtomsName"
                     v-model="
-                      formData.SignsAndSymptomsObject.SignsAndSymptomsSelected
+                      formData.SignsAndSymptomsObject.idSignsAndSymptomsName
                     "
                   />
                   <label
                     style="margin-top: 2px"
                     class="form-check-label"
-                    for="'inlineCheckbox' + index"
+                    :for="'inlineCheckbox' + index"
                     >{{ SignsAndSymptoms.name }}</label
                   >
                 </div>
               </div>
               <div
-                v-if="index === signsAndSymptomsOptions.length - 1 && formData.SignsAndSymptomsObject.SignsAndSymptomsSelected.includes(SignsAndSymptoms.idSignsAndSymtomsName)" 
+                v-if="
+                  index === signsAndSymptomsOptions.length - 1 &&
+                  formData.SignsAndSymptomsObject.idSignsAndSymptomsName.includes(
+                    SignsAndSymptoms.idSignsAndSymtomsName
+                  )
+                "
                 style="width: 100%"
               >
                 <div
@@ -1851,7 +1982,7 @@ export default defineComponent({
                       type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
-                      v-model="formData.SignsAndSymptomsObject.Others"
+                      v-model="formData.SignsAndSymptomsObject.Other"
                     />
                   </div>
                 </div>
@@ -1894,9 +2025,7 @@ export default defineComponent({
             <div class="accordion mt16" id="accordionPanelsStayOpenExample">
               <div
                 class="accordion-item"
-                v-for="(
-                  blood_transf24, index
-                ) in blood_tranf_detail.list_blood_transf24"
+                v-for="(blood_transf24, index) in formData.DetailRecordIn24Hrs"
                 :key="index"
               >
                 <h2
@@ -2187,21 +2316,23 @@ export default defineComponent({
                             style="
                               display: block;
                               margin-left: 8px;
-                              margin-top: 18px;
+                              margin-top: 22px;
                             "
                           >
                             <div class="form-check form-check-inline">
                               <input
                                 class="form-check-input"
                                 type="radio"
-                                name="history_reaction_transfusion"
-                                id="inlineRadio1"
+                                :name="'DetailRecordIn24Hrs_isReaction_0_' + index"
+                                :id="'DetailRecordIn24Hrs_isReaction_0_' + index"
                                 value="0"
-                                v-model="formData.isReactionHistory"
+                                v-model="
+                                  formData.DetailRecordIn24Hrs[index].isReaction
+                                "
                               />
                               <label
                                 class="form-check-label"
-                                for="inlineRadio1"
+                                :for="'DetailRecordIn24Hrs_isReaction_0_' + index"
                                 style="margin-top: 2px"
                                 >ไม่มี</label
                               >
@@ -2210,14 +2341,16 @@ export default defineComponent({
                               <input
                                 class="form-check-input"
                                 type="radio"
-                                name="history_reaction_transfusion"
-                                id="inlineRadio2"
+                                :name="'DetailRecordIn24Hrs_isReaction_1_' + index"
+                                :id="'DetailRecordIn24Hrs_isReaction_1_' + index"
                                 value="1"
-                                v-model="formData.isReactionHistory"
+                                v-model="
+                                  formData.DetailRecordIn24Hrs[index].isReaction
+                                "
                               />
                               <label
                                 class="form-check-label"
-                                for="inlineRadio2"
+                                :for="'DetailRecordIn24Hrs_isReaction_1_' + index"
                                 style="margin-top: 2px"
                                 >มี</label
                               >
@@ -2244,7 +2377,7 @@ export default defineComponent({
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="inlineCheckbox1"
+                    id="isBloodSample1"
                     :value="formData.SubmittingTest.isBloodSample"
                     v-model="formData.SubmittingTest.isBloodSample"
                     :checked="formData.SubmittingTest.isBloodSample !== 0"
@@ -2252,7 +2385,7 @@ export default defineComponent({
                   <label
                     style="margin-top: 2px; margin-left: 8px"
                     class="form-check-label"
-                    for="inlineCheckbox1"
+                    for="isBloodSample1"
                     >ส่งตัวอย่างเลือดผู้ป่วยหลังจากเกิดปฏิกิริยา (EDTA blood 6
                     ml.)</label
                   >
@@ -2266,7 +2399,7 @@ export default defineComponent({
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="inlineCheckbox1"
+                    id="isBloodBagReaction2"
                     :value="formData.SubmittingTest.isBloodBagReaction"
                     v-model="formData.SubmittingTest.isBloodBagReaction"
                     :checked="formData.SubmittingTest.isBloodBagReaction !== 0"
@@ -2274,7 +2407,7 @@ export default defineComponent({
                   <label
                     style="margin-top: 2px; margin-left: 8px"
                     class="form-check-label"
-                    for="inlineCheckbox1"
+                    for="isBloodBagReaction2"
                     >ส่งถุงเลือดที่เกิดปฏิกริยาพร้อมใบคล้องถุงเลือด</label
                   >
                 </div>
@@ -2346,7 +2479,8 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input class="form-control typing-box-style"
+                      <input
+                        class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
@@ -2356,8 +2490,9 @@ export default defineComponent({
                         type="date"
                         v-model="nurseDate"
                         aria-label="readonly input example"
-                        id="birthdaytime" name="birthdaytime"
-                        >
+                        id="birthdaytime"
+                        name="birthdaytime"
+                      />
                     </div>
                   </div>
                 </div>
@@ -2386,7 +2521,8 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                    <input class="form-control typing-box-style"
+                      <input
+                        class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
@@ -2396,8 +2532,9 @@ export default defineComponent({
                         type="time"
                         v-model="nurseTime"
                         aria-label="readonly input example"
-                        id="birthdaytime" name="birthdaytime"
-                        >
+                        id="birthdaytime"
+                        name="birthdaytime"
+                      />
                     </div>
                   </div>
                 </div>
@@ -2469,7 +2606,8 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                    <input class="form-control typing-box-style"
+                      <input
+                        class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
@@ -2479,8 +2617,9 @@ export default defineComponent({
                         type="date"
                         v-model="physicianDate"
                         aria-label="readonly input example"
-                        id="birthdaytime" name="birthdaytime"
-                        >
+                        id="birthdaytime"
+                        name="birthdaytime"
+                      />
                     </div>
                   </div>
                 </div>
@@ -2509,7 +2648,8 @@ export default defineComponent({
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
-                      <input class="form-control typing-box-style"
+                      <input
+                        class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
                           padding-right: 16px;
@@ -2519,8 +2659,9 @@ export default defineComponent({
                         type="time"
                         v-model="physicianTime"
                         aria-label="readonly input example"
-                        id="birthdaytime" name="birthdaytime"
-                        >
+                        id="birthdaytime"
+                        name="birthdaytime"
+                      />
                     </div>
                   </div>
                 </div>
@@ -2530,16 +2671,82 @@ export default defineComponent({
         </div>
         <div class="card" style="border: 0px; margin-bottom: 32px">
           <div style="display: flex; justify-content: flex-end; gap: 2%">
-            <button class="btn button-style-close" style="margin-top: 32px">
+            <button class="btn button-style-close" data-bs-toggle="modal" data-bs-target="#CloseButton" style="margin-top: 32px">
               ปิด
             </button>
             <button
               class="btn button-style-save"
               style="margin-top: 32px"
               type="submit"
+              data-bs-toggle="modal" data-bs-target="#SaveButton"
             >
               บันทึกข้อมูล
             </button>
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="CloseButton"
+          tabindex="-1"
+          aria-labelledby="closeModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="closeModalLabel">คุณต้องการยกเลิกการทำรายการใช่หรือไม่</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="ปิด"
+                ></button>
+              </div>
+              
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  ปิด
+                </button>
+                <button type="button" class="btn btn-primary" @click="navigateToPreviousPage">
+                  ตกลง
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="SaveButton"
+          tabindex="-1"
+          aria-labelledby="saveModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-center">
+                <h5 class="modal-title" id="saveModalLabel">บันทึกข้อมูลสำเร็จ</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label=""
+                ></button>
+              </div>
+              
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  ปิด
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2726,7 +2933,7 @@ hr.dashed {
 }
 
 .button-style-save {
-  width: 16%;
+  width: 22%;
   height: 44px;
   border-radius: 100px;
   background-color: rgba(0, 191, 165, 1);
@@ -2863,4 +3070,3 @@ hr.dashed {
   }
 }
 </style>
-../general/useCurrentTime
