@@ -282,11 +282,16 @@ export default defineComponent({
       this.formData.SubmittingTest.nurseName = item;
       this.showResultsNurse = false;
     },
+    restrictInput(event,name) {
+      // Remove non-numeric characters from the input value
+      this[name] = event.target.value.replace(/\D/g, '');
+    },
     // config this path for hostipal
     // go back to previous page 
     navigateToPreviousPage(){
       this.$router.push(`/mainBloodChecklist`);
       console.log("click")
+      $('#CloseButton').modal('hide');
     },
     //cleansing form
     async handleSubmit(formData) {
@@ -1624,13 +1629,11 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('beforeBP') }"
-                      type="number"
-                      pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionOne"
+                      @input="restrictInput($event,'beforeReactionBPSectionOne')"
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1644,13 +1647,11 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('beforeBP') }"
-                      type="number"
-                      pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionTwo"
+                      @input="restrictInput($event,'beforeReactionBPSectionTwo')"
                     />
                   </div>
                 </div>
@@ -1850,13 +1851,11 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('afterBP') }"
-                      type="number"
-                      pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionOne"
+                      @input="restrictInput($event,'afterReactionBPSectionOne')"
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1870,13 +1869,11 @@ export default defineComponent({
                         text-align: center;
                       "
                       :style="{ width: inputWidth('afterBP') }"
-                      type="number"
-                      pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionTwo"
+                      @input="restrictInput($event,'afterReactionBPSectionTwo')"
                     />
                   </div>
                 </div>

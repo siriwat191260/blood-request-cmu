@@ -87,7 +87,8 @@ function TRForm_Insert($p)
             $VitalSigns['afterReactionPulse'] !== null || $VitalSigns['afterReactionTemp'] !== null ||
             $VitalSigns['afterReactionTime'] !== null || $VitalSigns['beforeReactionBP'] !== null ||
             $VitalSigns['beforeReactionPulse'] !== null || $VitalSigns['beforeReactionTemp'] !== null || $VitalSigns['beforeReactionTime'] !== null)) {
-            if(insertIntoTable($con_db, $tableNameVitalSigns, $VitalSigns, $idTR_Form)){
+             /* print($VitalSigns['afterReactionTime']); */
+                if(insertIntoTable($con_db, $tableNameVitalSigns, $VitalSigns, $idTR_Form)){
                 $rep['s'] = true;
                 } else {
                     $rep['s'] = false;
@@ -183,11 +184,13 @@ function insertIntoTable($con_db, $tableName, $data, $idTR_Form)
         foreach ($data as $key => $value) {
             if ($value === "") {
                 $stmt->bindValue(":$key", null, PDO::PARAM_NULL);
-            } else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
+            }
+            else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
                 // Append a date to the time value
-                $datetimeValue = date('Y-m-d') . ' ' . $value;
-                $stmt->bindValue(":$key", $datetimeValue, PDO::PARAM_STR);
-            } if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
+                $time = DateTime::createFromFormat('H:i', $value);
+                $formattedDateTime = $time->format('Y-m-d H:i:s');
+                $stmt->bindValue(":$key", $formattedDateTime, PDO::PARAM_STR);
+            } else if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
                 $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
             }else {
@@ -201,6 +204,8 @@ function insertIntoTable($con_db, $tableName, $data, $idTR_Form)
 
         return true;
     } catch (Exception $e) {
+        error_log("Error inserting data into table $tableName: " . $e->getMessage());
+        
         // Return false if an exception occurred
         return false;
     }
