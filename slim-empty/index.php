@@ -91,6 +91,20 @@ function getApprove($idTR_Report)
     return $result;
 }
 
+function getId_Status_TRForm($bloodBagNumber)
+{
+    $conn_db = new PDOConnect('db');
+    $con_db = $conn_db->Open();
+
+    $sql = "SELECT idTR_Form, TXN, status FROM TR_Form WHERE bloodBagNumber = :bloodBagNumber";
+    $stmt = $con_db->prepare($sql);
+    $stmt->bindValue(":bloodBagNumber", $bloodBagNumber, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $result;
+}
+
 $app = new \Slim\App;
 
 $app->get('/', function (Request $request, Response $response) {
@@ -125,20 +139,17 @@ $app->group('/v1', function () use ($app) {
 $app->get('/getListBloodTransf', function (Request $request, Response $response, array $args) {
     try {
         $ListBloodValue = getListBloodTransf();
-
-        foreach ($ListBloodValue as &$bloodTransfRecord) {
+        $ListBloodMapping = array_map(function ($bloodTransfRecord) {
             $hn = $bloodTransfRecord['hn'];
             $packid = $bloodTransfRecord['packid'];
-            $trForm = getTableData("TR_Form", $hn, $packid);
+            $trForm = getId_Status_TRForm($packid);
             $trReport = getTableData("TR_Report", $hn, $packid);
             $bloodTransfRecord['TRForm'] = null;
             $bloodTransfRecord['TRReport'] = null;
             $bloodTransfRecord['approve'] = null;
-
             if (!empty($trForm)) {
                 $bloodTransfRecord['TRForm'] = $trForm[0]['status'];
                 $bloodTransfRecord['idTR_Form'] = $trForm[0]['idTR_Form'];
-
                 if (!empty($trReport)) {
                     $bloodTransfRecord['TRReport'] = $trReport[0]['status'];
                     $bloodTransfRecord['idTR_Report'] = $trReport[0]['idTR_Report'];
@@ -147,9 +158,10 @@ $app->get('/getListBloodTransf', function (Request $request, Response $response,
                     }
                 }
             }
-        }
+            return $bloodTransfRecord;
+        }, $ListBloodValue);
         $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($ListBloodValue));
+        $response->getBody()->write(json_encode($ListBloodMapping));
         return $response;
     } catch (Exception $error) {
         $response = $response->withHeader('Content-Type', 'application/json');
@@ -474,24 +486,24 @@ $app->get('/get-transfusion-report/{id}', function (Request $request, Response $
 });
 
 $app->post('/submitting_transfusion_form', function (Request $request, Response $response, $args) {
-        // Get the raw JSON data from the request body
-        $formData = $request->getBody()->getContents();
+    // Get the raw JSON data from the request body
+    $formData = $request->getBody()->getContents();
 
-        // Parse the JSON data into an associative array
-        $p = json_decode($formData, true);
+    // Parse the JSON data into an associative array
+    $p = json_decode($formData, true);
 
-         // Check if JSON decoding was successful
-        if ($p === null) {
-            $response->getBody()->write(json_encode(['error' => 'Error decoding JSON data']));
-            return $response->withStatus(400);
-        }
+    // Check if JSON decoding was successful
+    if ($p === null) {
+        $response->getBody()->write(json_encode(['error' => 'Error decoding JSON data']));
+        return $response->withStatus(400);
+    }
     $p['method'] = 'TRForm_Insert';
     $p['controller_name'] = 'bloodbank';
     $func = new Middleware(['controller' => $p['controller_name']]);
     $func->response = $response;
     $func->preCall($p);
     $rs = $func->callMethod($p);
-    return $rs;  
+    return $rs;
 });
 
 $app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
@@ -614,7 +626,7 @@ $app->put('/submitting_transfusion_form/{id}/update', function (Request $request
     $p = json_decode($formData, true);
     $p['id'] = $id;
 
-     // Check if JSON decoding was successful
+    // Check if JSON decoding was successful
     if ($p === null) {
         $response->getBody()->write(json_encode(['error' => 'Error decoding JSON data']));
         return $response->withStatus(400);
@@ -625,7 +637,7 @@ $app->put('/submitting_transfusion_form/{id}/update', function (Request $request
     $func->response = $response;
     $func->preCall($p);
     $rs = $func->callMethod($p);
-    return $rs;  
+    return $rs;
 });
 
 $app->run();
