@@ -183,17 +183,16 @@ export default {
                         <td v-else class="wait"> รอ</td>
 
                         <td v-if="row.TRForm" @click="getTransFusionForm(row.idTR_Form)" class="click">
-                            ฟอร์มนำส่งตรวจ </td>
+                            ฟอร์มนำส่งตรวจ {{ row.TRForm }}%</td>
                         <td v-else class="wait">ฟอร์มนำส่งตรวจ</td>
-
-                        <td v-if="!row.TRReport" @click="addTransFusionReport(row.idTR_Form)">
+                        <td v-if="row.TRForm !== 100">-</td>
+                        <td v-else-if="!row.TRReport " @click="addTransFusionReport(row.idTR_Form)">
                             <div class="add">
                                 <Icon icon="material-symbols:note-add-outline" class="icon-add" />
                                 <p class="done">เพิ่มรายงาน</p>
                             </div>
                         </td>
                         <td v-else-if="row.TRReport === 100" @click="editTransFusionReport(row.idTR_Report)" class="click">รายงานการตรวจ</td>
-                        <td v-else-if="!row.TRForm">-</td>
                         <td v-else class="wait click" @click="editTransFusionReport(row.idTR_Report)" >รายงานการตรวจ {{ row.TRForm }}%</td>
 
                         <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"

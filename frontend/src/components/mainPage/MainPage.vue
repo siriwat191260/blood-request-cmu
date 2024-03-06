@@ -9,7 +9,7 @@ export default defineComponent({
   data() {
     return {
       userInfo: [],
-      baseURL: "http://localhost:8000/",
+      baseURL: import.meta.env.VITE_BASE_URL,
       listBloodTranf: [],
       listReaction: [],
       userApprove: [],

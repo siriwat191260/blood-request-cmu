@@ -1,5 +1,5 @@
 <?php
-function TRForm_Insert($p)
+function TRForm_Update($p)
 {
 
     $cf_m = $p['cf']['mt']['cf'];
@@ -18,6 +18,8 @@ function TRForm_Insert($p)
     $con_db->exec("USE blood_request");
 
     $formData = $p['formData'];
+    $id = $p['id'];
+    $idTR_Form = $id['id'];
     // Extract individual sections of the form data
     $PatientInfo = $formData['PatientInfo'];
     $BloodTransfusionTest = $formData['BloodTransfusionTest'];
@@ -25,54 +27,39 @@ function TRForm_Insert($p)
     $SignsAndSymptoms = $formData['SignsAndSymptomsObject'];
     $DetailRecordIn24Hrs = $formData['DetailRecordIn24Hrs'];
     $SubmittingTest = $formData['SubmittingTest'];
-    /* echo '<pre>';
-        print_r($PatientInfo);
+     echo '<pre>';
+        print_r($idTR_Form);
         echo '</pre>'; 
- */
-    $con_db->beginTransaction();
+ 
     $status = 0;
-    if ($PatientInfo !== null) {
-        $sqlPatientInfo = "INSERT INTO blood_request.TR_Form 
-                        (`title`, `firstName`, `lastName`, `HN`, `TXN`, `createdDate`, `ward`, `phoneNumber`, 
-                        `diagnosis`, `primaryPhysicianName`, `bloodGroup_Patient`, `Rh_Patient`, `blood_component`, 
-                        `bloodGroup_Donor`, `Rh_Donor`, `bloodBagNumber`, `volume`, `medicationHistory`, 
-                        `isReactionHistory`, `reactionCategory`)
-                        VALUES 
-                        (:title, :firstName, :lastName, :HN, :TXN, :createdDate, :ward, :phoneNumber, 
-                        :diagnosis, :primaryPhysicianName, :bloodGroup_Patient, :Rh_Patient, :blood_component, 
-                        :bloodGroup_Donor, :Rh_Donor, :bloodBagNumber, :volume, :medicationHistory, 
-                        :isReactionHistory, :reactionCategory)";
-
-        $stmtPatientInfo  = $con_db->prepare($sqlPatientInfo);
-        if($PatientInfo['medicationHistory'] !== null && $PatientInfo['isReactionHistory'] !== null){
-            $status += 5;
-        }
-        //bind to TR_Form
-        foreach ($PatientInfo as $key => $value) {
-            if ($key === 'createdDate') {
-                $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->format('Y-m-d H:i:s');
-                $stmtPatientInfo->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
-            } else {
-                $stmtPatientInfo->bindValue(":$key", $value, PDO::PARAM_STR);
-            }
-        }
-        $stmtPatientInfo->execute();
-        if ($stmtPatientInfo) {
+    if ($PatientInfo !== null && ($PatientInfo['medicationHistory'] !== null || $PatientInfo['isReactionHistory'] !== null || $PatientInfo['reactionCategory'] !== null)) {
+        $sqlPatientInfo = "UPDATE blood_request.TR_Form SET medicationHistory = :medicationHistory, 
+        isReactionHistory = :isReactionHistory, reactionCategory = :reactionCategory 
+        WHERE idTR_Form = :idTR_Form";
+        $stmtPatientInfo = $con_db->prepare($sqlPatientInfo);
+        $stmtPatientInfo->bindValue(":medicationHistory", $PatientInfo['medicationHistory'], PDO::PARAM_STR);
+        $stmtPatientInfo->bindValue(":isReactionHistory", $PatientInfo['isReactionHistory'], PDO::PARAM_STR);
+        $stmtPatientInfo->bindValue(":reactionCategory", $PatientInfo['reactionCategory'], PDO::PARAM_STR);
+        $stmtPatientInfo->bindValue(":idTR_Form", $idTR_Form, PDO::PARAM_INT);
+        if ($stmtPatientInfo->execute()) {
             $rep['s'] = true;
-        }else {
+            // Increment status if both medicationHistory and isReactionHistory are not null
+            if ($PatientInfo['medicationHistory'] !== null && $PatientInfo['isReactionHistory'] !== null) {
+                $status += 5;
+            }
+        } else {
             $rep['s'] = false;
         }
     }
 
+
+
     // Get the last inserted ID
-    $idTR_Form = $con_db->lastInsertId();
     $tableNameBloodTransfusionTest = "blood_request.BloodTransfusionTest";
     $tableNameVitalSigns = "blood_request.VitalSigns";
     $tableNameSignsAndSymptoms = "blood_request.SignsAndSymptoms";
     $tableNameDetailRecordIn24Hrs = "blood_request.DetailRecordIn24Hrs";
     $tableNameSubmittingTest = "blood_request.SubmittingTest";
-
-    
 
     if ($idTR_Form) {
         //BloodTransfusionTest
@@ -80,16 +67,18 @@ function TRForm_Insert($p)
             $BloodTransfusionTest['isCorrectBloodComponent'] !== null || $BloodTransfusionTest['isCorrectBloodGroupDonor'] !== null ||
             $BloodTransfusionTest['isCorrectBloodGroupPatient'] !== null || $BloodTransfusionTest['isCorrectBloodTransfusionRec'] !== null ||
             $BloodTransfusionTest['isCorrectPatientName'] !== null || $BloodTransfusionTest['isWithin24hrsFever'] !== null)) {
-            if(insertIntoTable($con_db, $tableNameBloodTransfusionTest, $BloodTransfusionTest, $idTR_Form)){
+            if (updateTable($con_db, $tableNameBloodTransfusionTest, $BloodTransfusionTest, $idTR_Form, $status)) {
                 $rep['s'] = true;
-                } else {
-                    $rep['s'] = false;
-                }
-            if($BloodTransfusionTest['isCorrectBloodBagNumber'] !== null && $BloodTransfusionTest['isCorrectBloodComponent'] !== null &&
-                $BloodTransfusionTest['isCorrectBloodGroupDonor'] !== null && $BloodTransfusionTest['isCorrectBloodGroupPatient'] !== null && 
-                $BloodTransfusionTest['isCorrectBloodTransfusionRec'] !== null && $BloodTransfusionTest['isCorrectPatientName'] !== null && 
-                $BloodTransfusionTest['isWithin24hrsFever'] !== null){
-                    $status += 15;
+            } else {
+                $rep['s'] = false;
+            }
+            if (
+                $BloodTransfusionTest['isCorrectBloodBagNumber'] !== null && $BloodTransfusionTest['isCorrectBloodComponent'] !== null &&
+                $BloodTransfusionTest['isCorrectBloodGroupDonor'] !== null && $BloodTransfusionTest['isCorrectBloodGroupPatient'] !== null &&
+                $BloodTransfusionTest['isCorrectBloodTransfusionRec'] !== null && $BloodTransfusionTest['isCorrectPatientName'] !== null &&
+                $BloodTransfusionTest['isWithin24hrsFever'] !== null
+            ) {
+                $status += 15;
             }
         }
 
@@ -98,30 +87,35 @@ function TRForm_Insert($p)
             $VitalSigns['afterReactionPulse'] !== null || $VitalSigns['afterReactionTemp'] !== null ||
             $VitalSigns['afterReactionTime'] !== null || $VitalSigns['beforeReactionBP'] !== null ||
             $VitalSigns['beforeReactionPulse'] !== null || $VitalSigns['beforeReactionTemp'] !== null || $VitalSigns['beforeReactionTime'] !== null)) {
-             /* print($VitalSigns['afterReactionTime']); */
-                if(insertIntoTable($con_db, $tableNameVitalSigns, $VitalSigns, $idTR_Form)){
+            /* print($VitalSigns['afterReactionTime']); */
+            if (updateTable($con_db, $tableNameVitalSigns, $VitalSigns, $idTR_Form)) {
                 $rep['s'] = true;
-                } else {
-                    $rep['s'] = false;
-                }
-                if($VitalSigns['afterReactionBP'] !== null && $VitalSigns['afterReactionPulse'] !== null && $VitalSigns['afterReactionTemp'] !== null && 
-                $VitalSigns['afterReactionTime'] !== null && $VitalSigns['beforeReactionBP'] !== null && $VitalSigns['beforeReactionPulse'] !== null && 
-                $VitalSigns['beforeReactionTemp'] !== null && $VitalSigns['beforeReactionTime'] !== null){
-                    $status += 20;
-                }
+            } else {
+                $rep['s'] = false;
+            }
+            if (
+                $VitalSigns['afterReactionBP'] !== null && $VitalSigns['afterReactionPulse'] !== null && $VitalSigns['afterReactionTemp'] !== null &&
+                $VitalSigns['afterReactionTime'] !== null && $VitalSigns['beforeReactionBP'] !== null && $VitalSigns['beforeReactionPulse'] !== null &&
+                $VitalSigns['beforeReactionTemp'] !== null && $VitalSigns['beforeReactionTime'] !== null
+            ) {
+                $status += 20;
+            }
         }
 
         //SignsAndSymptoms
         if ($SignsAndSymptoms !== null && (($SignsAndSymptoms['idSignsAndSymptomsName'] !== null &&
             count($SignsAndSymptoms['idSignsAndSymptomsName']) > 0) || $SignsAndSymptoms['Other'] !== null)) {
+                $stmtDelete = $con_db->prepare("DELETE FROM $tableNameSignsAndSymptoms WHERE idTR_Form =:idTR_Form");
+                $stmtDelete->bindParam(':idTR_Form', $idTR_Form);
+                $stmtDelete->execute();
             foreach ($SignsAndSymptoms['idSignsAndSymptomsName'] as $idSignsAndSymptomsName) {
                 $stmt = $con_db->prepare("INSERT INTO $tableNameSignsAndSymptoms (idSignsAndSymptomsName, idTR_Form) VALUES (:idSignsAndSymptomsName, :idTR_Form)");
                 $stmt->bindParam(':idSignsAndSymptomsName', $idSignsAndSymptomsName);
                 $stmt->bindParam(':idTR_Form', $idTR_Form);
                 $stmt->execute();
-                if($stmt){
+                if ($stmt) {
                     $rep['s'] = true;
-                }else {
+                } else {
                     $rep['s'] = false;
                 }
             }
@@ -130,13 +124,13 @@ function TRForm_Insert($p)
                 $stmt->bindParam(':Other', $SignsAndSymptoms['Other']);
                 $stmt->bindParam(':idTR_Form', $idTR_Form);
                 $stmt->execute();
-                if($stmt){
+                if ($stmt) {
                     $rep['s'] = true;
-                }else {
+                } else {
                     $rep['s'] = false;
                 }
             }
-            if(count($SignsAndSymptoms['idSignsAndSymptomsName']) > 0 || $SignsAndSymptoms['Other'] !== null){
+            if (count($SignsAndSymptoms['idSignsAndSymptomsName']) > 0 || $SignsAndSymptoms['Other'] !== null) {
                 $status += 20;
             }
         }
@@ -154,14 +148,14 @@ function TRForm_Insert($p)
                 "isReaction" => "isReaction"
             ];
             $modifiedData = changeKeyNames($DetailRecordIn24Hrs, $keyMap);
-            foreach ($modifiedData as $row) {             
-                if(insertIntoTable($con_db, $tableNameDetailRecordIn24Hrs, $row, $idTR_Form)){
+            foreach ($modifiedData as $row) {
+                if (updateTable($con_db, $tableNameDetailRecordIn24Hrs, $row, $idTR_Form)) {
                     $rep['s'] = true;
-                    }else {
-                        $rep['s'] = false;
-                    }
-                if($row['isReaction'] !== null){
-                    $status += (20/count($DetailRecordIn24Hrs));
+                } else {
+                    $rep['s'] = false;
+                }
+                if ($row['isReaction'] !== null) {
+                    $status += (20 / count($DetailRecordIn24Hrs));
                 }
             }
         }
@@ -171,15 +165,17 @@ function TRForm_Insert($p)
             $SubmittingTest['isBloodSample'] !== null || $SubmittingTest['nurseDateTime'] !== null ||
             $SubmittingTest['nurseName'] !== null || $SubmittingTest['physicianDateTime'] !== null ||
             $SubmittingTest['physicianName'] !== null)) {
-            
-            if(insertIntoTable($con_db, $tableNameSubmittingTest, $SubmittingTest, $idTR_Form)){
+
+            if (updateTable($con_db, $tableNameSubmittingTest, $SubmittingTest, $idTR_Form)) {
                 $rep['s'] = true;
-                }else{
-                    $rep['s'] = false;
-                }
-            if($SubmittingTest['isBloodBagReaction'] !== null && $SubmittingTest['isBloodSample'] !== null && 
-            $SubmittingTest['nurseDateTime'] !== null && $SubmittingTest['nurseName'] !== null && 
-            $SubmittingTest['physicianDateTime'] !== null && $SubmittingTest['physicianName'] !== null){
+            } else {
+                $rep['s'] = false;
+            }
+            if (
+                $SubmittingTest['isBloodBagReaction'] !== null && $SubmittingTest['isBloodSample'] !== null &&
+                $SubmittingTest['nurseDateTime'] !== null && $SubmittingTest['nurseName'] !== null &&
+                $SubmittingTest['physicianDateTime'] !== null && $SubmittingTest['physicianName'] !== null
+            ) {
                 $status += 20;
             }
         }
@@ -194,30 +190,54 @@ function TRForm_Insert($p)
         $stmtStatus->execute();
         if ($stmtStatus) {
             $rep['s'] = true;
-        }else {
+        } else {
             $rep['s'] = false;
         }
     }
 
 
 
-    $con_db->commit();
+
+    
 
 
     return $rep;
 }
 //dynamic insert
-function insertIntoTable($con_db, $tableName, $data, $idTR_Form)
+function updateTable($con_db, $tableName, $data, $idTR_Form)
 {
     try {
         // Prepare the SQL statement
-        $sql = "INSERT INTO $tableName (";
-        $sql .= implode(', ', array_keys($data)); // Column names
-        $sql .= ", idTR_Form) VALUES (";
-        $sql .= implode(', ', array_map(function ($item) {
-            return ':' . $item;
-        }, array_keys($data))); // Parameter placeholders
-        $sql .= ", :idTR_Form)";
+        $sql = "UPDATE $tableName SET ";
+        $setValues = [];
+        $idDetailRecordIn24Hrs = [];
+        foreach ($data as $key => $value) {
+            $setValues[] = "$key = :$key";
+            if ($key === "idDetailRecordIn24Hrs") {
+                $idDetailRecordIn24Hrs[] = "AND $value";
+            }
+        }
+        $sql .= implode(', ', $setValues);
+        if ($tableName === "blood_request.DetailRecordIn24Hrs") {
+            $sql .= " WHERE idTR_Form = :idTR_Form ";
+            $sql .= implode(', ', $idDetailRecordIn24Hrs);
+        } else {
+            $sql .= " WHERE idTR_Form = :idTR_Form";
+        }
+
+        // Check if the row already exists in the table
+        $checkSql = "SELECT COUNT(*) FROM $tableName WHERE idTR_Form = :idTR_Form";
+        $checkStmt = $con_db->prepare($checkSql);
+        $checkStmt->bindValue(":idTR_Form", $idTR_Form, PDO::PARAM_INT);
+        $checkStmt->execute();
+        $rowExists = ($checkStmt->fetchColumn() > 0);
+
+        // If the row exists, update it; otherwise, insert a new row
+        if ($rowExists) {
+            $sql = "INSERT INTO $tableName (" . implode(', ', array_keys($data)) . ") VALUES (" . implode(', ', array_map(function ($item) {
+                return ':' . $item;
+            }, array_keys($data))) . ") ON DUPLICATE KEY UPDATE " . implode(', ', $setValues);
+        }
 
         $stmt = $con_db->prepare($sql);
 
@@ -225,15 +245,15 @@ function insertIntoTable($con_db, $tableName, $data, $idTR_Form)
         foreach ($data as $key => $value) {
             if ($value === "") {
                 $stmt->bindValue(":$key", null, PDO::PARAM_NULL);
-            }else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
+            } else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
                 // Append a date to the time value
                 $time = DateTime::createFromFormat('H:i', $value);
                 $formattedDateTime = $time->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDateTime, PDO::PARAM_STR);
-            }else if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
+            } else if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
                 $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
-            }else {
+            } else {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
@@ -244,12 +264,16 @@ function insertIntoTable($con_db, $tableName, $data, $idTR_Form)
 
         return true;
     } catch (Exception $e) {
-        error_log("Error inserting data into table $tableName: " . $e->getMessage());
+        error_log("Error updating data in table $tableName: " . $e->getMessage());
         
         // Return false if an exception occurred
         return false;
     }
 }
+
+
+
+
 
 function changeKeyNames($data, $keyMap)
 {
