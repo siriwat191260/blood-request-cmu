@@ -1,6 +1,5 @@
 <script>
 import { defineComponent } from "vue";
-import DropDownSVGVue from "../general/DropDownSVG.vue";
 import { Icon } from "@iconify/vue";
 import {
     parseDate,
@@ -72,33 +71,109 @@ export default defineComponent({
             showResultsTest: false,
             showResultsReport: false,
             userInfo: [],
-            tr_form: {},
+            tr_report: {},
             userBloodbank: {},
             baseURL: import.meta.env.VITE_BASE_URL,
         };
     },
     async mounted() {
-        const idTR_Form = this.$route.params.id;
+        const idTR_Report = this.$route.params.id;
         await this.fetchUser();
-        await this.fetchTRForm(idTR_Form);
+        await this.fetchTRReport(idTR_Report);
         await this.fetchUserBloodbank();
     },
     methods: {
         importData() {
-            this.formData.data.title = this.tr_form.PatientInfo.title
-            this.formData.data.firstName = this.tr_form.PatientInfo.firstName
-            this.formData.data.lastName = this.tr_form.PatientInfo.lastName
-            this.formData.data.HN = this.tr_form.PatientInfo.HN
-            this.formData.data.createdDate = new Date(this.tr_form.PatientInfo.createdDate).toISOString().split("T")[0];
-            this.formData.data.createdTime = parseTime(new Date(this.tr_form.PatientInfo.createdDate));
-            this.formData.data.createdDateTime = this.tr_form.PatientInfo.createdDate
-            this.formData.data.ward = this.tr_form.PatientInfo.ward
-            this.formData.data.bloodGroup_Patient = this.tr_form.PatientInfo.bloodGroup_Patient
-            this.formData.data.blood_component = this.tr_form.PatientInfo.blood_component
-            this.formData.data.bloodGroup_Donor = this.tr_form.PatientInfo.bloodGroup_Donor
-            this.formData.data.bloodBagNumber = this.tr_form.PatientInfo.bloodBagNumber
-            this.formData.data.primaryPhysicianName = this.tr_form.PatientInfo.primaryPhysicianName
-            this.formData.data.nurse = this.tr_form.SubmittingTest.nurseName
+            this.formData.data.title = this.tr_report.data.title
+            this.formData.data.firstName = this.tr_report.data.firstName
+            this.formData.data.lastName = this.tr_report.data.lastName
+            this.formData.data.HN = this.tr_report.data.HN
+            this.formData.data.createdDate = new Date(this.tr_report.data.createdDate).toISOString().split("T")[0];
+            this.formData.data.createdTime = parseTime(new Date(this.tr_report.data.createdDate));
+            this.formData.data.createdDateTime = this.tr_report.data.createdDate
+            this.formData.data.ward = this.tr_report.data.ward
+            this.formData.data.bloodGroup_Patient = this.tr_report.data.bloodGroup_Patient
+            this.formData.data.blood_component = this.tr_report.data.blood_component
+            this.formData.data.bloodGroup_Donor = this.tr_report.data.bloodGroup_Donor
+            this.formData.data.bloodBagNumber = this.tr_report.data.bloodBagNumber
+            this.formData.data.primaryPhysicianName = this.tr_report.data.primaryPhysicianName
+            this.formData.data.nurse = this.tr_report.data.nurse
+            this.formData.data.interpretation = this.tr_report.data.interpretation
+            this.formData.data.testedBy = this.tr_report.data.testedBy ? this.tr_report.data.testedBy : ""
+            this.formData.data.reportedBy = this.tr_report.data.reportedBy ? this.tr_report.data.reportedBy : ""
+            this.formData.data.testedDate = this.tr_report.data.testedDateTime ? new Date(this.tr_report.data.testedDateTime).toISOString().split("T")[0] : ""
+            this.formData.data.testedTime = this.tr_report.data.testedDateTime ? parseTime(new Date(this.tr_report.data.testedDateTime)) : ""
+            this.formData.data.reportedDate = this.tr_report.data.reportedDateTime ? new Date(this.tr_report.data.reportedDateTime).toISOString().split("T")[0] : ""
+            this.formData.data.reportedTime = this.tr_report.data.reportedDateTime ? parseTime(new Date(this.tr_report.data.reportedDateTime)) : ""
+            //BloodBagCharacteristic
+            this.formData.BloodBagCharacteristic.isTransfusionSet = this.tr_report.BloodBagCharacteristic.isTransfusionSet
+            this.formData.BloodBagCharacteristic.needleStatus = this.tr_report.BloodBagCharacteristic.needleStatus
+            this.formData.BloodBagCharacteristic.plasmaCharacteristicStatus = this.tr_report.BloodBagCharacteristic.plasmaCharacteristicStatus
+            this.formData.BloodBagCharacteristic.isLeakagePosition = this.tr_report.BloodBagCharacteristic.isLeakagePosition
+            this.formData.BloodBagCharacteristic.leakagePosition = this.tr_report.BloodBagCharacteristic.leakagePosition
+            this.formData.BloodBagCharacteristic.volumeOfBag = this.tr_report.BloodBagCharacteristic.volumeOfBag
+            this.formData.BloodBagCharacteristic.TransfusionVolume = this.tr_report.BloodBagCharacteristic.TransfusionVolume
+            //indicator
+            this.formData.indicator[0].PreTransfusionSample = this.tr_report.indicator[0].PreTransfusionSample
+            this.formData.indicator[0].PostTransfusionSample = this.tr_report.indicator[0].PostTransfusionSample
+            this.formData.indicator[0].bloodBagNumber = this.tr_report.indicator[0].bloodBagNumber
+            this.formData.indicator[0].Remarks = this.tr_report.indicator[0].Remarks
+
+            this.formData.indicator[1].PreTransfusionSample = this.tr_report.indicator[1].PreTransfusionSample
+            this.formData.indicator[1].PostTransfusionSample = this.tr_report.indicator[1].PostTransfusionSample
+            this.formData.indicator[1].bloodBagNumber = this.tr_report.indicator[1].bloodBagNumber
+            this.formData.indicator[1].Remarks = this.tr_report.indicator[1].Remarks
+
+            this.formData.indicator[2].PreTransfusionSample = this.tr_report.indicator[2].PreTransfusionSample
+            this.formData.indicator[2].PostTransfusionSample = this.tr_report.indicator[2].PostTransfusionSample
+            this.formData.indicator[2].bloodBagNumber = this.tr_report.indicator[2].bloodBagNumber
+            this.formData.indicator[2].Remarks = this.tr_report.indicator[2].Remarks
+
+            this.formData.indicator[3].PreTransfusionSample = this.tr_report.indicator[3].PreTransfusionSample
+            this.formData.indicator[3].PostTransfusionSample = this.tr_report.indicator[3].PostTransfusionSample
+            this.formData.indicator[3].bloodBagNumber = this.tr_report.indicator[3].bloodBagNumber
+            this.formData.indicator[3].Remarks = this.tr_report.indicator[3].Remarks
+
+            this.formData.indicator[4].PreTransfusionSample = this.tr_report.indicator[4].PreTransfusionSample
+            this.formData.indicator[4].PostTransfusionSample = this.tr_report.indicator[4].PostTransfusionSample
+            this.formData.indicator[4].bloodBagNumber = this.tr_report.indicator[4].bloodBagNumber
+            this.formData.indicator[4].Remarks = this.tr_report.indicator[4].Remarks
+
+            this.formData.indicator[5].PreTransfusionSample = this.tr_report.indicator[5].PreTransfusionSample
+            this.formData.indicator[5].PostTransfusionSample = this.tr_report.indicator[5].PostTransfusionSample
+            this.formData.indicator[5].bloodBagNumber = this.tr_report.indicator[5].bloodBagNumber
+            this.formData.indicator[5].Remarks = this.tr_report.indicator[5].Remarks
+
+            this.formData.indicator[6].PreTransfusionSample = this.tr_report.indicator[6].PreTransfusionSample
+            this.formData.indicator[6].PostTransfusionSample = this.tr_report.indicator[6].PostTransfusionSample
+            this.formData.indicator[6].bloodBagNumber = this.tr_report.indicator[6].bloodBagNumber
+            this.formData.indicator[6].Remarks = this.tr_report.indicator[6].Remarks
+
+            this.formData.indicator[7].PreTransfusionSample = this.tr_report.indicator[7].PreTransfusionSample
+            this.formData.indicator[7].PostTransfusionSample = this.tr_report.indicator[7].PostTransfusionSample
+            this.formData.indicator[7].bloodBagNumber = this.tr_report.indicator[7].bloodBagNumber
+            this.formData.indicator[7].Remarks = this.tr_report.indicator[7].Remarks
+
+            this.formData.indicator[8].PreTransfusionSample = this.tr_report.indicator[8].PreTransfusionSample
+            this.formData.indicator[8].PostTransfusionSample = this.tr_report.indicator[8].PostTransfusionSample
+            this.formData.indicator[8].bloodBagNumber = this.tr_report.indicator[8].bloodBagNumber
+            this.formData.indicator[8].Remarks = this.tr_report.indicator[8].Remarks
+
+            this.formData.indicator[9].PreTransfusionSample = this.tr_report.indicator[9].PreTransfusionSample
+            this.formData.indicator[9].PostTransfusionSample = this.tr_report.indicator[9].PostTransfusionSample
+            this.formData.indicator[9].bloodBagNumber = this.tr_report.indicator[9].bloodBagNumber
+            this.formData.indicator[9].Remarks = this.tr_report.indicator[9].Remarks
+
+            this.formData.GramStainAndCulture.isSubmittingGramStain = this.tr_report.GramStainAndCulture.isSubmittingGramStain
+            this.formData.GramStainAndCulture.gramNegativeOrPositive = this.tr_report.GramStainAndCulture.gramNegativeOrPositive
+            this.formData.GramStainAndCulture.resultGramStain = this.tr_report.GramStainAndCulture.resultGramStain
+            this.formData.GramStainAndCulture.toDateGram = this.tr_report.GramStainAndCulture.toDateGram
+
+            this.formData.GramStainAndCulture.isSubmittingCulture = this.tr_report.GramStainAndCulture.isSubmittingCulture
+            this.formData.GramStainAndCulture.cultureNegativeOrPositive = this.tr_report.GramStainAndCulture.cultureNegativeOrPositive
+            this.formData.GramStainAndCulture.resultCulture = this.tr_report.GramStainAndCulture.resultCulture
+            this.formData.GramStainAndCulture.toDateCulture = this.tr_report.GramStainAndCulture.toDateCulture
+
         },
         async fetchUser() {
             try {
@@ -108,10 +183,10 @@ export default defineComponent({
                 console.error("Error fetching List Blood Transfusion data:", error);
             }
         },
-        async fetchTRForm(idTR_Form) {
+        async fetchTRReport(idTR_Report) {
             try {
-                const response = await axios.get(this.baseURL + "trasfusion-form/getTR_Form/" + idTR_Form);
-                this.tr_form = response.data;
+                const response = await axios.get(this.baseURL + "get-transfusion-report/" + idTR_Report);
+                this.tr_report = response.data;
                 this.importData()
             } catch (error) {
                 console.error("Error fetching List Blood Transfusion data:", error);
@@ -255,8 +330,8 @@ export default defineComponent({
                 }
                 console.log("Form submitted! : ", formData);
                 console.log("cleasingFormData submitted! : ", cleasingFormData);
-                const response = await axios.post(
-                    this.baseURL + "submitting_transfusion_report",
+                const response = await axios.put(
+                    this.baseURL + `submitting_transfusion_report/update/${this.$route.params.id}`,
                     { formData: cleasingFormData }
                 );
                 console.log("Form submitted successfully!", response.data);
@@ -267,7 +342,7 @@ export default defineComponent({
         },
     },
     watch: {
-        'formData.BloodBagCharacteristic.isLeakagePosition': function (newVal, oldVal) {
+        'formData.BloodBagCharacteristic.isLeakagePosition': function (newVal) {
             if (newVal !== 1) {
                 this.formData.BloodBagCharacteristic.leakagePosition = "";
             }
@@ -291,21 +366,21 @@ export default defineComponent({
                 this.formData.GramStainAndCulture.toDateCulture = new Date().toISOString().split("T")[0];
             }
         },
-        'formData.GramStainAndCulture.isSubmittingGramStain': function (newVal, oldVal) {
+        'formData.GramStainAndCulture.isSubmittingGramStain': function (newVal) {
             if (parseInt(newVal) === 0) {
                 this.formData.GramStainAndCulture.gramNegativeOrPositive = "";
                 this.formData.GramStainAndCulture.resultGramStain = "";
                 this.formData.GramStainAndCulture.toDateGram = "";
             }
         },
-        'formData.GramStainAndCulture.isSubmittingCulture': function (newVal, oldVal) {
+        'formData.GramStainAndCulture.isSubmittingCulture': function (newVal) {
             if (parseInt(newVal) === 0) {
                 this.formData.GramStainAndCulture.cultureNegativeOrPositive = "";
                 this.formData.GramStainAndCulture.resultCulture = "";
                 this.formData.GramStainAndCulture.toDateCulture = "";
             }
         },
-        'formData.data.reportedBy.length': function (newVal) {
+        'formData.data.reportedBy.length': function () {
             if (this.formData.data.reportedBy.length >= 1) {
                 this.formData.data.reportedDate = new Date().toISOString().split("T")[0];
                 this.formData.data.reportedTime = this.parseTime(new Date());
@@ -314,7 +389,7 @@ export default defineComponent({
                 this.formData.data.reportedTime = "";
             }
         },
-        'formData.data.testedBy.length': function (newVal) {
+        'formData.data.testedBy.length': function () {
             if (this.formData.data.testedBy.length >= 1) {
                 this.formData.data.testedDate = new Date().toISOString().split("T")[0];
                 this.formData.data.testedTime = this.parseTime(new Date());
@@ -325,7 +400,6 @@ export default defineComponent({
         }
     },
     components: {
-        DropDownSVGVue,
         Icon,
     },
     computed: {
@@ -599,14 +673,12 @@ export default defineComponent({
                         <div class="col-md-2 ">
                             <input class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio1" value="1"
                                 v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี</label>
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี</label>
                         </div>
                         <div class="col-md-3 form-check-inline">
                             <input class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio2" value="0"
                                 v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 2 -->
@@ -619,20 +691,17 @@ export default defineComponent({
                         <div class="col-md-2 ">
                             <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio1" value="1"
                                 v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี ปิดสนิท</label>
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี ปิดสนิท</label>
                         </div>
                         <div class="col-md-3 ">
                             <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio2" value="2"
                                 v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">มี ปิดไม่สนิท</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">มี ปิดไม่สนิท</label>
                         </div>
                         <div class="col-md-2">
                             <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio3" value="3"
                                 v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 3 -->
@@ -645,20 +714,17 @@ export default defineComponent({
                         <div class="col-md-2 ">
                             <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio1"
                                 value="1" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี Fibrin</label>
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี Fibrin</label>
                         </div>
                         <div class="col-md-3 ">
                             <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio2"
                                 value="2" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ใส</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ใส</label>
                         </div>
                         <div class="col-md-2">
                             <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio3"
                                 value="3" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio3"
-                                style=" margin-top: 2px; margin-left: 10px">ขุ่น</label>
+                            <label class="form-check-label" for="inlineRadio3" style=" margin-top: 2px; margin-left: 10px">ขุ่น</label>
                         </div>
                     </div>
                     <!-- row 4 -->
@@ -671,8 +737,7 @@ export default defineComponent({
                         <div class="col-md-1 ">
                             <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio1"
                                 value="1" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี </label>
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี </label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -692,8 +757,7 @@ export default defineComponent({
                         <div class="col-md-2">
                             <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio2"
                                 value="0" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 5 -->
@@ -713,7 +777,7 @@ export default defineComponent({
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" placeholder="กรุณากรอกข้อมูล"
+                                        onkeypress="return event.charCode != 45" min="0" placeholder="กรุณากรอกข้อมูล"
                                         v-model="formData.BloodBagCharacteristic.volumeOfBag" />
                                 </div>
                             </div>
@@ -728,7 +792,7 @@ export default defineComponent({
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" placeholder="กรุณากรอกข้อมูล"
+                                        onkeypress="return event.charCode != 45" min="0" placeholder="กรุณากรอกข้อมูล"
                                         v-model="formData.BloodBagCharacteristic.TransfusionVolume" />
                                 </div>
                             </div>
@@ -1393,21 +1457,18 @@ export default defineComponent({
                         <div class="col-md-3">
                             <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="inlineRadio1"
                                 value="1" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
                                 stain</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
                             <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio2"
                                 value="0" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Negative</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
                             <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio3"
                                 value="1" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Positive</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
                         <div class="col-md-3" v-if="parseInt(formData.GramStainAndCulture.gramNegativeOrPositive) === 1">
                             <div class="card-box-info-row-component-style">
@@ -1430,8 +1491,7 @@ export default defineComponent({
                         <div class="col-md-3 ">
                             <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio1"
                                 value="2" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -1468,8 +1528,7 @@ export default defineComponent({
                         <div class="col-md-9 ">
                             <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="inlineRadio1"
                                 value="0" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Not done</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
                     </div>
                 </div>
@@ -1482,20 +1541,17 @@ export default defineComponent({
                         <div class="col-md-3">
                             <input class="form-check-input" type="radio" name="isSubmittingCulture" id="inlineRadio1"
                                 value="1" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
                             <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio2"
                                 value="0" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Negative</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
                             <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio3"
                                 value="1" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Positive</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
                         <div class="col-md-3" v-if="parseInt(formData.GramStainAndCulture.cultureNegativeOrPositive) === 1">
                             <div class="card-box-info-row-component-style">
@@ -1518,8 +1574,7 @@ export default defineComponent({
                         <div class="col-md-3 ">
                             <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio1"
                                 value="2" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -1556,8 +1611,7 @@ export default defineComponent({
                         <div class="col-md-9 ">
                             <input class="form-check-input" type="radio" name="isSubmittingCulture" id="inlineRadio1"
                                 value="0" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Not done</label>
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
                     </div>
                 </div>
@@ -1996,14 +2050,6 @@ div {
     color: rgba(255, 255, 255, 1);
 }
 
-.accordion {
-    --bs-accordion-btn-icon: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.68937 7.10275L11.0131 13.4265L12.2079 14.6213L13.4026 13.4265L19.7264 7.10275L21.4158 8.79211L12.2079 18L3 8.79211L4.68937 7.10275Z' fill='%2300BFA5'/%3E%3C/svg%3E");
-
-    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.68937 7.10275L11.0131 13.4265L12.2079 14.6213L13.4026 13.4265L19.7264 7.10275L21.4158 8.79211L12.2079 18L3 8.79211L4.68937 7.10275Z' fill='%2300BFA5'/%3E%3C/svg%3E");
-
-    --bs-accordion-btn-icon-width: 2rem;
-}
-
 .indicators-box {
     width: 20%;
 }
@@ -2070,4 +2116,5 @@ div {
         width: 33%;
     }
 
-}</style>
+}
+</style>

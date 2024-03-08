@@ -16,18 +16,18 @@ class PDOConnect{
 			$this->password='pwd#mis2023';
 			$this->db='db';
 		}
+		// if($dbName=='db'){				
+		// 	$this->host='127.0.0.1';			
+		// 	$this->username='root';			
+		// 	$this->password='1234';
+		// 	$this->db='blood_request';
+		// }
 		if($dbName=='db'){				
-			$this->host='127.0.0.1';			
-			$this->username='root';			
-			$this->password='1234';
-			$this->db='blood_request';
-		}
-		/* if($dbName=='db'){				
 			$this->host='127.0.0.1';			
 			$this->username='root';			
 			$this->password='00000000';
 			$this->db='blood_request';
-		} */
+		}
 	}
 	
 	

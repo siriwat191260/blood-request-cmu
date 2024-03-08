@@ -840,7 +840,7 @@ export default defineComponent( {
 .card-box-body-style {
   width: 100%;
   height: 48px;
-  padding: 12px 0px 0px 16px;
+  padding: 5px 0px 0px 6px;
 }
 
 .card-box-info-style {

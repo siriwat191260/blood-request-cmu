@@ -113,10 +113,10 @@ export default {
             this.$router.push(`/get-transfusion-report/${id}`);
         },
         getApprove(id) {
-            this.$router.push(`/approve/${id}`);
+            this.$router.push(`/get-approve/${id}`);
         },
         addApprove(id) {
-            this.$router.push(`/add-approve/${id}`);
+            this.$router.push(`/approve/${id}`);
         },
         parseDate,
         parseTime,
@@ -203,7 +203,7 @@ export default {
                         <td>{{ row.ttl + " " + row.name + " " + row.lname }}</td>
                         <td>{{ row.hn }}</td>
                         <td v-if="!row.TRForm" class="wait">ไม่มีปฏิกิริยา</td>
-                        <td v-else-if="row.approve === 2" class="done">สำเร็จ</td>
+                        <td v-else-if="row.approve === 1" class="done">สำเร็จ</td>
                         <td v-else class="wait">รอ</td>
 
                         <td v-if="!row.TRForm" @click="addTransFusionForm(row.blood_transf_id)">
@@ -226,6 +226,7 @@ export default {
                                 <p class="done">เพิ่ม review</p>
                             </div>
                         </td>
+                        <td v-else-if="row.approve === 1 & isUserApproved()" class="done click" @click="addApprove(row.idTR_Report)">สำเร็จ</td>
                         <td v-else-if="row.approve === 1" class="done click" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
                         <td v-else class="wait">รอ</td>
                     </tr>

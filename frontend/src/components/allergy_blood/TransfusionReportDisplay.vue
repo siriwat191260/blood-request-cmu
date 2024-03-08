@@ -72,73 +72,116 @@ export default defineComponent({
             showResultsTest: false,
             showResultsReport: false,
             userInfo: [],
-            tr_form: {},
+            tr_report: {},
             userBloodbank: {},
             baseURL: import.meta.env.VITE_BASE_URL,
         };
     },
     async mounted() {
-        const idTR_Form = this.$route.params.id;
-        await this.fetchUser();
-        await this.fetchTRForm(idTR_Form);
-        await this.fetchUserBloodbank();
+        const idTR_Report = this.$route.params.id;
+        await this.fetchTRReport(idTR_Report);
     },
     methods: {
         importData() {
-            this.formData.data.title = this.tr_form.PatientInfo.title
-            this.formData.data.firstName = this.tr_form.PatientInfo.firstName
-            this.formData.data.lastName = this.tr_form.PatientInfo.lastName
-            this.formData.data.HN = this.tr_form.PatientInfo.HN
-            this.formData.data.createdDate = new Date(this.tr_form.PatientInfo.createdDate).toISOString().split("T")[0];
-            this.formData.data.createdTime = parseTime(new Date(this.tr_form.PatientInfo.createdDate));
-            this.formData.data.createdDateTime = this.tr_form.PatientInfo.createdDate
-            this.formData.data.ward = this.tr_form.PatientInfo.ward
-            this.formData.data.bloodGroup_Patient = this.tr_form.PatientInfo.bloodGroup_Patient
-            this.formData.data.blood_component = this.tr_form.PatientInfo.blood_component
-            this.formData.data.bloodGroup_Donor = this.tr_form.PatientInfo.bloodGroup_Donor
-            this.formData.data.bloodBagNumber = this.tr_form.PatientInfo.bloodBagNumber
-            this.formData.data.primaryPhysicianName = this.tr_form.PatientInfo.primaryPhysicianName
-            this.formData.data.nurse = this.tr_form.SubmittingTest.nurseName
+            this.formData.data.title = this.tr_report.data.title
+            this.formData.data.firstName = this.tr_report.data.firstName
+            this.formData.data.lastName = this.tr_report.data.lastName
+            this.formData.data.HN = this.tr_report.data.HN
+            this.formData.data.createdDate = new Date(this.tr_report.data.createdDate).toISOString().split("T")[0];
+            this.formData.data.createdTime = parseTime(new Date(this.tr_report.data.createdDate));
+            this.formData.data.createdDateTime = this.tr_report.data.createdDate
+            this.formData.data.ward = this.tr_report.data.ward
+            this.formData.data.bloodGroup_Patient = this.tr_report.data.bloodGroup_Patient
+            this.formData.data.blood_component = this.tr_report.data.blood_component
+            this.formData.data.bloodGroup_Donor = this.tr_report.data.bloodGroup_Donor
+            this.formData.data.bloodBagNumber = this.tr_report.data.bloodBagNumber
+            this.formData.data.primaryPhysicianName = this.tr_report.data.primaryPhysicianName
+            this.formData.data.nurse = this.tr_report.data.nurse
+            this.formData.data.interpretation = this.tr_report.data.interpretation
+            this.formData.data.testedBy = this.tr_report.data.testedBy ? this.tr_report.data.testedBy : ""
+            this.formData.data.reportedBy = this.tr_report.data.reportedBy ? this.tr_report.data.reportedBy : ""
+            this.formData.data.testedDate = this.tr_report.data.testedDateTime ? new Date(this.tr_report.data.testedDateTime).toISOString().split("T")[0] : ""
+            this.formData.data.testedTime = this.tr_report.data.testedDateTime ? parseTime(new Date(this.tr_report.data.testedDateTime)) : ""
+            this.formData.data.reportedDate = this.tr_report.data.reportedDateTime ? new Date(this.tr_report.data.reportedDateTime).toISOString().split("T")[0] : ""
+            this.formData.data.reportedTime = this.tr_report.data.reportedDateTime ? parseTime(new Date(this.tr_report.data.reportedDateTime)) : ""
+            //BloodBagCharacteristic
+            this.formData.BloodBagCharacteristic.isTransfusionSet = this.tr_report.BloodBagCharacteristic.isTransfusionSet
+            this.formData.BloodBagCharacteristic.needleStatus = this.tr_report.BloodBagCharacteristic.needleStatus
+            this.formData.BloodBagCharacteristic.plasmaCharacteristicStatus = this.tr_report.BloodBagCharacteristic.plasmaCharacteristicStatus
+            this.formData.BloodBagCharacteristic.isLeakagePosition = this.tr_report.BloodBagCharacteristic.isLeakagePosition
+            this.formData.BloodBagCharacteristic.leakagePosition = this.tr_report.BloodBagCharacteristic.leakagePosition
+            this.formData.BloodBagCharacteristic.volumeOfBag = this.tr_report.BloodBagCharacteristic.volumeOfBag
+            this.formData.BloodBagCharacteristic.TransfusionVolume = this.tr_report.BloodBagCharacteristic.TransfusionVolume
+            //indicator
+            this.formData.indicator[0].PreTransfusionSample = this.tr_report.indicator[0].PreTransfusionSample
+            this.formData.indicator[0].PostTransfusionSample = this.tr_report.indicator[0].PostTransfusionSample
+            this.formData.indicator[0].bloodBagNumber = this.tr_report.indicator[0].bloodBagNumber
+            this.formData.indicator[0].Remarks = this.tr_report.indicator[0].Remarks
+
+            this.formData.indicator[1].PreTransfusionSample = this.tr_report.indicator[1].PreTransfusionSample
+            this.formData.indicator[1].PostTransfusionSample = this.tr_report.indicator[1].PostTransfusionSample
+            this.formData.indicator[1].bloodBagNumber = this.tr_report.indicator[1].bloodBagNumber
+            this.formData.indicator[1].Remarks = this.tr_report.indicator[1].Remarks
+
+            this.formData.indicator[2].PreTransfusionSample = this.tr_report.indicator[2].PreTransfusionSample
+            this.formData.indicator[2].PostTransfusionSample = this.tr_report.indicator[2].PostTransfusionSample
+            this.formData.indicator[2].bloodBagNumber = this.tr_report.indicator[2].bloodBagNumber
+            this.formData.indicator[2].Remarks = this.tr_report.indicator[2].Remarks
+
+            this.formData.indicator[3].PreTransfusionSample = this.tr_report.indicator[3].PreTransfusionSample
+            this.formData.indicator[3].PostTransfusionSample = this.tr_report.indicator[3].PostTransfusionSample
+            this.formData.indicator[3].bloodBagNumber = this.tr_report.indicator[3].bloodBagNumber
+            this.formData.indicator[3].Remarks = this.tr_report.indicator[3].Remarks
+
+            this.formData.indicator[4].PreTransfusionSample = this.tr_report.indicator[4].PreTransfusionSample
+            this.formData.indicator[4].PostTransfusionSample = this.tr_report.indicator[4].PostTransfusionSample
+            this.formData.indicator[4].bloodBagNumber = this.tr_report.indicator[4].bloodBagNumber
+            this.formData.indicator[4].Remarks = this.tr_report.indicator[4].Remarks
+
+            this.formData.indicator[5].PreTransfusionSample = this.tr_report.indicator[5].PreTransfusionSample
+            this.formData.indicator[5].PostTransfusionSample = this.tr_report.indicator[5].PostTransfusionSample
+            this.formData.indicator[5].bloodBagNumber = this.tr_report.indicator[5].bloodBagNumber
+            this.formData.indicator[5].Remarks = this.tr_report.indicator[5].Remarks
+
+            this.formData.indicator[6].PreTransfusionSample = this.tr_report.indicator[6].PreTransfusionSample
+            this.formData.indicator[6].PostTransfusionSample = this.tr_report.indicator[6].PostTransfusionSample
+            this.formData.indicator[6].bloodBagNumber = this.tr_report.indicator[6].bloodBagNumber
+            this.formData.indicator[6].Remarks = this.tr_report.indicator[6].Remarks
+
+            this.formData.indicator[7].PreTransfusionSample = this.tr_report.indicator[7].PreTransfusionSample
+            this.formData.indicator[7].PostTransfusionSample = this.tr_report.indicator[7].PostTransfusionSample
+            this.formData.indicator[7].bloodBagNumber = this.tr_report.indicator[7].bloodBagNumber
+            this.formData.indicator[7].Remarks = this.tr_report.indicator[7].Remarks
+
+            this.formData.indicator[8].PreTransfusionSample = this.tr_report.indicator[8].PreTransfusionSample
+            this.formData.indicator[8].PostTransfusionSample = this.tr_report.indicator[8].PostTransfusionSample
+            this.formData.indicator[8].bloodBagNumber = this.tr_report.indicator[8].bloodBagNumber
+            this.formData.indicator[8].Remarks = this.tr_report.indicator[8].Remarks
+
+            this.formData.indicator[9].PreTransfusionSample = this.tr_report.indicator[9].PreTransfusionSample
+            this.formData.indicator[9].PostTransfusionSample = this.tr_report.indicator[9].PostTransfusionSample
+            this.formData.indicator[9].bloodBagNumber = this.tr_report.indicator[9].bloodBagNumber
+            this.formData.indicator[9].Remarks = this.tr_report.indicator[9].Remarks
+
+            this.formData.GramStainAndCulture.isSubmittingGramStain = this.tr_report.GramStainAndCulture.isSubmittingGramStain
+            this.formData.GramStainAndCulture.gramNegativeOrPositive = this.tr_report.GramStainAndCulture.gramNegativeOrPositive
+            this.formData.GramStainAndCulture.resultGramStain = this.tr_report.GramStainAndCulture.resultGramStain
+            this.formData.GramStainAndCulture.toDateGram = this.tr_report.GramStainAndCulture.toDateGram
+
+            this.formData.GramStainAndCulture.isSubmittingCulture = this.tr_report.GramStainAndCulture.isSubmittingCulture
+            this.formData.GramStainAndCulture.cultureNegativeOrPositive = this.tr_report.GramStainAndCulture.cultureNegativeOrPositive
+            this.formData.GramStainAndCulture.resultCulture = this.tr_report.GramStainAndCulture.resultCulture
+            this.formData.GramStainAndCulture.toDateCulture = this.tr_report.GramStainAndCulture.toDateCulture
+
         },
-        async fetchUser() {
+        async fetchTRReport(idTR_Report) {
             try {
-                const response = await axios.get(this.baseURL + "getUserLogin");
-                this.userInfo = response.data;
-            } catch (error) {
-                console.error("Error fetching List Blood Transfusion data:", error);
-            }
-        },
-        async fetchTRForm(idTR_Form) {
-            try {
-                const response = await axios.get(this.baseURL + "trasfusion-form/getTR_Form/" + idTR_Form);
-                this.tr_form = response.data;
+                const response = await axios.get(this.baseURL + "get-transfusion-report/" + idTR_Report);
+                this.tr_report = response.data;
                 this.importData()
             } catch (error) {
                 console.error("Error fetching List Blood Transfusion data:", error);
             }
-        },
-        async fetchUserBloodbank() {
-            try {
-                const response = await axios.get(this.baseURL + "getUserBloodbank");
-                this.userBloodbank = response.data;
-            } catch (error) {
-                console.error("Error fetching User Doctor data:", error);
-            }
-        },
-        handleInput(role) {
-            if (role === "test") {
-                this.showResultsTest = true;
-            } else if (role === "report") {
-                this.showResultsReport = true;
-            }
-        },
-        selectReport(item) {
-            this.formData.data.reportedBy = item;
-            this.showResultsReport = false;
-        },
-        selectTest(item) {
-            this.formData.data.testedBy = item;
-            this.showResultsTest = false;
         },
         currentDate,
         currentTime,
@@ -149,217 +192,16 @@ export default defineComponent({
             console.log("click")
             $('#CloseButton').modal('hide');
         },
-        async handleSubmit(formData) {
-            try {
-                const { data, BloodBagCharacteristic, indicator, GramStainAndCulture } = formData;
-                const testedDateTime = data.testedDate ? new Date(`${data.testedDate} ${data.testedTime}`) : null;
-                const reportedDateTime = data.reportedDate ? new Date(`${data.reportedDate} ${data.reportedTime}`) : null;
-
-                const cleasingFormData = {
-                    data: {
-                        title: data && data.title ? data.title : null,
-                        firstName: data && data.firstName ? data.firstName : null,
-                        lastName: data && data.lastName ? data.lastName : null,
-                        HN: data && data.HN ? data.HN : null,
-                        createdDate: data && data.createdDateTime ? new Date(`${data.createdDateTime}`) : null,
-                        ward: data && data.ward ? data.ward : null,
-                        bloodGroup_Patient: data && data.bloodGroup_Patient ? data.bloodGroup_Patient : null,
-                        blood_component: data && data.blood_component ? data.blood_component : null,
-                        bloodGroup_Donor: data && data.bloodGroup_Donor ? data.bloodGroup_Donor : null,
-                        bloodBagNumber: data && data.bloodBagNumber ? data.bloodBagNumber : null,
-                        primaryPhysicianName: data && data.primaryPhysicianName ? data.primaryPhysicianName : null,
-                        nurse: data && data.nurse ? data.nurse : null,
-                        interpretation: data && data.interpretation ? data.interpretation : null,
-                        testedBy: data && data.testedBy ? data.testedBy : null,
-                        testedDateTime: data && testedDateTime ? testedDateTime : null,
-                        reportedBy: data && data.reportedBy ? data.reportedBy : null,
-                        reportedDateTime: data && reportedDateTime ? reportedDateTime : null,
-                    },
-                    BloodBagCharacteristic: {
-                        isTransfusionSet: BloodBagCharacteristic ? BloodBagCharacteristic.isTransfusionSet : null,
-                        needleStatus: BloodBagCharacteristic && BloodBagCharacteristic.needleStatus ? BloodBagCharacteristic.needleStatus : null,
-                        plasmaCharacteristicStatus: BloodBagCharacteristic && BloodBagCharacteristic.plasmaCharacteristicStatus ? BloodBagCharacteristic.plasmaCharacteristicStatus : null,
-                        isLeakagePosition: BloodBagCharacteristic ? BloodBagCharacteristic.isLeakagePosition : null,
-                        leakagePosition: BloodBagCharacteristic && BloodBagCharacteristic.leakagePosition ? BloodBagCharacteristic.leakagePosition : null,
-                        volumeOfBag: BloodBagCharacteristic ? BloodBagCharacteristic.volumeOfBag : null,
-                        TransfusionVolume: BloodBagCharacteristic ? BloodBagCharacteristic.TransfusionVolume : null,
-                    },
-                    indicator: [{
-                        idIndicatorName: 1, PreTransfusionSample: indicator && indicator[0].PreTransfusionSample ? indicator[0].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[0].PostTransfusionSample ? indicator[0].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[0].bloodBagNumber ? indicator[0].bloodBagNumber : null,
-                        Remarks: indicator && indicator[0].Remarks ? indicator[0].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 2, PreTransfusionSample: indicator && indicator[1].PreTransfusionSample ? indicator[1].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[1].PostTransfusionSample ? indicator[1].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[1].bloodBagNumber ? indicator[1].bloodBagNumber : null,
-                        Remarks: indicator && indicator[1].Remarks ? indicator[1].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 3, PreTransfusionSample: indicator && indicator[2].PreTransfusionSample ? indicator[2].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[2].PostTransfusionSample ? indicator[2].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[2].bloodBagNumber ? indicator[2].bloodBagNumber : null,
-                        Remarks: indicator && indicator[2].Remarks ? indicator[2].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 4, PreTransfusionSample: null, PostTransfusionSample: null,
-                        bloodBagNumber: indicator && indicator[3].bloodBagNumber ? indicator[3].bloodBagNumber : null,
-                        Remarks: indicator && indicator[3].Remarks ? indicator[3].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 5, PreTransfusionSample: indicator && indicator[4].PreTransfusionSample ? indicator[4].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[4].PostTransfusionSample ? indicator[4].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[4].bloodBagNumber ? indicator[4].bloodBagNumber : null,
-                        Remarks: indicator && indicator[4].Remarks ? indicator[4].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 6, PreTransfusionSample: indicator && indicator[5].PreTransfusionSample ? indicator[5].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[5].PostTransfusionSample ? indicator[5].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[5].bloodBagNumber ? indicator[5].bloodBagNumber : null,
-                        Remarks: indicator && indicator[5].Remarks ? indicator[5].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 7, PreTransfusionSample: indicator && indicator[6].PreTransfusionSample ? indicator[6].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[6].PostTransfusionSample ? indicator[6].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[6].bloodBagNumber ? indicator[6].bloodBagNumber : null,
-                        Remarks: indicator && indicator[6].Remarks ? indicator[6].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 8, PreTransfusionSample: indicator && indicator[7].PreTransfusionSample ? indicator[7].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[7].PostTransfusionSample ? indicator[7].PostTransfusionSample : null,
-                        bloodBagNumber: indicator && indicator[7].bloodBagNumber ? indicator[7].bloodBagNumber : null,
-                        Remarks: indicator && indicator[7].Remarks ? indicator[7].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 9, PreTransfusionSample: indicator && indicator[8].PreTransfusionSample ? indicator[8].PreTransfusionSample : null,
-                        PostTransfusionSample: indicator && indicator[8].PostTransfusionSample ? indicator[8].PostTransfusionSample : null,
-                        bloodBagNumber: null, Remarks: indicator && indicator[8].Remarks ? indicator[8].Remarks : null
-                    },
-                    {
-                        idIndicatorName: 10, PreTransfusionSample: null, PostTransfusionSample: null,
-                        bloodBagNumber: indicator && indicator[9].bloodBagNumber ? indicator[9].bloodBagNumber : null,
-                        Remarks: indicator && indicator[9].Remarks ? indicator[9].Remarks : null
-                    },
-                    ],
-                    GramStainAndCulture: {
-                        isSubmittingGramStain: GramStainAndCulture ? GramStainAndCulture.isSubmittingGramStain : null,
-                        gramNegativeOrPositive: GramStainAndCulture ? GramStainAndCulture.gramNegativeOrPositive : null,
-                        resultGramStain: GramStainAndCulture && GramStainAndCulture.resultGramStain ? GramStainAndCulture.resultGramStain : null,
-                        toDateGram: GramStainAndCulture && data.toDateGram ? new Date(`${data.toDateGram}`) : null,
-                        isSubmittingCulture: GramStainAndCulture ? GramStainAndCulture.isSubmittingCulture : null,
-                        cultureNegativeOrPositive: GramStainAndCulture ? GramStainAndCulture.cultureNegativeOrPositive : null,
-                        resultCulture: GramStainAndCulture && GramStainAndCulture.resultCulture ? GramStainAndCulture.resultCulture : null,
-                        toDateCulture: GramStainAndCulture && data.toDateCulture ? new Date(`${data.toDateCulture}`) : null
-                    },
-                }
-                console.log("Form submitted! : ", formData);
-                console.log("cleasingFormData submitted! : ", cleasingFormData);
-                const response = await axios.post(
-                    this.baseURL + "submitting_transfusion_report",
-                    { formData: cleasingFormData }
-                );
-                console.log("Form submitted successfully!", response.data);
-            } catch (error) {
-                console.error("Error submitting form:", error);
-                // Handle error if necessary
-            }
-        },
-    },
-    watch: {
-        'formData.BloodBagCharacteristic.isLeakagePosition': function (newVal, oldVal) {
-            if (newVal !== 1) {
-                this.formData.BloodBagCharacteristic.leakagePosition = "";
-            }
-        },
-        'formData.GramStainAndCulture.gramNegativeOrPositive': function (newVal, oldVal) {
-            if (parseInt(oldVal) === 2) {
-                this.formData.GramStainAndCulture.toDateGram = "";
-            } else if (parseInt(oldVal) === 1) {
-                this.formData.GramStainAndCulture.resultGramStain = "";
-            }
-            if (parseInt(newVal) === 2) {
-                this.formData.GramStainAndCulture.toDateGram = new Date().toISOString().split("T")[0];
-            }
-        }, 'formData.GramStainAndCulture.cultureNegativeOrPositive': function (newVal, oldVal) {
-            if (parseInt(oldVal) === 2) {
-                this.formData.GramStainAndCulture.toDateCulture = "";
-            } else if (parseInt(oldVal) === 1) {
-                this.formData.GramStainAndCulture.resultCulture = "";
-            }
-            if (parseInt(newVal) === 2) {
-                this.formData.GramStainAndCulture.toDateCulture = new Date().toISOString().split("T")[0];
-            }
-        },
-        'formData.GramStainAndCulture.isSubmittingGramStain': function (newVal, oldVal) {
-            if (parseInt(newVal) === 0) {
-                this.formData.GramStainAndCulture.gramNegativeOrPositive = "";
-                this.formData.GramStainAndCulture.resultGramStain = "";
-                this.formData.GramStainAndCulture.toDateGram = "";
-            }
-        },
-        'formData.GramStainAndCulture.isSubmittingCulture': function (newVal, oldVal) {
-            if (parseInt(newVal) === 0) {
-                this.formData.GramStainAndCulture.cultureNegativeOrPositive = "";
-                this.formData.GramStainAndCulture.resultCulture = "";
-                this.formData.GramStainAndCulture.toDateCulture = "";
-            }
-        },
-        'formData.data.reportedBy.length': function (newVal) {
-            if (this.formData.data.reportedBy.length >= 1) {
-                this.formData.data.reportedDate = new Date().toISOString().split("T")[0];
-                this.formData.data.reportedTime = this.parseTime(new Date());
-            } else {
-                this.formData.data.reportedDate = "";
-                this.formData.data.reportedTime = "";
-            }
-        },
-        'formData.data.testedBy.length': function (newVal) {
-            if (this.formData.data.testedBy.length >= 1) {
-                this.formData.data.testedDate = new Date().toISOString().split("T")[0];
-                this.formData.data.testedTime = this.parseTime(new Date());
-            } else {
-                this.formData.data.testedDate = "";
-                this.formData.data.testedTime = "";
-            }
-        }
     },
     components: {
         DropDownSVGVue,
         Icon,
     },
-    computed: {
-        filteredItems() {
-            return () => {
-                if (this.showResultsReport) {
-                    const list_user_bloodbank = this.userBloodbank.filter((bloodbank) =>
-                        bloodbank.name
-                            .toLowerCase()
-                            .includes(
-                                this.formData.data.reportedBy.toLowerCase()
-                            )
-                    );
-                    const names = list_user_bloodbank.map((bloodbank) => bloodbank.name);
-                    return names;
-                } else if (this.showResultsTest) {
-                    const list_user_bloodbank = this.userBloodbank.filter((bloodbank) =>
-                        bloodbank.name
-                            .toLowerCase()
-                            .includes(
-                                this.formData.data.testedBy.toLowerCase()
-                            )
-                    );
-                    const names = list_user_bloodbank.map((bloodbank) => bloodbank.name);
-                    return names;
-                }
-            };
-        },
-    }
 });
 </script>
 <template>
     <div class="container-md">
-        <form @submit.prevent="handleSubmit(formData)">
+        <form>
             <div class="card" style="border: 0px; justify-content: center">
                 <!-- header -->
                 <div class="row">
@@ -465,7 +307,7 @@ export default defineComponent({
                                             padding-left: 16px;
                                             padding-top: 0px;
                                             padding-bottom: 0px;
-                                        " aria-label="Small select example" v-model="formData.data.ward">
+                                        " aria-label="Small select example"  :value="formData.data.ward">
                                     </div>
                                 </div>
                             </div>
@@ -482,7 +324,7 @@ export default defineComponent({
                                             padding-left: 16px;
                                             padding-top: 0px;
                                             padding-bottom: 0px;
-                                        " aria-label="Small select example" v-model="formData.data.bloodGroup_Patient">
+                                        " aria-label="Small select example"  :value="formData.data.bloodGroup_Patient">
                                     </div>
                                 </div>
                             </div>
@@ -502,7 +344,7 @@ export default defineComponent({
                                             padding-left: 16px;
                                             padding-top: 0px;
                                             padding-bottom: 0px;
-                                        " aria-label="Small select example" v-model="formData.data.blood_component">
+                                        " aria-label="Small select example"  :value="formData.data.blood_component">
                                     </div>
                                 </div>
                             </div>
@@ -519,7 +361,7 @@ export default defineComponent({
                                             padding-left: 16px;
                                             padding-top: 0px;
                                             padding-bottom: 0px;
-                                        " aria-label="Small select example" v-model="formData.data.bloodGroup_Donor">
+                                        " aria-label="Small select example"  :value="formData.data.bloodGroup_Donor">
                                     </div>
                                 </div>
                             </div>
@@ -536,7 +378,7 @@ export default defineComponent({
                                             padding-left: 16px;
                                             padding-top: 0px;
                                             padding-bottom: 0px;
-                                        " aria-label="Small select example" v-model="formData.data.bloodBagNumber">
+                                        " aria-label="Small select example"  :value="formData.data.bloodBagNumber">
                                     </div>
                                 </div>
                             </div>
@@ -557,7 +399,7 @@ export default defineComponent({
                                             padding-top: 0px;
                                             padding-bottom: 0px;
                                         " aria-label="Small select example"
-                                            v-model="formData.data.primaryPhysicianName">
+                                             :value="formData.data.primaryPhysicianName">
                                     </div>
                                 </div>
                             </div>
@@ -574,7 +416,7 @@ export default defineComponent({
                                             padding-left: 16px;
                                             padding-top: 0px;
                                             padding-bottom: 0px;
-                                        " aria-label="Small select example" v-model="formData.data.nurse">
+                                        " aria-label="Small select example"  :value="formData.data.nurse">
                                     </div>
                                 </div>
                             </div>
@@ -597,16 +439,16 @@ export default defineComponent({
                             1. มี Transfusion set เสียบอยู่ที่ถุงเลือด
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio1" value="1"
-                                v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี</label>
+                            <input :disabled="formData.BloodBagCharacteristic.isTransfusionSet !== 1"
+                                class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio1"
+                                :checked="formData.BloodBagCharacteristic.isTransfusionSet === 1" />
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี</label>
                         </div>
                         <div class="col-md-3 form-check-inline">
-                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio2" value="0"
-                                v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <input :disabled="formData.BloodBagCharacteristic.isTransfusionSet !== 0"
+                                class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio2"
+                                :checked="formData.BloodBagCharacteristic.isTransfusionSet !== 1" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 2 -->
@@ -617,22 +459,22 @@ export default defineComponent({
                             2. มี Needle ติดที่ปลาย Transfusion set
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio1" value="1"
-                                v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี ปิดสนิท</label>
+                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio1"
+                                :disabled="formData.BloodBagCharacteristic.needleStatus !== 1"
+                                :checked="formData.BloodBagCharacteristic.needleStatus == 1" />
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี ปิดสนิท</label>
                         </div>
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio2" value="2"
-                                v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">มี ปิดไม่สนิท</label>
+                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio2"
+                                :disabled="formData.BloodBagCharacteristic.needleStatus !== 2"
+                                :checked="formData.BloodBagCharacteristic.needleStatus == 2" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">มี ปิดไม่สนิท</label>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio3" value="3"
-                                v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio3"
+                                :disabled="formData.BloodBagCharacteristic.needleStatus !== 3"
+                                :checked="formData.BloodBagCharacteristic.needleStatus == 3" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 3 -->
@@ -643,22 +485,22 @@ export default defineComponent({
                             3. ลักษณะของพลาสมา
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio1"
-                                value="1" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี Fibrin</label>
+                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus"
+                                id="inlineRadio1" :disabled="formData.BloodBagCharacteristic.plasmaCharacteristicStatus !== 1"
+                                :checked="formData.BloodBagCharacteristic.plasmaCharacteristicStatus === 1 " />
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี Fibrin</label>
                         </div>
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio2"
-                                value="2" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ใส</label>
+                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus"
+                                id="inlineRadio2" :disabled="formData.BloodBagCharacteristic.plasmaCharacteristicStatus !== 2"
+                                :checked="formData.BloodBagCharacteristic.plasmaCharacteristicStatus === 2" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ใส</label>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio3"
-                                value="3" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio3"
-                                style=" margin-top: 2px; margin-left: 10px">ขุ่น</label>
+                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus"
+                                id="inlineRadio3" :disabled="formData.BloodBagCharacteristic.plasmaCharacteristicStatus !== 3"
+                                :checked="formData.BloodBagCharacteristic.plasmaCharacteristicStatus === 3" />
+                            <label class="form-check-label" for="inlineRadio3" style=" margin-top: 2px; margin-left: 10px">ขุ่น</label>
                         </div>
                     </div>
                     <!-- row 4 -->
@@ -670,9 +512,9 @@ export default defineComponent({
                         </p>
                         <div class="col-md-1 ">
                             <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio1"
-                                value="1" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">มี </label>
+                                :disabled="formData.BloodBagCharacteristic.isLeakagePosition !== 1"
+                                :checked="formData.BloodBagCharacteristic.isLeakagePosition == 1" />
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี </label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -684,16 +526,16 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.BloodBagCharacteristic.leakagePosition" />
+                                        " aria-label="default input example"
+                                         :value="formData.BloodBagCharacteristic.leakagePosition" />
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio2"
-                                value="0" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            :disabled="formData.BloodBagCharacteristic.isLeakagePosition !== 0"
+                                :checked="formData.BloodBagCharacteristic.isLeakagePosition == 0" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 5 -->
@@ -709,12 +551,12 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 16px;">
                                         เหลือในถุง
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.BloodBagCharacteristic.volumeOfBag" />
+                                        onkeypress="return event.charCode != 45" min="0"
+                                         :value="formData.BloodBagCharacteristic.volumeOfBag" />
                                 </div>
                             </div>
                         </div>
@@ -724,12 +566,12 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 16px;">
                                         เติมให้ผู้ป่วย
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.BloodBagCharacteristic.TransfusionVolume" />
+                                        onkeypress="return event.charCode != 45" min="0"
+                                         :value="formData.BloodBagCharacteristic.TransfusionVolume" />
                                 </div>
                             </div>
                         </div>
@@ -754,11 +596,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[0].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -768,11 +610,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[0].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -784,11 +626,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[0].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -798,11 +640,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <inputdisabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[0].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -818,11 +659,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[1].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -832,11 +673,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[1].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -848,11 +689,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[1].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -862,11 +703,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[1].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -883,11 +723,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[2].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[2].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -897,11 +737,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[2].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[2].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -913,11 +753,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[2].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[2].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -927,11 +767,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[2].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[2].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -976,11 +815,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[3].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[3].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -990,11 +829,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[3].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[3].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1011,11 +849,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[4].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1025,11 +863,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[4].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1041,11 +879,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[4].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -1055,11 +893,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[4].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1075,11 +912,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[5].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1089,11 +926,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[5].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1105,11 +942,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[5].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -1119,11 +956,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[5].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1139,11 +975,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[6].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1153,11 +989,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[6].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1169,11 +1005,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[6].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -1183,11 +1019,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[6].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1203,11 +1038,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[7].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1217,11 +1052,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[7].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1233,11 +1068,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[7].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -1247,11 +1082,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[7].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1267,11 +1101,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[8].PreTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[8].PreTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1281,11 +1115,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[8].PostTransfusionSample" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[8].PostTransfusionSample" />
                                 </div>
                             </div>
                         </div>
@@ -1310,11 +1144,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[8].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[8].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1358,11 +1191,11 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[9].bloodBagNumber" />
+                                        " aria-label="default input example"
+                                         :value="formData.indicator[9].bloodBagNumber" />
                                 </div>
                             </div>
                         </div>
@@ -1372,11 +1205,10 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Remarks
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[9].Remarks" />
+                                        " aria-label="default input example"  :value="formData.indicator[9].Remarks" />
                                 </div>
                             </div>
                         </div>
@@ -1391,23 +1223,23 @@ export default defineComponent({
                             ผล Gram stain
                         </p>
                         <div class="col-md-3">
-                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="inlineRadio1"
-                                value="1" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
+                            <input class="form-check-input" type="radio" name="isSubmittingGramStain"
+                                id="inlineRadio1" :disabled="formData.GramStainAndCulture.isSubmittingGramStain !== 1"
+                                :checked="formData.GramStainAndCulture.isSubmittingGramStain === 1" />
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
                                 stain</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio2"
-                                value="0" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Negative</label>
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive"
+                            :disabled="formData.GramStainAndCulture.isSubmittingGramStain !== 0"
+                                :checked="formData.GramStainAndCulture.isSubmittingGramStain === 0" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
-                        <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio3"
-                                value="1" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Positive</label>
+                        <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.gramNegativeOrPositive) === 1">
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive"
+                            :disabled="formData.GramStainAndCulture.gramNegativeOrPositive !== 1"
+                                :checked="formData.GramStainAndCulture.gramNegativeOrPositive === 1" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
                         <div class="col-md-3" v-if="parseInt(formData.GramStainAndCulture.gramNegativeOrPositive) === 1">
                             <div class="card-box-info-row-component-style">
@@ -1415,23 +1247,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 16px;">
                                         ผล
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.GramStainAndCulture.resultGramStain" />
+                                        " aria-label="default input example"
+                                         :value="formData.GramStainAndCulture.resultGramStain" />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- row 2 -->
                     <div class="row" style="margin-top: 16px; justify-content: flex-end"
-                        v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
+                        v-if="parseInt(formData.GramStainAndCulture.gramNegativeOrPositive) === 2">
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio1"
-                                value="2" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive"
+                            :disabled="formData.GramStainAndCulture.gramNegativeOrPositive !== 2"
+                                :checked="formData.GramStainAndCulture.gramNegativeOrPositive === 2" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -1448,12 +1280,12 @@ export default defineComponent({
                                     </p>
                                     <div style="position: relative">
                                         <div style="display: inline; position: absolute; width: 100%">
-                                            <input class="form-control typing-box-style" style="
+                                            <input disabled class="form-control typing-box-style" style="
                                                 padding-left: 16px;
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="date" v-model="formData.GramStainAndCulture.toDateGram"
+                                                " type="date"  :value="formData.GramStainAndCulture.toDateGram"
                                                 aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
                                         </div>
                                     </div>
@@ -1462,14 +1294,14 @@ export default defineComponent({
                         </div>
                     </div>
                     <!-- row 3 -->
-                    <div class="row" style="margin-top: 16px; ">
+                    <div class="row" style="margin-top: 16px; "  v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 0">
                         <p class=" col-md-2">
                         </p>
                         <div class="col-md-9 ">
-                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="inlineRadio1"
-                                value="0" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Not done</label>
+                            <input class="form-check-input" type="radio" name="isSubmittingGramStain"
+                            :disabled="formData.GramStainAndCulture.isSubmittingGramStain !== 0"
+                                :checked="formData.GramStainAndCulture.isSubmittingGramStain === 0" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
                     </div>
                 </div>
@@ -1480,22 +1312,22 @@ export default defineComponent({
                             ผล Culture
                         </p>
                         <div class="col-md-3">
-                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="inlineRadio1"
-                                value="1" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
-                            <label class="form-check-label" for="inlineRadio1"
-                                style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
+                            <input class="form-check-input" type="radio" name="isSubmittingCulture"
+                            :disabled="formData.GramStainAndCulture.isSubmittingCulture !== 1"
+                                :checked="formData.GramStainAndCulture.isSubmittingCulture === 1" />
+                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio2"
-                                value="0" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Negative</label>
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive"
+                            :disabled="formData.GramStainAndCulture.cultureNegativeOrPositive !== 0"
+                                :checked="formData.GramStainAndCulture.cultureNegativeOrPositive === 0" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio3"
-                                value="1" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Positive</label>
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive"
+                               :disabled="formData.GramStainAndCulture.cultureNegativeOrPositive !== 1"
+                                :checked="formData.GramStainAndCulture.cultureNegativeOrPositive === 1" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
                         <div class="col-md-3" v-if="parseInt(formData.GramStainAndCulture.cultureNegativeOrPositive) === 1">
                             <div class="card-box-info-row-component-style">
@@ -1503,23 +1335,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 16px;">
                                         ผล
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.GramStainAndCulture.resultCulture" />
+                                        " aria-label="default input example"
+                                         :value="formData.GramStainAndCulture.resultCulture" />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- row 2 -->
                     <div class="row" style="margin-top: 16px; justify-content: flex-end"
-                        v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
+                        v-if="parseInt(formData.GramStainAndCulture.gramNegativeOrPositive) === 2">
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio1"
-                                value="2" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive"
+                            :disabled="formData.GramStainAndCulture.cultureNegativeOrPositive !== 2"
+                                :checked="formData.GramStainAndCulture.cultureNegativeOrPositive === 2" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -1541,7 +1373,7 @@ export default defineComponent({
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="date" v-model="formData.GramStainAndCulture.toDateCulture"
+                                                " type="date"  :value="formData.GramStainAndCulture.toDateCulture"
                                                 aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
                                         </div>
                                     </div>
@@ -1550,14 +1382,14 @@ export default defineComponent({
                         </div>
                     </div>
                     <!-- row 3 -->
-                    <div class="row" style="margin-top: 16px; ">
+                    <div class="row" style="margin-top: 16px; " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 0">
                         <p class=" col-md-2">
                         </p>
                         <div class="col-md-9 ">
-                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="inlineRadio1"
-                                value="0" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
-                            <label class="form-check-label" for="inlineRadio2"
-                                style=" margin-top: 2px; margin-left: 10px">Not done</label>
+                            <input class="form-check-input" type="radio" name="isSubmittingCulture"
+                            :disabled="formData.GramStainAndCulture.isSubmittingCulture !== 0"
+                                :checked="formData.GramStainAndCulture.isSubmittingCulture === 0" />
+                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
                     </div>
                 </div>
@@ -1572,8 +1404,7 @@ export default defineComponent({
                                 padding-top: 0px;
                                 padding-bottom: 0px;
                                 height: 72px;
-                                " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                v-model="formData.data.interpretation">
+                                " aria-label="default input example"  :value="formData.data.interpretation">
                             </textarea>
                         </div>
                     </div>
@@ -1584,19 +1415,13 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 16px;">
                                         Test by
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-left: 16px;
                                         padding-right: 16px;
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " type="text" aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        @input="handleInput('test')" v-model="formData.data.testedBy" />
-                                    <ul v-if="showResultsTest && formData.data.testedBy.length >= 1
-                                        " class="autocomplete-results">
-                                        <li v-for="(item, index) in filteredItems()" :key="index" @click="selectTest(item)">
-                                            {{ item }}
-                                        </li>
-                                    </ul>
+                                        " type="text" aria-label="default input example" @input="handleInput('test')"
+                                         :value="formData.data.testedBy" />
                                 </div>
                             </div>
                         </div>
@@ -1614,14 +1439,13 @@ export default defineComponent({
                                     </p>
                                     <div style="position: relative">
                                         <div style="display: inline; position: absolute; width: 100%">
-                                            <input class="form-control typing-box-style" style="
+                                            <input disabled class="form-control typing-box-style" style="
                                                 padding-left: 16px;
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="date" v-model="formData.data.testedDate"
-                                                :disabled="formData.data.testedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                " type="date"  :value="formData.data.testedDate"
+                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime"/>
                                         </div>
                                     </div>
                                 </div>
@@ -1646,9 +1470,8 @@ export default defineComponent({
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="time" v-model="formData.data.testedTime"
-                                                :disabled="formData.data.testedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                " type="time"  :value="formData.data.testedTime"
+                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -1662,20 +1485,13 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 16px;">
                                         Report by
                                     </p>
-                                    <input class="form-control typing-box-style" style="
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-left: 16px;
                                         padding-right: 16px;
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " type="text" aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        @input="handleInput('report')" v-model="formData.data.reportedBy" />
-                                    <ul v-if="showResultsReport && formData.data.reportedBy.length >= 1
-                                        " class="autocomplete-results">
-                                        <li v-for="(item, index) in filteredItems()" :key="index"
-                                            @click="selectReport(item)">
-                                            {{ item }}
-                                        </li>
-                                    </ul>
+                                        " type="text" aria-label="default input example" @input="handleInput('report')"
+                                         :value="formData.data.reportedBy" />
                                 </div>
                             </div>
                         </div>
@@ -1698,9 +1514,8 @@ export default defineComponent({
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="date" v-model="formData.data.reportedDate"
-                                                :disabled="formData.data.reportedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                " type="date"  :value="formData.data.reportedDate"
+                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -1720,13 +1535,12 @@ export default defineComponent({
                                     </p>
                                     <div style="position: relative">
                                         <div style="display: inline; position: absolute; width: 100%">
-                                            <input class="form-control typing-box-style" style="
+                                            <input disabled class="form-control typing-box-style" style="
                                                 padding-left: 16px;
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="time" v-model="formData.data.reportedTime"
-                                                :disabled="formData.data.reportedBy.length === 0"
+                                                " type="time"  :value="formData.data.reportedTime"
                                                 aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
                                         </div>
                                     </div>
@@ -1739,49 +1553,9 @@ export default defineComponent({
                 <div class="card" style="border: 0px; margin-bottom: 32px">
                     <div style="display: flex; justify-content: flex-end; gap: 2%">
                         <button class="btn button-style-close" data-bs-toggle="modal" data-bs-target="#CloseButton"
-                            style="margin-top: 32px">
+                            style="margin-top: 32px" @click="navigateToPreviousPage">
                             ปิด
                         </button>
-                        <button class="btn button-style-save" style="margin-top: 32px" type="submit" data-bs-toggle="modal"
-                            data-bs-target="#SaveButton">
-                            บันทึก
-                        </button>
-                    </div>
-                </div>
-                <div class="modal fade" id="CloseButton" tabindex="-1" aria-labelledby="closeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="closeModalLabel">คุณต้องการยกเลิกการทำรายการใช่หรือไม่</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    ปิด
-                                </button>
-                                <button type="button" class="btn btn-primary" @click="navigateToPreviousPage">
-                                    ตกลง
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="SaveButton" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header text-center">
-                                <h5 class="modal-title" id="saveModalLabel">บันทึกข้อมูลสำเร็จ</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label=""></button>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                    @click="navigateToPreviousPage">
-                                    ปิด
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1996,14 +1770,6 @@ div {
     color: rgba(255, 255, 255, 1);
 }
 
-.accordion {
-    --bs-accordion-btn-icon: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.68937 7.10275L11.0131 13.4265L12.2079 14.6213L13.4026 13.4265L19.7264 7.10275L21.4158 8.79211L12.2079 18L3 8.79211L4.68937 7.10275Z' fill='%2300BFA5'/%3E%3C/svg%3E");
-
-    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.68937 7.10275L11.0131 13.4265L12.2079 14.6213L13.4026 13.4265L19.7264 7.10275L21.4158 8.79211L12.2079 18L3 8.79211L4.68937 7.10275Z' fill='%2300BFA5'/%3E%3C/svg%3E");
-
-    --bs-accordion-btn-icon-width: 2rem;
-}
-
 .indicators-box {
     width: 20%;
 }
@@ -2070,4 +1836,5 @@ div {
         width: 33%;
     }
 
-}</style>
+}
+</style>

@@ -614,16 +614,7 @@ export default defineComponent({
               <p class="fontTopicBox">ชื่อผู้ป่วย</p>
               <div class="card card-box-style">
                 <div class="card-body card-box-body-style">
-                  <p class="fontInsideBox">
-                    <Icon
-                      icon="bx:id-card"
-                      style="
-                        color: #00bfa5;
-                        width: 32;
-                        height: 32;
-                        margin-bottom: 4px;
-                      "
-                    ></Icon>
+                  <p class="fontInsideBox" style="margin-top: 6px;">
                     &nbsp;
                     {{
                       formData.PatientInfo.title +
@@ -1101,7 +1092,7 @@ export default defineComponent({
                     <label
                       class="form-check-label"
                       for="isReactionHistory1"
-                      style="margin-top: 2px"
+                      style=" margin-top: 2px; margin-left: 10px"
                       >ไม่มี</label
                     >
                   </div>
@@ -1117,7 +1108,7 @@ export default defineComponent({
                     <label
                       class="form-check-label"
                       for="isReactionHistory2"
-                      style="margin-top: 2px"
+                      style=" margin-top: 2px; margin-left: 10px"
                       >มี</label
                     >
                   </div>
@@ -1206,7 +1197,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectPatientName1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
                     </div>
@@ -1227,7 +1218,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectPatientName2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
                     </div>
@@ -1274,7 +1265,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isWithin24hrsFever1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >มีไข้</label
                       >
                     </div>
@@ -1295,7 +1286,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isWithin24hrsFever2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่มีไข้</label
                       >
                     </div>
@@ -1344,7 +1335,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodComponent1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
                     </div>
@@ -1365,7 +1356,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodComponent2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
                     </div>
@@ -1413,7 +1404,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodTransfusionRec1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
                     </div>
@@ -1435,7 +1426,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodTransfusionRec2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
                     </div>
@@ -1484,7 +1475,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodBagNumber1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
                     </div>
@@ -1505,7 +1496,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodBagNumber2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
                     </div>
@@ -1552,7 +1543,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodGroupDonor1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
                     </div>
@@ -1573,7 +1564,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodGroupDonor2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
                     </div>
@@ -1623,7 +1614,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodGroupPatient1"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
                     </div>
@@ -1645,7 +1636,7 @@ export default defineComponent({
                       <label
                         class="form-check-label"
                         for="isCorrectBloodGroupPatient2"
-                        style="margin-top: 2px"
+                        style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
                     </div>
@@ -1689,51 +1680,6 @@ export default defineComponent({
                   >
                     เวลา
                   </p>
-                  <!-- <div style="position: relative">
-                    <div
-                      style="display: inline; position: absolute; width: 100%"
-                    >
-                      <div style="display: flex; height: 24px;">
-                        <input
-                          class="form-control typing-box-style"
-                          style="
-                            padding-left: 16px;
-                            padding-right: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                            width: 100%; 
-                            text-align: center;
-                          "
-                          :style="{ width: inputWidth('beforeTime') }"
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          required
-                          v-model="beforeReactionTimeSectionOne"
-                          @input="restrictInput"
-                        />
-                        <p class="fontTopicInfo" style="margin-top: 2px">:</p>
-                        <input
-                          class="form-control typing-box-style"
-                          style="
-                            padding-left: 16px;
-                            padding-right: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                            width: 100%;
-                            text-align: center;
-                          "
-                           :style="{ width: inputWidth('beforeTime') }"
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          required
-                          v-model="beforeReactionTimeSectionTwo"
-                          @input="restrictInput"
-                        />
-                      </div>
-                    </div>
-                  </div> -->
                   <div style="position: relative">
                     <div
                       style="display: inline; position: absolute; width: 100%"
@@ -1915,51 +1861,6 @@ export default defineComponent({
                   >
                     เวลา
                   </p>
-                  <!-- <div style="position: relative">
-                    <div
-                      style="display: inline; position: absolute; width: 100%"
-                    >
-                    <div style="display: flex; height: 24px;">
-                        <input
-                          class="form-control typing-box-style"
-                          style="
-                            padding-left: 16px;
-                            padding-right: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                            width: 100%; 
-                            text-align: center;
-                          "
-                          :style="{ width: inputWidth('afterTime') }"
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          required
-                          v-model="afterReactionTimeSectionOne"
-                          @input="restrictInput"
-                        />
-                        <p class="fontTopicInfo" style="margin-top: 2px">:</p>
-                        <input
-                          class="form-control typing-box-style"
-                          style="
-                            padding-left: 16px;
-                            padding-right: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                            width: 100%;
-                            text-align: center;
-                          "
-                           :style="{ width: inputWidth('afterTime') }"
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          required
-                          v-model="afterReactionTimeSectionTwo"
-                          @input="restrictInput"
-                        />
-                      </div>
-                    </div>
-                  </div> -->
                   <div style="position: relative">
                     <div
                       style="display: inline; position: absolute; width: 100%"
@@ -2149,7 +2050,7 @@ export default defineComponent({
                     "
                   />
                   <label
-                    style="margin-top: 2px"
+                    style=" margin-top: 2px; margin-left: 5px"
                     class="form-check-label"
                     :for="'inlineCheckbox' + index"
                     >{{ SignsAndSymptoms.name }}</label
@@ -2545,7 +2446,7 @@ export default defineComponent({
                                 :for="
                                   'DetailRecordIn24Hrs_isReaction_0_' + index
                                 "
-                                style="margin-top: 2px"
+                                style=" margin-top: 2px; margin-left: 10px"
                                 >ไม่มี</label
                               >
                             </div>
@@ -2569,7 +2470,7 @@ export default defineComponent({
                                 :for="
                                   'DetailRecordIn24Hrs_isReaction_1_' + index
                                 "
-                                style="margin-top: 2px"
+                                style=" margin-top: 2px; margin-left: 10px"
                                 >มี</label
                               >
                             </div>
@@ -2601,7 +2502,7 @@ export default defineComponent({
                     :checked="formData.SubmittingTest.isBloodSample === 1"
                   />
                   <label
-                    style="margin-top: 2px; margin-left: 8px"
+                    style="margin-top: 2px; margin-left: 10px"
                     class="form-check-label"
                     for="isBloodSample1"
                     >ส่งตัวอย่างเลือดผู้ป่วยหลังจากเกิดปฏิกิริยา (EDTA blood 6
@@ -2623,7 +2524,7 @@ export default defineComponent({
                     :checked="formData.SubmittingTest.isBloodBagReaction === 1"
                   />
                   <label
-                    style="margin-top: 2px; margin-left: 8px"
+                    style="margin-top: 2px; margin-left: 10px"
                     class="form-check-label"
                     for="isBloodBagReaction2"
                     >ส่งถุงเลือดที่เกิดปฏิกริยาพร้อมใบคล้องถุงเลือด</label
@@ -2904,7 +2805,7 @@ export default defineComponent({
               data-bs-toggle="modal"
               data-bs-target="#SaveButton"
             >
-              บันทึกข้อมูล
+              บันทึก
             </button>
           </div>
         </div>
@@ -3062,7 +2963,7 @@ export default defineComponent({
 .card-box-body-style {
   width: 100%;
   height: 48px;
-  padding: 12px 0px 0px 16px;
+  padding: 5px 0px 0px 6px;
 }
 .card-box-info-row-component-style {
   width: 100%;

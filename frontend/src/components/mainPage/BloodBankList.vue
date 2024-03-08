@@ -81,9 +81,6 @@ export default {
         getTransFusionForm(id) {
             this.$router.push(`/get-transfusion-form/${id}`);
         },
-        getTransFusionReport(id) {
-            this.$router.push(`/get-transfusion-report/${id}`);
-        },
         addTransFusionReport(id) {
             this.$router.push(`/transfusion-report/${id}`);
         },
@@ -185,6 +182,7 @@ export default {
                         <td v-if="row.TRForm" @click="getTransFusionForm(row.idTR_Form)" class="click">
                             ฟอร์มนำส่งตรวจ {{ row.TRForm }}%</td>
                         <td v-else class="wait">ฟอร์มนำส่งตรวจ</td>
+
                         <td v-if="row.TRForm !== 100">-</td>
                         <td v-else-if="!row.TRReport " @click="addTransFusionReport(row.idTR_Form)">
                             <div class="add">
@@ -193,9 +191,9 @@ export default {
                             </div>
                         </td>
                         <td v-else-if="row.TRReport === 100" @click="editTransFusionReport(row.idTR_Report)" class="click">รายงานการตรวจ</td>
-                        <td v-else class="wait click" @click="editTransFusionReport(row.idTR_Report)" >รายงานการตรวจ {{ row.TRForm }}%</td>
+                        <td v-else class="wait click" @click="editTransFusionReport(row.idTR_Report)" >รายงานการตรวจ {{ row.TRReport }}%</td>
 
-                        <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"
+                        <td v-if="!row.approve && isUserApproved() && row.TRReport === 100"
                             @click="addApprove(row.idTR_Report)">
                             <div class="add">
                                 <Icon icon="material-symbols:note-add-outline" class="icon-add" />

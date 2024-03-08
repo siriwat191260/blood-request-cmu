@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from "vue";
-import BloodBankList from "./BloodBankList.vue"
+import BloodBankList from "./BloodBankList.vue";
 import MedList from "./MedList.vue";
 import axios from "axios";
 
