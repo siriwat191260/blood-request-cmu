@@ -16,6 +16,7 @@ export default {
     },
     data() {
         return {
+            searchHN: null,
             sortByField: '',
             sortDirection: 'asc',
             currentPage: 1,
@@ -42,8 +43,16 @@ export default {
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
-            return this.sortedRows.slice(startIndex, endIndex);
+            let data = this.sortedRows.slice(startIndex, endIndex); 
+            if (!this.searchHN ) {
+                return data;
+            } else {
+                return data.filter(row => {
+                    return row.hn.includes(this.searchHN); 
+                });
+            }
         },
+
         paginationRange() {
             const start = (this.currentPage - 1) * this.rowsPerPage + 1;
             const end = Math.min(this.currentPage * this.rowsPerPage, this.sortedRows.length);
@@ -146,8 +155,23 @@ export default {
             </div>
         </nav>
         <div class="container-md">
-            <div class="card" style="border: 0px; justify-content: center; margin: 30px 0px;">
-                <p class="fontSize_header">ประวัติการรับเลือดทั้งหมด</p>
+            <div class="card"
+                style="border: 0px; justify-content: center; margin: 20px 0px; display: flex; align-items: center; flex-direction: row;">
+                <p style="font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 0; color: #3c3c3c; flex: 1;">
+                    ประวัติการรับเลือดทั้งหมด</p>
+                <div class="col-md-3">
+                    <p class="fontTopicBox">ค้นหา HN</p>
+                    <div class="card search-card">
+                        <div class="card-body search-input">
+                            <!-- Icon -->
+                            <Icon icon="ion:search" class="search-icon"></Icon>
+                            <!-- Input field -->
+                            <input class="form-control typing-box-style search-input-field" v-model="searchHN" type="number"
+                                pattern="[0-9]*" />
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <table>
                 <thead>
@@ -208,22 +232,27 @@ export default {
                                 <p class="done">เพิ่มฟอร์ม</p>
                             </div>
                         </td>
-                        <td v-else-if="row.TRForm === 100" @click="editTransFusionForm(row.idTR_Form)" class="click">ฟอร์มนำส่งตรวจ</td>
-                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait click">ฟอร์มนำส่งตรวจ {{ row.TRForm }}%</td>
+                        <td v-else-if="row.TRForm === 100" @click="editTransFusionForm(row.idTR_Form)" class="click">
+                            ฟอร์มนำส่งตรวจ</td>
+                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait click">ฟอร์มนำส่งตรวจ {{
+                            row.TRForm }}%</td>
 
                         <td v-if="!row.TRForm" class="wait">-</td>
-                        <td v-else-if="row.TRReport === 100" @click="getTransFusionReport(row.idTR_Report)" class="click">รายงานการตรวจ</td>
+                        <td v-else-if="row.TRReport === 100" @click="getTransFusionReport(row.idTR_Report)" class="click">
+                            รายงานการตรวจ</td>
                         <td v-else class="wait">รายงานการตรวจ</td>
 
-                        <td v-if="!row.approve & isUserApproved() &row.TRReport === 100"
+                        <td v-if="!row.approve & isUserApproved() & row.TRReport === 100"
                             @click="addApprove(row.idTR_Report)">
                             <div class="add">
                                 <Icon icon="material-symbols:note-add-outline" class="icon-add" />
                                 <p class="done">เพิ่ม review</p>
                             </div>
                         </td>
-                        <td v-else-if="row.approve === 1 & isUserApproved()" class="done click" @click="addApprove(row.idTR_Report)">สำเร็จ</td>
-                        <td v-else-if="row.approve === 1" class="done click" @click="getApprove(row.idTR_Report)">สำเร็จ</td>
+                        <td v-else-if="row.approve === 1 & isUserApproved()" class="done click"
+                            @click="addApprove(row.idTR_Report)">สำเร็จ</td>
+                        <td v-else-if="row.approve === 1" class="done click" @click="getApprove(row.idTR_Report)">สำเร็จ
+                        </td>
                         <td v-else class="wait">รอ</td>
                     </tr>
                 </tbody>
@@ -331,6 +360,7 @@ p {
     align-items: center;
     border: 0;
 }
+
 .add:hover {
     cursor: pointer;
 }
@@ -403,6 +433,40 @@ th {
     margin-right: 6px;
     color: #008E76;
 }
+
+.search-card {
+    width: 100%;
+    height: 48px;
+    border: 2px solid #dee0e6;
+    border-radius: 8px;
+    background-color: #fbfbfc;
+}
+
+.search-input {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0px 0px 0px 6px;
+    align-items: center;
+}
+
+.search-icon {
+    color: #00bfa5;
+    width: 25px;
+    height: 25px;
+}
+
+.search-input-field {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
     .icon-add {

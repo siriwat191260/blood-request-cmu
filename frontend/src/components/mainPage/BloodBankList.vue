@@ -16,6 +16,7 @@ export default {
     },
     data() {
         return {
+            searchHN: null,
             sortByField: '',
             sortDirection: 'asc',
             currentPage: 1,
@@ -42,7 +43,14 @@ export default {
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
-            return this.sortedRows.slice(startIndex, endIndex);
+            let data = this.sortedRows.slice(startIndex, endIndex); 
+            if (!this.searchHN ) {
+                return data;
+            } else {
+                return data.filter(row => {
+                    return row.hn.includes(this.searchHN); 
+                });
+            }
         },
         paginationRange() {
             const start = (this.currentPage - 1) * this.rowsPerPage + 1;
@@ -143,8 +151,23 @@ export default {
             </div>
         </nav>
         <div class="container-md">
-            <div class="card" style="border: 0px; justify-content: center; margin: 30px 0px;">
-                <p class="fontSize_header">การเกิดปฏิกิริยาจากการรับเลือดทั้งหมด</p>
+            <div class="card"
+                style="border: 0px; justify-content: center; margin: 20px 0px; display: flex; align-items: center; flex-direction: row;">
+                <p style="font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 0; color: #3c3c3c; flex: 1;">
+                    การเกิดปฏิกิริยาจากการรับเลือดทั้งหมด</p>
+                <div class="col-md-3">
+                    <p class="fontTopicBox">ค้นหา HN</p>
+                    <div class="card search-card">
+                        <div class="card-body search-input">
+                            <!-- Icon -->
+                            <Icon icon="ion:search" class="search-icon"></Icon>
+                            <!-- Input field -->
+                            <input class="form-control typing-box-style search-input-field" v-model="searchHN" type="number"
+                                pattern="[0-9]*" />
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <table>
                 <thead>
@@ -412,6 +435,39 @@ th {
     height: 100%;
     margin-right: 6px;
     color: #008E76;
+}
+
+.search-card {
+    width: 100%;
+    height: 48px;
+    border: 2px solid #dee0e6;
+    border-radius: 8px;
+    background-color: #fbfbfc;
+}
+
+.search-input {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0px 0px 0px 6px;
+    align-items: center;
+}
+
+.search-icon {
+    color: #00bfa5;
+    width: 25px;
+    height: 25px;
+}
+
+.search-input-field {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
