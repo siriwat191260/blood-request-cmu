@@ -132,21 +132,15 @@ export default defineComponent({
           this.beforeReactionBPSectionOne &&
           this.beforeReactionBPSectionTwo
         ) {
-          return "25%";
-        } else if (
-          category === "afterTime" &&
-          this.afterReactionTimeSectionOne &&
-          this.afterReactionTimeSectionTwo
-        ) {
-          return "25%";
+          return "inputWidth";
         } else if (
           category === "afterBP" &&
           this.afterReactionBPSectionOne &&
           this.afterReactionBPSectionTwo
         ) {
-          return "25%";
+          return "inputWidth";
         } else {
-          return "100%"; // Set the width to 100% initially or if only one input is completed
+          return "inputWidth"; // Set the width to 100% initially or if only one input is completed
         }
       };
     },
@@ -160,7 +154,7 @@ export default defineComponent({
           this.formData.PatientInfo.lastName;
         const length = name.length;
         if (length > 20) {
-          return "16.67%";
+          return "HNWidth";
         } else {
           return "";
         }
@@ -176,7 +170,8 @@ export default defineComponent({
           this.formData.PatientInfo.lastName;
         const length = name.length;
         if (length > 20) {
-          return "33.33%";
+          this.styleName2Line = true;
+          return "NameWidth";
         } else {
           return "";
         }
@@ -289,16 +284,15 @@ export default defineComponent({
       <div class="card" style="border: 0px; justify-content: center">
         <!-- header -->
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 vertical-style-100w">
             <div style="margin-top: 60px">
               <p class="fontSize_header">
                 ฟอร์มนำส่งตรวจการเกิดปฏิกิริยาจากการรับเลือด
-                <Icon icon="bx:edit" style="color: black"></Icon>
               </p>
             </div>
           </div>
           <!-- HN -->
-          <div class="col-md-3" :style="{ width: HNWidth() }">
+          <div class="col-md-3 vertical-style-33w" :class="HNWidth()">
             <p class="fontTopicBox">HN</p>
             <div class="card card-box-style">
               <div class="card-body card-box-body-style">
@@ -319,7 +313,7 @@ export default defineComponent({
             </div>
           </div>
           <!-- ชื่อผู้ป่วย -->
-          <div class="col-md-3" :style="{ width: NameWidth() }">
+          <div class="col-md-3 vertical-style-66w" :class="NameWidth()">
             <div>
               <p class="fontTopicBox">ชื่อผู้ป่วย</p>
               <div class="card card-box-style">
@@ -777,7 +771,7 @@ export default defineComponent({
             <!--row 5 -->
             <!-- ประวัติการเกิดปฏิกิริยาการรับเลือด มีหรือไม่ -->
             <div
-              class="col-md-5 size-col-4point5 mt16 size-col-43w vertical-style-100w"
+              class="col-md-5 size-col-4point5 mt16 size-col-50w vertical-style-100w"
             >
               <div style="display: flex">
                 <p
@@ -827,7 +821,7 @@ export default defineComponent({
             <!-- ชนิดของปฏิกิริยา -->
             <div
               v-if="showReactionCategoryInput"
-              class="col-md-7 size-col-7point5 mt16 size-col-57w vertical-style-100w"
+              class="col-md-7 size-col-7point5 mt16 size-col-50w vertical-style-100w"
             >
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
@@ -1357,52 +1351,7 @@ export default defineComponent({
                   >
                     เวลา
                   </p>
-                  <!-- <div style="position: relative">
-                    <div
-                      style="display: inline; position: absolute; width: 100%"
-                    >
-                      <div style="display: flex; height: 24px;">
-                        <input
-                          class="form-control typing-box-style"
-                          style="
-                            padding-left: 16px;
-                            padding-right: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                            width: 100%; 
-                            text-align: center;
-                          "
-                          :style="{ width: inputWidth('beforeTime') }"
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          required
-                          v-model="beforeReactionTimeSectionOne"
-                          @input="restrictInput"
-                        />
-                        <p class="fontTopicInfo" style="margin-top: 2px">:</p>
-                        <input
-                          class="form-control typing-box-style"
-                          style="
-                            padding-left: 16px;
-                            padding-right: 16px;
-                            padding-top: 0px;
-                            padding-bottom: 0px;
-                            width: 100%;
-                            text-align: center;
-                          "
-                           :style="{ width: inputWidth('beforeTime') }"
-                          type="text"
-                          aria-label="default input example"
-                          placeholder="กรุณากรอกข้อมูล"
-                          required
-                          v-model="beforeReactionTimeSectionTwo"
-                          @input="restrictInput"
-                        />
-                      </div>
-                    </div>
-                  </div> -->
-                  <div style="position: relative">
+                 <div style="position: relative">
                     <div
                       style="display: inline; position: absolute; width: 100%"
                     >
@@ -1484,15 +1433,14 @@ export default defineComponent({
                   <div style="display: flex; height: 24px">
                     <input
                       class="form-control typing-box-style"
+                      :class="inputWidth('beforeBP')"
                       style="
                         padding-left: 16px;
                         padding-right: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
-                        width: 100%;
                         text-align: center;
                       "
-                      :style="{ width: inputWidth('beforeBP') }"
                       type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
@@ -1502,15 +1450,14 @@ export default defineComponent({
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
                       class="form-control typing-box-style"
+                      :class="inputWidth('beforeBP')"
                       style="
                         padding-left: 16px;
                         padding-right: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
-                        width: 100%;
                         text-align: center;
                       "
-                      :style="{ width: inputWidth('beforeBP') }"
                       type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
@@ -1664,15 +1611,14 @@ export default defineComponent({
                   <div style="display: flex; height: 24px">
                     <input
                       class="form-control typing-box-style"
+                      :class="inputWidth('afterBP')"
                       style="
                         padding-left: 16px;
                         padding-right: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
-                        width: 100%;
                         text-align: center;
                       "
-                      :style="{ width: inputWidth('afterBP') }"
                       type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
@@ -1682,15 +1628,14 @@ export default defineComponent({
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
                       class="form-control typing-box-style"
+                      :class="inputWidth('afterBP')"
                       style="
                         padding-left: 16px;
                         padding-right: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
-                        width: 100%;
                         text-align: center;
                       "
-                      :style="{ width: inputWidth('afterBP') }"
                       type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
@@ -1890,7 +1835,7 @@ export default defineComponent({
                   <div class="accordion-body">
                     <div class="row">
                       <!-- ชนิดของเลือดที่ให้ -->
-                      <div class="col-md-2 vertical-style-33w">
+                      <div class="col-md-2 horizon-style-20w vertical-style-50w">
                         <div class="card-box-info-row-component-style">
                           <div
                             style="
@@ -1923,7 +1868,7 @@ export default defineComponent({
                         </div>
                       </div>
                       <!-- วันที่ -->
-                      <div class="col-md-2 vertical-style-50w">
+                      <div class="col-md-2 horizon-style-25w vertical-style-50w">
                         <div class="card-box-info-row-component-style">
                           <Icon
                             icon="bx:calendar-event"
@@ -1976,7 +1921,7 @@ export default defineComponent({
                         </div>
                       </div>
                       <!-- เริ่ม -->
-                      <div class="col-md-2 size-col-1point5 vertical-style-50w">
+                      <div class="col-md-2 size-col-1point5 horizon-style-20w vertical-style-50w">
                         <div class="card-box-info-row-component-style">
                           <Icon
                             icon="bx:alarm"
@@ -2028,7 +1973,7 @@ export default defineComponent({
                         </div>
                       </div>
                       <!-- เสร็จสิ้น -->
-                      <div class="col-md-2 size-col-1point5 vertical-style-50w">
+                      <div class="col-md-2 size-col-1point5 horizon-style-20w vertical-style-50w">
                         <div class="card-box-info-row-component-style">
                           <Icon
                             icon="bx:alarm"
@@ -2081,7 +2026,7 @@ export default defineComponent({
                       </div>
                       <!-- ปริมาตรที่ให้ -->
                       <div
-                        class="col-md-2 size-col-1point75 vertical-style-50w"
+                        class="col-md-2 size-col-1point75 horizon-style-20w mt-horizon-16 vertical-style-50w"
                       >
                         <div class="card-box-info-row-component-style">
                           <div
@@ -2132,7 +2077,7 @@ export default defineComponent({
                       </div>
                       <!-- เกิดปฏิกิริยา -->
                       <div
-                        class="col-md-2 size-col-2point5 size-col-43w vertical-style-100w"
+                        class="col-md-2 size-col-2point5 size-col-43w vertical-style-50w"
                       >
                         <div style="display: flex">
                           <p
@@ -2781,6 +2726,17 @@ hr.dashed {
   background-color: rgb(247 247 247);
 }
 
+.inputWidth {
+  width: 30%
+}
+
+.HNWidth{
+  width: 16.67%;
+}
+.NameWidth{
+  width: 33.33%;
+}
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
   .fontSize_header {
     font-size: 20px;
@@ -2813,6 +2769,31 @@ hr.dashed {
   .size-col-50w {
     width: 50%;
   }
+  .size-col-100w {
+    width: 100%;
+  }
+  .inputWidth {
+    width: 100%
+  }
+  .horizon-style-15w {
+  width: 15%;
+}
+  .horizon-style-20w {
+  width: 20%;
+}
+.horizon-style-25w {
+  width: 25%;
+}
+  .inputWidth {
+  width: 100%
+}
+.HNWidth{
+  width: 16.67%;
+}
+.NameWidth{
+  width: 33.33%;
+}
+
 }
 @media only screen and ((max-device-width: 768px) or (max-device-width: 810px)) {
   .fontSize_header {
@@ -2836,6 +2817,10 @@ hr.dashed {
     width: 33.33%;
     margin-bottom: 16px;
   }
+  .vertical-style-66w {
+    width: 66.67%;
+    margin-bottom: 16px;
+  }
   .vertical-style-100w {
     width: 100%;
     margin-bottom: 16px;
@@ -2850,5 +2835,9 @@ hr.dashed {
     display: block;
     justify-content: none;
   }
+  .inputWidth {
+  width: 100%
+}
+
 }
 </style>

@@ -199,36 +199,37 @@ export default defineComponent({
     },
     computed: {
         HNWidth() {
-            return () => {
-                const name =
-                    this.formData.data.title +
-                    " " +
-                    this.formData.data.firstName +
-                    " " +
-                    this.formData.data.lastName;
-                const length = name.length;
-                if (length > 20) {
-                    return "16.67%";
-                } else {
-                    return "";
-                }
-            };
+        return () => {
+            const name =
+            this.formData.PatientInfo.title +
+            " " +
+            this.formData.PatientInfo.firstName +
+            " " +
+            this.formData.PatientInfo.lastName;
+            const length = name.length;
+            if (length > 20) {
+            return "HNWidth";
+            } else {
+            return "";
+            }
+        };
         },
         NameWidth() {
-            return () => {
-                const name =
-                    this.formData.data.title +
-                    " " +
-                    this.formData.data.firstName +
-                    " " +
-                    this.formData.data.lastName;
-                const length = name.length;
-                if (length > 20) {
-                    return "33.33%";
-                } else {
-                    return "";
-                }
-            };
+        return () => {
+            const name =
+            this.formData.PatientInfo.title +
+            " " +
+            this.formData.PatientInfo.firstName +
+            " " +
+            this.formData.PatientInfo.lastName;
+            const length = name.length;
+            if (length > 20) {
+            this.styleName2Line = true;
+            return "NameWidth";
+            } else {
+            return "";
+            }
+        };
         },
     }
 });
@@ -239,14 +240,14 @@ export default defineComponent({
             <div class="card" style="border: 0px; justify-content: center">
                 <!-- header -->
                 <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 vertical-style-100w">
                             <div style="margin-top: 60px">
                                 <p class="fontSize_header">
                                     รายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด (Transfusion reaction report)
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-3" :style="{ width: HNWidth() }">
+                        <div class="col-md-3 vertical-style-33w" :class="HNWidth()">
                             <p class="fontTopicBox">HN</p>
                             <div class="card card-box-style">
                                 <div class="card-body card-box-body-style">
@@ -260,7 +261,7 @@ export default defineComponent({
                             </div>
                         </div>
                         <!-- ชื่อผู้ป่วย -->
-                        <div class="col-md-3" :style="{ width: NameWidth() }">
+                        <div class="col-md-3 vertical-style-66w" :class="NameWidth()">
                             <div>
                                 <p class="fontTopicBox">ชื่อผู้ป่วย</p>
                                 <div class="card card-box-style">
@@ -1821,6 +1822,13 @@ div {
     width: 20%;
 }
 
+.HNWidth{
+        width: 16.67%;
+}
+.NameWidth{
+        width: 33.33%;
+}
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
     .fontSize_header {
         font-size: 20px;
@@ -1836,6 +1844,13 @@ div {
 
     .fontInsideBox {
         font-size: 14px;
+    }
+
+    .HNWidth{
+        width: 16.67%;
+    }
+    .NameWidth{
+        width: 33.33%;
     }
 
 }
@@ -1869,6 +1884,21 @@ div {
     .indicators-box-name {
         width: 33%;
     }
+    .vertical-style-100w {
+    width: 100%;
+    }
+    .vertical-style-50w {
+    width: 50%;
+    margin-bottom: 16px;
+  }
+  .vertical-style-33w {
+    width: 33.33%;
+    margin-bottom: 16px;
+  }
+  .vertical-style-66w {
+    width: 66.67%;
+    margin-bottom: 16px;
+  }
 
 }
 </style>
