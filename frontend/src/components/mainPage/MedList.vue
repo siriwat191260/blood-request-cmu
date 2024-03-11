@@ -58,10 +58,6 @@ export default {
                 this.sortByField = field;
                 this.sortDirection = 'asc';
             }
-            if (field === 'approve') {
-                valA = valA === null ? 0 : valA;
-                valB = valB === null ? 0 : valB;
-            }
 
             if (typeof this.sortedRows[0][field] === 'string') {
                 this.sortedRows.sort((a, b) => {
@@ -156,13 +152,13 @@ export default {
             <table>
                 <thead>
                     <tr>
-                        <th @click="sortBy('date')">วันที่
-                            <i v-if="sortByField === 'date'"
+                        <th @click="sortBy('dtm')">วันที่
+                            <i v-if="sortByField === 'dtm'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('time')">
+                        <th @click="sortBy('dtm')">
                             เวลา
-                            <i v-if="sortByField === 'time'"
+                            <i v-if="sortByField === 'dtm'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
                         <th @click="sortBy('packid')">หมายเลขถุงเลือด
@@ -177,16 +173,16 @@ export default {
                             <i v-if="sortByField === 'hn'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('status')">สถานะ
-                            <i v-if="sortByField === 'status'"
+                        <th @click="sortBy('approve')">สถานะ
+                            <i v-if="sortByField === 'approve'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('transfusion')">Transfusion
-                            <i v-if="sortByField === 'transfusion'"
+                        <th @click="sortBy('TRForm')">Transfusion
+                            <i v-if="sortByField === 'TRForm'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('reaction')">Transfusion reaction
-                            <i v-if="sortByField === 'reaction'"
+                        <th @click="sortBy('TRReport')">Transfusion reaction
+                            <i v-if="sortByField === 'TRReport'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
                         <th @click="sortBy('approve')">Approve

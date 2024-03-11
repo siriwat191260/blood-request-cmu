@@ -58,6 +58,24 @@ export default {
                 this.sortByField = field;
                 this.sortDirection = 'asc';
             }
+
+            if (typeof this.sortedRows[0][field] === 'string') {
+                this.sortedRows.sort((a, b) => {
+                    const valA = a[field].toLowerCase();
+                    const valB = b[field].toLowerCase();
+                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            } else {
+                this.sortedRows.sort((a, b) => {
+                    const valA = a[field];
+                    const valB = b[field];
+                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
         },
         nextPage() {
             if (this.currentPage < this.totalPages) {
@@ -131,36 +149,37 @@ export default {
             <table>
                 <thead>
                     <tr>
-                        <th @click="sortBy('date')">วันที่
-                            <i v-if="sortByField === 'date'"
+                        <th @click="sortBy('dtm')">วันที่
+                            <i v-if="sortByField === 'dtm'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('time')">เวลา
-                            <i v-if="sortByField === 'time'"
+                        <th @click="sortBy('dtm')">
+                            เวลา
+                            <i v-if="sortByField === 'dtm'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('bloodBagNum')">หมายเลขถุงเลือด
-                            <i v-if="sortByField === 'bloodBagNum'"
+                        <th @click="sortBy('packid')">หมายเลขถุงเลือด
+                            <i v-if="sortByField === 'packid'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
                         <th @click="sortBy('name')">ชื่อ-สกุล
                             <i v-if="sortByField === 'name'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('HN')">HN
-                            <i v-if="sortByField === 'HN'"
+                        <th @click="sortBy('hn')">HN
+                            <i v-if="sortByField === 'hn'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('status')">สถานะ
-                            <i v-if="sortByField === 'status'"
+                        <th @click="sortBy('approve')">สถานะ
+                            <i v-if="sortByField === 'approve'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('transfusion')">Transfusion
-                            <i v-if="sortByField === 'transfusion'"
+                        <th @click="sortBy('TRForm')">Transfusion
+                            <i v-if="sortByField === 'TRForm'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('reaction')">Transfusion reaction
-                            <i v-if="sortByField === 'reaction'"
+                        <th @click="sortBy('TRReport')">Transfusion reaction
+                            <i v-if="sortByField === 'TRReport'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
                         <th @click="sortBy('approve')">Approve

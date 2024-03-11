@@ -735,14 +735,14 @@ export default defineComponent({
                             1. มี Transfusion set เสียบอยู่ที่ถุงเลือด
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio1" value="1"
+                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet1" value="1"
                                 v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
-                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี</label>
+                            <label class="form-check-label" for="isTransfusionSet1" style=" margin-top: 2px; margin-left: 10px">มี</label>
                         </div>
                         <div class="col-md-3 form-check-inline">
-                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="inlineRadio2" value="0"
+                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet2" value="0"
                                 v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <label class="form-check-label" for="isTransfusionSet" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 2 -->
@@ -753,19 +753,19 @@ export default defineComponent({
                             2. มี Needle ติดที่ปลาย Transfusion set
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio1" value="1"
+                            <input class="form-check-input" type="radio" name="needleStatus" id="needleStatus1" value="1"
                                 v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี ปิดสนิท</label>
+                            <label class="form-check-label" for="needleStatus1" style=" margin-top: 2px; margin-left: 10px">มี ปิดสนิท</label>
                         </div>
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio2" value="2"
+                            <input class="form-check-input" type="radio" name="needleStatus" id="needleStatus2" value="2"
                                 v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">มี ปิดไม่สนิท</label>
+                            <label class="form-check-label" for="needleStatus2" style=" margin-top: 2px; margin-left: 10px">มี ปิดไม่สนิท</label>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-check-input" type="radio" name="needleStatus" id="inlineRadio3" value="3"
+                            <input class="form-check-input" type="radio" name="needleStatus" id="needleStatus3" value="3"
                                 v-model="formData.BloodBagCharacteristic.needleStatus" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <label class="form-check-label" for="needleStatus3" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 3 -->
@@ -776,19 +776,19 @@ export default defineComponent({
                             3. ลักษณะของพลาสมา
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="plasmaCharacteristicStatus"
                                 value="1" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี Fibrin</label>
+                            <label class="form-check-label" for="plasmaCharacteristicStatus1" style=" margin-top: 2px; margin-left: 10px">มี Fibrin</label>
                         </div>
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio2"
+                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="plasmaCharacteristicStatus2"
                                 value="2" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ใส</label>
+                            <label class="form-check-label" for="plasmaCharacteristicStatus2" style=" margin-top: 2px; margin-left: 10px">ใส</label>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="inlineRadio3"
+                            <input class="form-check-input" type="radio" name="plasmaCharacteristicStatus" id="plasmaCharacteristicStatus3"
                                 value="3" v-model="formData.BloodBagCharacteristic.plasmaCharacteristicStatus" />
-                            <label class="form-check-label" for="inlineRadio3" style=" margin-top: 2px; margin-left: 10px">ขุ่น</label>
+                            <label class="form-check-label" for="plasmaCharacteristicStatus3" style=" margin-top: 2px; margin-left: 10px">ขุ่น</label>
                         </div>
                     </div>
                     <!-- row 4 -->
@@ -799,9 +799,9 @@ export default defineComponent({
                             4. ตำแหน่งที่เกิดรอยรั่ว
                         </p>
                         <div class="col-md-1 ">
-                            <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="isLeakagePosition" id="isLeakagePosition1"
                                 value="1" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
-                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">มี </label>
+                            <label class="form-check-label" for="isLeakagePosition1" style=" margin-top: 2px; margin-left: 10px">มี </label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -819,9 +819,9 @@ export default defineComponent({
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio2"
+                            <input class="form-check-input" type="radio" name="isLeakagePosition" id="isLeakagePosition2"
                                 value="0" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
+                            <label class="form-check-label" for="isLeakagePosition2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
                     <!-- row 5 -->
@@ -1519,20 +1519,20 @@ export default defineComponent({
                             ผล Gram stain
                         </p>
                         <div class="col-md-3">
-                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="isSubmittingGramStain1"
                                 value="1" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
-                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
+                            <label class="form-check-label" for="isSubmittingGramStain1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
                                 stain</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio2"
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="gramNegativeOrPositive1"
                                 value="0" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Negative</label>
+                            <label class="form-check-label" for="gramNegativeOrPositive1" style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio3"
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="gramNegativeOrPositive2"
                                 value="1" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
+                            <label class="form-check-label" for="gramNegativeOrPositive2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
                         <div class="col-md-3" v-if="parseInt(formData.GramStainAndCulture.gramNegativeOrPositive) === 1">
                             <div class="card-box-info-row-component-style">
@@ -1553,9 +1553,9 @@ export default defineComponent({
                     <div class="row" style="margin-top: 16px; justify-content: flex-end"
                         v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="gramNegativeOrPositive3"
                                 value="2" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
+                            <label class="form-check-label" for="gramNegativeOrPositive3" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -1578,7 +1578,7 @@ export default defineComponent({
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
                                                 " type="date" v-model="formData.GramStainAndCulture.toDateGram"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                aria-label="readonly input example" id="toDateGram" name="toDateGram" />
                                         </div>
                                     </div>
                                 </div>
@@ -1590,9 +1590,9 @@ export default defineComponent({
                         <p class=" col-md-2">
                         </p>
                         <div class="col-md-9 ">
-                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="isSubmittingGramStain2"
                                 value="0" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
+                            <label class="form-check-label" for="isSubmittingGramStain2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
                     </div>
                 </div>
@@ -1603,19 +1603,19 @@ export default defineComponent({
                             ผล Culture
                         </p>
                         <div class="col-md-3">
-                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="isSubmittingCulture1"
                                 value="1" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
-                            <label class="form-check-label" for="inlineRadio1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
+                            <label class="form-check-label" for="isSubmittingCulture1" style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio2"
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="cultureNegativeOrPositive1"
                                 value="0" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Negative</label>
+                            <label class="form-check-label" for="cultureNegativeOrPositive1" style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio3"
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="cultureNegativeOrPositive2"
                                 value="1" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
+                            <label class="form-check-label" for="cultureNegativeOrPositive2" style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
                         <div class="col-md-3" v-if="parseInt(formData.GramStainAndCulture.cultureNegativeOrPositive) === 1">
                             <div class="card-box-info-row-component-style">
@@ -1636,9 +1636,9 @@ export default defineComponent({
                     <div class="row" style="margin-top: 16px; justify-content: flex-end"
                         v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="cultureNegativeOrPositive3"
                                 value="2" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
+                            <label class="form-check-label" for="cultureNegativeOrPositive3" style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
                         <div class="col-md-4">
                             <div class="card-box-info-row-component-style"
@@ -1661,7 +1661,7 @@ export default defineComponent({
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
                                                 " type="date" v-model="formData.GramStainAndCulture.toDateCulture"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                aria-label="readonly input example" id="toDateCulture" name="toDateCulture" />
                                         </div>
                                     </div>
                                 </div>
@@ -1673,9 +1673,9 @@ export default defineComponent({
                         <p class=" col-md-2">
                         </p>
                         <div class="col-md-9 ">
-                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="inlineRadio1"
+                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="isSubmittingCulture2"
                                 value="0" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
-                            <label class="form-check-label" for="inlineRadio2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
+                            <label class="form-check-label" for="isSubmittingCulture2" style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
                     </div>
                 </div>
@@ -1739,7 +1739,7 @@ export default defineComponent({
                                                 padding-bottom: 0px;
                                                 " type="date" v-model="formData.data.testedDate"
                                                 :disabled="formData.data.testedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                aria-label="readonly input example" id="testedDate" name="testedDate" />
                                         </div>
                                     </div>
                                 </div>
@@ -1766,7 +1766,7 @@ export default defineComponent({
                                                 padding-bottom: 0px;
                                                 " type="time" v-model="formData.data.testedTime"
                                                 :disabled="formData.data.testedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                aria-label="readonly input example" id="testedTime" name="testedTime" />
                                         </div>
                                     </div>
                                 </div>
@@ -1818,7 +1818,7 @@ export default defineComponent({
                                                 padding-bottom: 0px;
                                                 " type="date" v-model="formData.data.reportedDate"
                                                 :disabled="formData.data.reportedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                aria-label="readonly input example" id="reportedDate" name="reportedDate" />
                                         </div>
                                     </div>
                                 </div>
@@ -1845,7 +1845,7 @@ export default defineComponent({
                                                 padding-bottom: 0px;
                                                 " type="time" v-model="formData.data.reportedTime"
                                                 :disabled="formData.data.reportedBy.length === 0"
-                                                aria-label="readonly input example" id="birthdaytime" name="birthdaytime" />
+                                                aria-label="readonly input example" id="reportedTime" name="reportedTime" />
                                         </div>
                                     </div>
                                 </div>
