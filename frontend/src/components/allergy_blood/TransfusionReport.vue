@@ -329,6 +329,38 @@ export default defineComponent({
         Icon,
     },
     computed: {
+        HNWidth() {
+            return () => {
+                const name =
+                    this.formData.data.title +
+                    " " +
+                    this.formData.data.firstName +
+                    " " +
+                    this.formData.data.lastName;
+                const length = name.length;
+                if (length > 20) {
+                    return "16.67%";
+                } else {
+                    return "";
+                }
+            };
+        },
+        NameWidth() {
+            return () => {
+                const name =
+                    this.formData.data.title +
+                    " " +
+                    this.formData.data.firstName +
+                    " " +
+                    this.formData.data.lastName;
+                const length = name.length;
+                if (length > 20) {
+                    return "33.33%";
+                } else {
+                    return "";
+                }
+            };
+        },
         filteredItems() {
             return () => {
                 if (this.showResultsReport) {
