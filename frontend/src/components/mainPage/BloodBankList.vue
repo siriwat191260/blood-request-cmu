@@ -203,7 +203,7 @@ export default {
                         <td v-else class="wait">ฟอร์มนำส่งตรวจ</td>
 
                         <td v-if="row.TRForm !== 100">-</td>
-                        <td v-else-if="!row.TRReport " @click="addTransFusionReport(row.idTR_Form)">
+                        <td v-else-if="!row.idTR_Report " @click="addTransFusionReport(row.idTR_Form)">
                             <div class="add">
                                 <Icon icon="material-symbols:note-add-outline" class="icon-add" />
                                 <p class="done">เพิ่มรายงาน</p>
