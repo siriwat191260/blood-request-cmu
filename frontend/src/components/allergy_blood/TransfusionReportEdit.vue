@@ -78,7 +78,7 @@ export default defineComponent({
     },
     async mounted() {
         const idTR_Report = this.$route.params.id;
-        await this.fetchUser();
+        this.fetchUser();
         await this.fetchTRReport(idTR_Report);
         await this.fetchUserBloodbank();
     },
@@ -175,13 +175,8 @@ export default defineComponent({
             this.formData.GramStainAndCulture.toDateCulture = this.tr_report.GramStainAndCulture.toDateCulture
 
         },
-        async fetchUser() {
-            try {
-                const response = await axios.get(this.baseURL + "getUserLogin");
-                this.userInfo = response.data;
-            } catch (error) {
-                console.error("Error fetching List Blood Transfusion data:", error);
-            }
+        fetchUser() {
+            this.userInfo = JSON.parse(localStorage.getItem('userProfile'))
         },
         async fetchTRReport(idTR_Report) {
             try {

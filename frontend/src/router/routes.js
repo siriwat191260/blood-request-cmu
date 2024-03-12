@@ -10,6 +10,7 @@ import TransfusionReportDisplay from '../components/allergy_blood/TransfusionRep
 import Approve from '../components/allergy_blood/Approve.vue';
 import ApproveDisplay from '../components/allergy_blood/ApproveDisplay.vue';
 import MainPage from '../components/mainPage/MainPage.vue';
+import CheckToken from '../components/mainPage/CheckToken.vue';
 
 const routes = [
   { path: '/transfusion-form', component: TransfusionForm, name: 'transfusion-form' },
@@ -22,7 +23,7 @@ const routes = [
   { path: '/approve/:id', component: Approve, name: 'approve' },
   { path: '/get-approve/:id', component: ApproveDisplay },
   { path: '/mainBloodChecklist', component: MainPage, name: 'MainPage' },
-
+  { path: '/transfusionSystem/:id', component: CheckToken },
 
   // Add more routes as needed
 ];

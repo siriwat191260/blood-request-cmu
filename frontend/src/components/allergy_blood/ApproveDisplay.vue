@@ -88,7 +88,7 @@ export default defineComponent({
     },
     async mounted() {
         const idTR_Report = this.$route.params.id;
-        await this.fetchUser();
+        this.fetchUser();
         await this.fetchTRReport(idTR_Report);
     },
     methods: {
@@ -191,13 +191,8 @@ export default defineComponent({
             this.formData.TransfusionMedicalDirectorReview.approvedDate = this.tr_report.data.approvedDateTime ? new Date(this.tr_report.data.approvedDateTime).toISOString().split("T")[0] : ""
             this.formData.TransfusionMedicalDirectorReview.approvedTime = this.tr_report.data.approvedDateTime ? parseTime(new Date(this.tr_report.data.approvedDateTime)) : ""
         },
-        async fetchUser() {
-            try {
-                const response = await axios.get(this.baseURL + "getUserLogin");
-                this.userInfo = response.data;
-            } catch (error) {
-                console.error("Error fetching List Blood Transfusion data:", error);
-            }
+        fetchUser() {
+            this.userInfo = JSON.parse(localStorage.getItem('userProfile'))
         },
         async fetchTRReport(idTR_Report) {
             try {

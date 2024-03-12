@@ -16,21 +16,15 @@ export default defineComponent({
     };
   },
   async mounted() {
-    await this.fetchUser();
+    this.fetchUser();
     await this.fetchListBloodTransf();
     await this.fetchListReaction();
     await this.fetchUserApprove();
   },
   methods: {
-    async fetchUser() {
-      try {
-        const response = await axios.get(this.baseURL + "getUserLogin");
-        console.log(" response.data", response.data)
-        this.userInfo = response.data;
-      } catch (error) {
-        console.error("Error fetching List Blood Transfusion data:", error);
-      }
-    },
+    fetchUser() {
+            this.userInfo = JSON.parse(localStorage.getItem('userProfile'))
+        },
     async fetchListBloodTransf() {
       try {
         const response = await axios.get(this.baseURL + "getListBloodTransf");

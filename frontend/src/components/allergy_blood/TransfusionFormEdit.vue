@@ -2867,6 +2867,7 @@ export default defineComponent({
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
+                  @click="navigateToPreviousPage"
                 >
                   ปิด
                 </button>

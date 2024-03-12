@@ -567,35 +567,17 @@ $app->get('/get-transfusion-report/{id}', function (Request $request, Response $
     return $rs;
 });
 
-$app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
+$app->get('/getCheckToken', function (Request $request, Response $response, array $args) {
     try {
-        $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
-        //Approve ID : 1254,6523
-        //Doctor ID : 1254,6523
-        //BloodBank ID : 7895
-        //Nurse ID : 451236
-        $idUser = "7895";
-        $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
-        // Prepare cURL request to get token
-        $ch1 = curl_init($getTokenEndpoint);
-        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-        $apiResponse = curl_exec($ch1);
+        $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php";
 
-        // Check for errors in obtaining token
-        if (curl_errno($ch1)) {
-            throw new Exception("cURL request failed: " . curl_error($ch1));
-        }
-        curl_close($ch1);
-
-        // Decode the response to get token
-        $result = json_decode($apiResponse, true);
-        $token = $result['v'];
-
+        $token = $request->getQueryParams()['Token'];
+        $tokenFormat = array("token" => $token);
         // Prepare cURL request to check token validity
         $ch2 = curl_init($checkTokenEndpoint);
         curl_setopt($ch2, CURLOPT_POST, 1);
-        curl_setopt($ch2, CURLOPT_POSTFIELDS, json_encode($token));
+        curl_setopt($ch2, CURLOPT_POSTFIELDS, json_encode($tokenFormat));
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(
             $ch2,
@@ -616,12 +598,11 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         }
         curl_close($ch2);
         $resultChecktoken = json_decode($checkTokenResponse, true);
-        $UserInfo = $resultChecktoken['v'];
 
         // Process the check token response as needed
         // For example, you can return it as the response from this endpoint
         $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($UserInfo));
+        $response->getBody()->write(json_encode($resultChecktoken));
         return $response;
     } catch (Exception $error) {
         // Handle errors
@@ -630,40 +611,105 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         return $response->withStatus(500);
     }
 });
-$app->get('/getToken', function (Request $request, Response $response, array $args) {
-    try {
 
-        $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+//for test
+// $app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
+//     try {
+//         $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+//         //Approve ID : 1254,6523
+//         //Doctor ID : 1254,6523
+//         //BloodBank ID : 7895
+//         //Nurse ID : 451236
+//         $idUser = "7895";
+//         $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
-        // Prepare cURL request
-        $ch = curl_init($endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//         // Prepare cURL request to get token
+//         $ch1 = curl_init($getTokenEndpoint);
+//         curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+//         $apiResponse = curl_exec($ch1);
 
-        // Execute the request
-        $apiResponse = curl_exec($ch);
+//         // Check for errors in obtaining token
+//         if (curl_errno($ch1)) {
+//             throw new Exception("cURL request failed: " . curl_error($ch1));
+//         }
+//         curl_close($ch1);
 
-        // Check for errors
-        if (curl_errno($ch)) {
-            throw new Exception("cURL request failed: " . curl_error($ch));
-        }
+//         // Decode the response to get token
+//         $result = json_decode($apiResponse, true);
+//         $token = $result['v'];
 
-        // Close cURL resource
-        curl_close($ch);
+//         // Prepare cURL request to check token validity
+//         $ch2 = curl_init($checkTokenEndpoint);
+//         curl_setopt($ch2, CURLOPT_POST, 1);
+//         curl_setopt($ch2, CURLOPT_POSTFIELDS, json_encode($token));
+//         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+//         curl_setopt(
+//             $ch2,
+//             CURLOPT_HTTPHEADER,
+//             array(
+//                 'Content-Type: application/json',
+//                 'Access-Control-Allow-Origin: *',
+//                 'Access-Control-Allow-Methods: GET, POST, PUT, DELETE',
+//                 'Access-Control-Allow-Headers: Content-Type',
+//                 'Access-Control-Allow-Credentials: true',
+//             )
+//         );
+//         $checkTokenResponse = curl_exec($ch2);
 
-        // Decode the response
-        $result = json_decode($apiResponse, true);
+//         // Check for errors in checking token validity
+//         if (curl_errno($ch2)) {
+//             throw new Exception("cURL request failed: " . curl_error($ch2));
+//         }
+//         curl_close($ch2);
+//         $resultChecktoken = json_decode($checkTokenResponse, true);
+//         $UserInfo = $resultChecktoken['v'];
 
-        // Process $result as needed
-        $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($result));
-        return $response;
-    } catch (Exception $error) {
-        $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+//         // Process the check token response as needed
+//         // For example, you can return it as the response from this endpoint
+//         $response = $response->withHeader('Content-Type', 'application/json');
+//         $response->getBody()->write(json_encode($UserInfo));
+//         return $response;
+//     } catch (Exception $error) {
+//         // Handle errors
+//         $response = $response->withHeader('Content-Type', 'application/json');
+//         $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+//         return $response->withStatus(500);
+//     }
+// });
+// $app->get('/getToken', function (Request $request, Response $response, array $args) {
+//     try {
 
-        return $response->withStatus(500);
-    }
-});
+//         $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+
+//         // Prepare cURL request
+//         $ch = curl_init($endpoint);
+//         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+//         // Execute the request
+//         $apiResponse = curl_exec($ch);
+
+//         // Check for errors
+//         if (curl_errno($ch)) {
+//             throw new Exception("cURL request failed: " . curl_error($ch));
+//         }
+
+//         // Close cURL resource
+//         curl_close($ch);
+
+//         // Decode the response
+//         $result = json_decode($apiResponse, true);
+
+//         // Process $result as needed
+//         $response = $response->withHeader('Content-Type', 'application/json');
+//         $response->getBody()->write(json_encode($result));
+//         return $response;
+//     } catch (Exception $error) {
+//         $response = $response->withHeader('Content-Type', 'application/json');
+//         $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+
+//         return $response->withStatus(500);
+//     }
+// });
 
 $app->get('/getListBloodTransIService', function (Request $request, Response $response, array $args) {
     try {
