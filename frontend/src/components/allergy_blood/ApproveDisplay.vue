@@ -613,7 +613,7 @@ export default defineComponent({
                             <p class="col-md-5 fontTopicCheckBox">
                                 4. ตำแหน่งที่เกิดรอยรั่ว
                             </p>
-                            <div class="col-md-1 ">
+                            <div class="col-md-1" style="padding-right: 0px">
                                 <input class="form-check-input" type="radio" name="isLeakagePosition" id="inlineRadio1"
                                     :disabled="formData.BloodBagCharacteristic.isLeakagePosition != 1"
                                     :checked="formData.BloodBagCharacteristic.isLeakagePosition == 1" />

@@ -696,7 +696,7 @@ export default defineComponent({
                         <p class="col-md-5 fontTopicCheckBox">
                             4. ตำแหน่งที่เกิดรอยรั่ว
                         </p>
-                        <div class="col-md-1 ">
+                        <div class="col-md-1" style="padding-right: 0px">
                             <input class="form-check-input" type="radio" name="isLeakagePosition" id="isLeakagePosition1"
                                 value="1" v-model="formData.BloodBagCharacteristic.isLeakagePosition" />
                             <label class="form-check-label" for="isLeakagePosition1"

@@ -218,11 +218,11 @@ export default {
                         <td>{{ row.packid }}</td>
                         <td>{{ row.ttl + " " + row.name + " " + row.lname }}</td>
                         <td>{{ row.hn }}</td>
-                        <td v-if="row.approve === 2" class="done">สำเร็จ</td>
+                        <td v-if="row.approve == 1" class="done">สำเร็จ</td>
                         <td v-else class="wait"> รอ</td>
 
-                        <td v-if="row.TRForm" @click="getTransFusionForm(row.idTR_Form)" class="click">
-                            ฟอร์มนำส่งตรวจ {{ row.TRForm }}%</td>
+                        <td v-if="row.TRForm == 100" @click="getTransFusionForm(row.idTR_Form)" class="click ">
+                            ฟอร์มนำส่งตรวจ </td>
                         <td v-else class="wait">ฟอร์มนำส่งตรวจ</td>
 
                         <td v-if="row.TRForm !== 100">-</td>
