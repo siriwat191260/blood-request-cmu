@@ -338,6 +338,7 @@ export default defineComponent({
         event.preventDefault();
         event.stopPropagation();
         this.$refs.form.classList.add('was-validated');
+        $('#Invalid').modal('show');
         return;
       }
       //cleansing form
@@ -402,11 +403,11 @@ export default defineComponent({
       
       console.log("Form submitted! : ", formData);
       console.log("cleasingFormData submitted! : ", cleasingFormData);
-      /* const response = await axios.post(
+      const response = await axios.post(
           this.baseURL + "submitting_transfusion_form",
           { formData: cleasingFormData }
         );
-      console.log("Form submitted successfully!", response.data); */
+      console.log("Form submitted successfully!", response.data);
       $('#SaveButton').modal('show');
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -2727,6 +2728,31 @@ export default defineComponent({
                   data-bs-dismiss="modal"
                   aria-label=""
                 ></button>
+              </div>
+              
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  ปิด
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="Invalid"
+          tabindex="-1"
+          aria-labelledby="Invalid"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-center">
+                <h5 class="modal-title" id="Invalid">ไม่สามารถบันทึกข้อมูลได้ <Icon icon="noto:warning" width="24" height="24"></Icon></h5>
               </div>
               
               <div class="modal-footer">
