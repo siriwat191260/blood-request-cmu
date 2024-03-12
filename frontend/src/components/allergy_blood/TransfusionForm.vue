@@ -26,7 +26,6 @@ export default defineComponent({
           TXN: "",
           //ค่าอะไร ?
           pt_type: "",
-          createdDate: "" || new Date(),
           ward: "",
           phoneNumber: "",
           diagnosis: "",
@@ -342,7 +341,6 @@ export default defineComponent({
           TXN: PatientInfo && PatientInfo.TXN ? PatientInfo.TXN : null,
           //ค่าอะไร ?
           /* pt_type: PatientInfo && PatientInfo ? PatientInfo.: null, */
-          createdDate: new Date(),
           ward: PatientInfo && PatientInfo.ward ? PatientInfo.ward : null,
           phoneNumber: PatientInfo && PatientInfo.phoneNumber ? PatientInfo.phoneNumber : null,
           diagnosis: PatientInfo && PatientInfo.diagnosis ? PatientInfo.diagnosis : null,
@@ -968,7 +966,7 @@ export default defineComponent({
             </div>
             <!-- ชนิดของปฏิกิริยา -->
             <div v-if="showReactionCategoryInput"
-              class="col-md-7 size-col-7point5 mt16 size-col-57w vertical-style-100w"
+              class="col-md-7 size-col-7point5 mt16 size-col-50w vertical-style-100w"
             >
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
@@ -1018,14 +1016,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     ชื่อ - นามสกุล ผู้ป่วย
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1086,14 +1084,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox pdl16Horizontal"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     ภายใน 24 ชั่วโมง ผู้ป่วย
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1156,14 +1154,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     ชนิดของเลือดที่ให้
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1224,14 +1222,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox pdl16Horizontal"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     บันทึกการให้เลือด
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1296,14 +1294,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     หมายเลขถุงเลือด
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1364,14 +1362,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox pdl16Horizontal"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     หมู่เลือดผู้บริจาค
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1434,14 +1432,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     หมู่เลือดผู้ป่วย
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "

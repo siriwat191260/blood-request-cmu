@@ -247,8 +247,6 @@ export default defineComponent({
         console.error("Error fetching TR Form data:", error);
       }
     },
-    currentDate,
-    currentTime,
     parseDate,
     parseTime,
     // go back to previous page
@@ -368,7 +366,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        :value="currentDate()"
+                        :value="parseDate(formData.PatientInfo.createdDate)"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -410,7 +408,7 @@ export default defineComponent({
                           padding-bottom: 0px;
                         "
                         type="text"
-                        :value="currentTime()"
+                        :value="parseTime(formData.PatientInfo.createdDate)"
                         aria-label="readonly input example"
                         readonly
                       />
@@ -871,14 +869,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     ชื่อ - นามสกุล ผู้ป่วย
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -935,14 +933,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox pdl16Horizontal"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     ภายใน 24 ชั่วโมง ผู้ป่วย
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1001,14 +999,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     ชนิดของเลือดที่ให้
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1065,14 +1063,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox pdl16Horizontal"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     บันทึกการให้เลือด
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1131,14 +1129,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     หมายเลขถุงเลือด
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1195,14 +1193,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox pdl16Horizontal"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     หมู่เลือดผู้บริจาค
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -1261,14 +1259,14 @@ export default defineComponent({
                 >
                   <p
                     class="fontTopicCheckBox"
-                    style="width: 50%; margin-top: 26.5px; display: block"
+                    style="width: 40%; margin-top: 26.5px; display: block"
                   >
                     หมู่เลือดผู้ป่วย
                   </p>
                   <div
                     style="
                       display: block;
-                      width: 50%;
+                      width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
                     "
@@ -2784,6 +2782,9 @@ hr.dashed {
 .horizon-style-25w {
   width: 25%;
 }
+.mt-horizon-16 {
+    margin-top: 16px;
+  }
   .inputWidth {
   width: 100%
 }

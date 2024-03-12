@@ -33,12 +33,12 @@ function TRForm_Insert($p)
     $status = 0;
     if ($PatientInfo !== null) {
         $sqlPatientInfo = "INSERT INTO blood_request.TR_Form 
-                        (`title`, `firstName`, `lastName`, `HN`, `TXN`, `createdDate`, `ward`, `phoneNumber`, 
+                        (`title`, `firstName`, `lastName`, `HN`, `TXN`, `ward`, `phoneNumber`, 
                         `diagnosis`, `primaryPhysicianName`, `bloodGroup_Patient`, `Rh_Patient`, `blood_component`, 
                         `bloodGroup_Donor`, `Rh_Donor`, `bloodBagNumber`, `volume`, `medicationHistory`, 
                         `isReactionHistory`, `reactionCategory`)
                         VALUES 
-                        (:title, :firstName, :lastName, :HN, :TXN, :createdDate, :ward, :phoneNumber, 
+                        (:title, :firstName, :lastName, :HN, :TXN, :ward, :phoneNumber, 
                         :diagnosis, :primaryPhysicianName, :bloodGroup_Patient, :Rh_Patient, :blood_component, 
                         :bloodGroup_Donor, :Rh_Donor, :bloodBagNumber, :volume, :medicationHistory, 
                         :isReactionHistory, :reactionCategory)";
@@ -49,12 +49,7 @@ function TRForm_Insert($p)
         }
         //bind to TR_Form
         foreach ($PatientInfo as $key => $value) {
-            if ($key === 'createdDate') {
-                $formattedDate = (DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value))->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
-                $stmtPatientInfo->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
-            } else {
-                $stmtPatientInfo->bindValue(":$key", $value, PDO::PARAM_STR);
-            }
+            $stmtPatientInfo->bindValue(":$key", $value, PDO::PARAM_STR);
         }
         $stmtPatientInfo->execute();
         if ($stmtPatientInfo) {

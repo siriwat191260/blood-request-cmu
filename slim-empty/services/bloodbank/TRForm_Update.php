@@ -224,21 +224,6 @@ function updateTable($con_db, $tableName, $data, $idTR_Form)
         } else {
             $sql .= " WHERE idTR_Form = :idTR_Form";
         }
-
-        // Check if the row already exists in the table
-        $checkSql = "SELECT COUNT(*) FROM $tableName WHERE idTR_Form = :idTR_Form";
-        $checkStmt = $con_db->prepare($checkSql);
-        $checkStmt->bindValue(":idTR_Form", $idTR_Form, PDO::PARAM_INT);
-        $checkStmt->execute();
-        $rowExists = ($checkStmt->fetchColumn() > 0);
-
-        // If the row exists, update it; otherwise, insert a new row
-        if ($rowExists) {
-            $sql = "INSERT INTO $tableName (" . implode(', ', array_keys($data)) . ") VALUES (" . implode(', ', array_map(function ($item) {
-                return ':' . $item;
-            }, array_keys($data))) . ") ON DUPLICATE KEY UPDATE " . implode(', ', $setValues);
-        }
-
         $stmt = $con_db->prepare($sql);
 
         // Bind values
