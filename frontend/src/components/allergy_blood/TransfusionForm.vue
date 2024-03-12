@@ -123,7 +123,7 @@ export default defineComponent({
         this.fetchBlood_tranf_detail();
         this.fetchUserDoctor();
         this.fetchUserNurse();
-      }
+      },
     );
   },
   computed: {
@@ -411,6 +411,14 @@ export default defineComponent({
         this.formData.SignsAndSymptomsObject.Other = "";
       }
     },
+      "formData.PatientInfo.isReactionHistory": function (newVal, oldVal) {
+        if (newVal === 1 || newVal === "1") {
+          // Set a flag or update a state variable to show the input field
+          this.showReactionCategoryInput = true;
+        } else {
+          this.showReactionCategoryInput = false;
+        }
+      },
   },
   components: {
     Icon,
@@ -929,8 +937,8 @@ export default defineComponent({
                       type="radio"
                       name="isReactionHistory"
                       id="isReactionHistory1"
-                      :checked = "formData.PatientInfo.isReactionHistory == 0 ? true : false"
-                      :disabled ="formData.PatientInfo.isReactionHistory == 0 ? false : true"
+                      value=0
+                      v-model="formData.PatientInfo.isReactionHistory"
                     />
                     <label
                       class="form-check-label"
@@ -943,10 +951,10 @@ export default defineComponent({
                     <input
                       class="form-check-input"
                       type="radio"
+                      value=1
                       name="isReactionHistory"
                       id="isReactionHistory2"
-                      :checked = "formData.PatientInfo.isReactionHistory == 1 ? true : false"
-                      :disabled ="formData.PatientInfo.isReactionHistory == 1 ? false : true"
+                      v-model="formData.PatientInfo.isReactionHistory"
                     />
                     <label
                       class="form-check-label"
@@ -959,7 +967,7 @@ export default defineComponent({
               </div>
             </div>
             <!-- ชนิดของปฏิกิริยา -->
-            <div v-if="formData.PatientInfo.isReactionHistory === '1'"
+            <div v-if="showReactionCategoryInput"
               class="col-md-7 size-col-7point5 mt16 size-col-57w vertical-style-100w"
             >
               <div class="card-box-info-row-component-style">
