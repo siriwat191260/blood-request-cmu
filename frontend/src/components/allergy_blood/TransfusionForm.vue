@@ -334,7 +334,7 @@ export default defineComponent({
         // Physician DateTime
         const physicianDateTime = new Date(`${this.physicianDate} ${this.physicianTime}`);
 
-        if (!this.$refs.form.checkValidity()) {
+        if (!this.$refs.form.checkValidity() || SignsAndSymptomsObject.idSignsAndSymptomsName.length == 0 ) {
         event.preventDefault();
         event.stopPropagation();
         this.$refs.form.classList.add('was-validated');
@@ -1930,12 +1930,10 @@ export default defineComponent({
                     class="form-check-input"
                     type="checkbox"
                     :id="'inlineCheckbox' + index"
-                    name="SignsAndSymptoms"
                     :value="SignsAndSymptoms.idSignsAndSymtomsName"
                     v-model="
                       formData.SignsAndSymptomsObject.idSignsAndSymptomsName
                     "
-                    required
                   />
                   <label
                     style=" margin-top: 2px; margin-left: 5px"
