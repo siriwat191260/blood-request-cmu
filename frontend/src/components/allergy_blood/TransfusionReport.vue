@@ -332,11 +332,11 @@ export default defineComponent({
         HNWidth() {
         return () => {
             const name =
-            this.formData.PatientInfo.title +
+            this.formData.data.title +
             " " +
-            this.formData.PatientInfo.firstName +
+            this.formData.data.firstName +
             " " +
-            this.formData.PatientInfo.lastName;
+            this.formData.data.lastName;
             const length = name.length;
             if (length > 20) {
             return "HNWidth";
@@ -348,11 +348,11 @@ export default defineComponent({
         NameWidth() {
         return () => {
             const name =
-            this.formData.PatientInfo.title +
+            this.formData.data.title +
             " " +
-            this.formData.PatientInfo.firstName +
+            this.formData.data.firstName +
             " " +
-            this.formData.PatientInfo.lastName;
+            this.formData.data.lastName;
             const length = name.length;
             if (length > 20) {
             this.styleName2Line = true;
