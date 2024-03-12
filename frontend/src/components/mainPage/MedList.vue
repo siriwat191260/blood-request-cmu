@@ -43,12 +43,12 @@ export default {
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
-            let data = this.sortedRows.slice(startIndex, endIndex); 
-            if (!this.searchHN ) {
+            let data = this.sortedRows.slice(startIndex, endIndex);
+            if (!this.searchHN) {
                 return data;
             } else {
                 return data.filter(row => {
-                    return row.hn.includes(this.searchHN); 
+                    return row.hn.includes(this.searchHN);
                 });
             }
         },
@@ -157,7 +157,8 @@ export default {
         <div class="container-md">
             <div class="card"
                 style="border: 0px; justify-content: center; margin: 20px 0px; display: flex; align-items: center; flex-direction: row;">
-                <p style="font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 0; color: #3c3c3c; flex: 1;">
+                <p
+                    style="font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 0; color: #3c3c3c; flex: 1;">
                     ประวัติการรับเลือดทั้งหมด</p>
                 <div class="col-md-3">
                     <p class="fontTopicBox">ค้นหา HN</p>
@@ -223,7 +224,7 @@ export default {
                         <td>{{ row.ttl + " " + row.name + " " + row.lname }}</td>
                         <td>{{ row.hn }}</td>
                         <td v-if="!row.TRForm" class="wait">ไม่มีปฏิกิริยา</td>
-                        <td v-else-if="row.approve === 1" class="done">สำเร็จ</td>
+                        <td v-else-if="row.approve == 1" class="done">สำเร็จ</td>
                         <td v-else class="wait">รอ</td>
 
                         <td v-if="!row.TRForm" @click="addTransFusionForm(row.blood_transf_id)">
@@ -232,15 +233,15 @@ export default {
                                 <p class="done">เพิ่มฟอร์ม</p>
                             </div>
                         </td>
-                        <td v-else-if="row.TRForm === 100" @click="editTransFusionForm(row.idTR_Form)" class="click">
+                        <td v-else-if="row.TRForm == 100" @click="editTransFusionForm(row.idTR_Form)" class="click">
                             ฟอร์มนำส่งตรวจ</td>
-                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait click">ฟอร์มนำส่งตรวจ {{
-                            row.TRForm }}%</td>
+                        <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait click">ฟอร์มนำส่งตรวจ</td>
 
                         <td v-if="!row.TRForm" class="wait">-</td>
-                        <td v-else-if="row.TRReport === 100" @click="getTransFusionReport(row.idTR_Report)" class="click">
+                        <td v-else-if="row.TRReport == 100" @click="getTransFusionReport(row.idTR_Report)" class="click">
                             รายงานการตรวจ</td>
-                        <td v-else class="wait">รายงานการตรวจ</td>
+                        <td v-else-if="!row.TRReport" class="wait">รายงานการตรวจ</td>
+                        <td v-else class="wait">รายงานการตรวจ {{ row.TRReport }}%</td>
 
                         <td v-if="!row.approve & isUserApproved() & row.TRReport === 100"
                             @click="addApprove(row.idTR_Report)">
