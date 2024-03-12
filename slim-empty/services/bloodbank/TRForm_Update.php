@@ -248,10 +248,10 @@ function updateTable($con_db, $tableName, $data, $idTR_Form)
             } else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
                 // Append a date to the time value
                 $time = DateTime::createFromFormat('H:i', $value);
-                $formattedDateTime = $time->format('Y-m-d H:i:s');
+                $formattedDateTime = $time->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDateTime, PDO::PARAM_STR);
             } else if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
-                $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->format('Y-m-d H:i:s');
+                $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
             } else {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
