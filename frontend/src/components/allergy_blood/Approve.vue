@@ -1535,163 +1535,145 @@ export default defineComponent({
                             </div>
                         </div>
                         <div class="row" style="margin-top: 16px;">
-                            <div class="col-md-6">
-                                <div class="card-box-info-row-component-style">
-                                    <div style="display: inline; position: absolute; width: 100%">
-                                        <p class="fontTopicInfo" style="margin-left: 16px;">
-                                            Test by
-                                        </p>
-                                        <input disabled class="form-control typing-box-style" style="
+                        <div class="col-md-6">
+                            <div class="card-box-info-row-component-style">
+                                <div style="display: inline; position: absolute; width: 100%">
+                                    <p class="fontTopicInfo" style="margin-left: 16px;">
+                                        Test by
+                                    </p>
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-left: 16px;
                                         padding-right: 16px;
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " type="text" aria-label="default input example" @input="handleInput('test')"
-                                            :value="formData.data.testedBy" />
-                                        <ul v-if="showResultsTest && formData.data.testedBy.length >= 1
-                                            " class="autocomplete-results">
-                                            <li v-for="(item, index) in filteredItems()" :key="index"
-                                                @click="selectTest(item)">
-                                                {{ item }}
-                                            </li>
-                                        </ul>
-                                    </div>
+                                         :value="formData.data.testedBy" />
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="card-box-info-row-component-style">
-                                    <Icon icon="bx:calendar-event" style="
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-box-info-row-component-style">
+                                <Icon icon="bx:calendar-event" style="
                                     width: 14%;
                                     height: 60%;
                                     margin-left: 16px;
                                     margin-top: 18px;
                                 " />
-                                    <div style="display: inline; position: absolute; width: 80%">
-                                        <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
-                                            วันที่
-                                        </p>
-                                        <div style="position: relative">
-                                            <div style="display: inline; position: absolute; width: 100%">
-                                                <input class="form-control typing-box-style" style="
+                                <div style="display: inline; position: absolute; width: 80%">
+                                    <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
+                                        วันที่
+                                    </p>
+                                    <div style="position: relative">
+                                        <div style="display: inline; position: absolute; width: 100%">
+                                            <input disabled class="form-control typing-box-style" style="
                                                 padding-left: 16px;
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="date" :value="formData.data.testedDate"
-                                                    aria-label="readonly input example" id="birthdaytime"
-                                                    name="birthdaytime" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card-box-info-row-component-style">
-                                    <Icon icon="bx:alarm" style="
-                                    width: 14%;
-                                    height: 60%;
-                                    margin-left: 16px;
-                                    margin-top: 18px;
-                                " />
-                                    <div style="display: inline; position: absolute; width: 80%">
-                                        <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
-                                            เวลา
-                                        </p>
-                                        <div style="position: relative">
-                                            <div style="display: inline; position: absolute; width: 100%">
-                                                <input class="form-control typing-box-style" style="
-                                                padding-left: 16px;
-                                                padding-right: 16px;
-                                                padding-top: 0px;
-                                                padding-bottom: 0px;
-                                                " type="time" :value="formData.data.testedTime"
-                                                    aria-label="readonly input example" id="birthdaytime"
-                                                    name="birthdaytime" />
-                                            </div>
+                                                " type="date"  :value="formData.data.testedDate"
+                                                aria-label="readonly input example" id="testedDate" name="testedDate"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 16px;">
-                            <div class="col-md-6">
-                                <div class="card-box-info-row-component-style">
-                                    <div style="display: inline; position: absolute; width: 100%">
-                                        <p class="fontTopicInfo" style="margin-left: 16px;">
-                                            Report by
-                                        </p>
-                                        <input disabled class="form-control typing-box-style" style="
+                        <div class="col-md-3">
+                            <div class="card-box-info-row-component-style">
+                                <Icon icon="bx:alarm" style="
+                                    width: 14%;
+                                    height: 60%;
+                                    margin-left: 16px;
+                                    margin-top: 18px;
+                                " />
+                                <div style="display: inline; position: absolute; width: 80%">
+                                    <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
+                                        เวลา
+                                    </p>
+                                    <div style="position: relative">
+                                        <div style="display: inline; position: absolute; width: 100%">
+                                            <input class="form-control typing-box-style" style="
+                                                padding-left: 16px;
+                                                padding-right: 16px;
+                                                padding-top: 0px;
+                                                padding-bottom: 0px;
+                                                " type="time"  :value="formData.data.testedTime"
+                                                aria-label="readonly input example" id="testedTime" name="testedTime" disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 16px;">
+                        <div class="col-md-6">
+                            <div class="card-box-info-row-component-style">
+                                <div style="display: inline; position: absolute; width: 100%">
+                                    <p class="fontTopicInfo" style="margin-left: 16px;">
+                                        Report by
+                                    </p>
+                                    <input disabled class="form-control typing-box-style" style="
                                         padding-left: 16px;
                                         padding-right: 16px;
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " type="text" aria-label="default input example" @input="handleInput('report')"
-                                            :value="formData.data.reportedBy" />
-                                        <ul v-if="showResultsReport && formData.data.reportedBy.length >= 1
-                                            " class="autocomplete-results">
-                                            <li v-for="(item, index) in filteredItems()" :key="index"
-                                                @click="selectReport(item)">
-                                                {{ item }}
-                                            </li>
-                                        </ul>
-                                    </div>
+                                         :value="formData.data.reportedBy" />
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="card-box-info-row-component-style">
-                                    <Icon icon="bx:calendar-event" style="
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-box-info-row-component-style">
+                                <Icon icon="bx:calendar-event" style="
                                     width: 14%;
                                     height: 60%;
                                     margin-left: 16px;
                                     margin-top: 18px;
                                 " />
-                                    <div style="display: inline; position: absolute; width: 80%">
-                                        <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
-                                            วันที่
-                                        </p>
-                                        <div style="position: relative">
-                                            <div style="display: inline; position: absolute; width: 100%">
-                                                <input class="form-control typing-box-style" style="
+                                <div style="display: inline; position: absolute; width: 80%">
+                                    <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
+                                        วันที่
+                                    </p>
+                                    <div style="position: relative">
+                                        <div style="display: inline; position: absolute; width: 100%">
+                                            <input class="form-control typing-box-style" style="
                                                 padding-left: 16px;
                                                 padding-right: 16px;
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
-                                                " type="date" :value="formData.data.reportedDate"
-                                                    aria-label="readonly input example" id="birthdaytime"
-                                                    name="birthdaytime" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card-box-info-row-component-style">
-                                    <Icon icon="bx:alarm" style="
-                                    width: 14%;
-                                    height: 60%;
-                                    margin-left: 16px;
-                                    margin-top: 18px;
-                                " />
-                                    <div style="display: inline; position: absolute; width: 80%">
-                                        <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
-                                            เวลา
-                                        </p>
-                                        <div style="position: relative">
-                                            <div style="display: inline; position: absolute; width: 100%">
-                                                <input disabled class="form-control typing-box-style" style="
-                                                padding-left: 16px;
-                                                padding-right: 16px;
-                                                padding-top: 0px;
-                                                padding-bottom: 0px;
-                                                " type="time" :value="formData.data.reportedTime"
-                                                    aria-label="readonly input example" id="birthdaytime"
-                                                    name="birthdaytime" />
-                                            </div>
+                                                " type="date"  :value="formData.data.reportedDate"
+                                                aria-label="readonly input example" id="reportedDate" name="reportedDate" disabled/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="card-box-info-row-component-style">
+                                <Icon icon="bx:alarm" style="
+                                    width: 14%;
+                                    height: 60%;
+                                    margin-left: 16px;
+                                    margin-top: 18px;
+                                " />
+                                <div style="display: inline; position: absolute; width: 80%">
+                                    <p class="fontTopicInfo" style="margin-left: 16px; margin-top: 7px">
+                                        เวลา
+                                    </p>
+                                    <div style="position: relative">
+                                        <div style="display: inline; position: absolute; width: 100%">
+                                            <input disabled class="form-control typing-box-style" style="
+                                                padding-left: 16px;
+                                                padding-right: 16px;
+                                                padding-top: 0px;
+                                                padding-bottom: 0px;
+                                                " type="time"  :value="formData.data.reportedTime"
+                                                aria-label="readonly input example" id="reportedTime" name="reportedTime" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
                 <div class="card card-box-info-style">
