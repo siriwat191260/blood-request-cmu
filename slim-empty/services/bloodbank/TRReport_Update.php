@@ -115,19 +115,6 @@ function TRReport_Update($p)
                     $indicator['PreTransfusionSample'] !== null || $indicator['PostTransfusionSample'] !== null ||
                     $indicator['bloodBagNumber'] !== null || $indicator['Remarks'] !== null)
             ) {
-                // $stmt = $con_db->prepare("INSERT INTO $tableNameindicator (idindicatorName, PreTransfusionSample, PostTransfusionSample, bloodBagNumber, Remarks, idTR_Report) VALUES (?, ?, ?, ?, ?, ?)");
-                // $stmt->bindParam(':idindicatorName', $indicator['idindicatorName']);
-                // $stmt->bindParam(':PreTransfusionSample', $indicator['PreTransfusionSample']);
-                // $stmt->bindParam(':PostTransfusionSample', $indicator['PostTransfusionSample']);
-                // $stmt->bindParam(':bloodBagNumber', $indicator['bloodBagNumber']);
-                // $stmt->bindParam(':Remarks', $indicator['Remarks']);
-                // $stmt->bindParam(':idTR_Report', $idTR_Report);
-                // $stmt->execute();
-                // if ($stmt) {
-                //     $rep['s'] = true;
-                // } else {
-                //     $rep['s'] = false;
-                // }
                 var_dump($indicator);
                 if (updateTable($con_db, $tableNameindicator, $indicator, $idTR_Report)) {
                     $rep['s'] = true;
@@ -244,10 +231,10 @@ function updateTable($con_db, $tableName, $data, $idTR_Report)
             } else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
                 // Append a date to the time value
                 $time = DateTime::createFromFormat('H:i', $value);
-                $formattedDateTime = $time->format('Y-m-d H:i:s');
+                $formattedDateTime = $time->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDateTime, PDO::PARAM_STR);
             } else if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
-                $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->format('Y-m-d H:i:s');
+                $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
             } else {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);

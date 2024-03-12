@@ -75,7 +75,6 @@ function TRReport($p)
     $ind = array();
     for ($i = 1; $i <= 10; $i++) {
         $sql = "SELECT * FROM Indicator
-                LEFT JOIN IndicatorName ON IndicatorName.idIndicatorName = Indicator.idIndicatorName
                 WHERE idTR_Report = :id AND Indicator.idIndicatorName = :i";
         $stmt = $con_db->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);

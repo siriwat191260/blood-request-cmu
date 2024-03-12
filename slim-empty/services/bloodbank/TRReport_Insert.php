@@ -106,19 +106,7 @@ function TRReport_Insert($p)
                     $indicator['PreTransfusionSample'] !== null || $indicator['PostTransfusionSample'] !== null ||
                     $indicator['bloodBagNumber'] !== null || $indicator['Remarks'] !== null)
             ) {
-                // $stmt = $con_db->prepare("INSERT INTO $tableNameindicator (idindicatorName, PreTransfusionSample, PostTransfusionSample, bloodBagNumber, Remarks, idTR_Report) VALUES (?, ?, ?, ?, ?, ?)");
-                // $stmt->bindParam(':idindicatorName', $indicator['idindicatorName']);
-                // $stmt->bindParam(':PreTransfusionSample', $indicator['PreTransfusionSample']);
-                // $stmt->bindParam(':PostTransfusionSample', $indicator['PostTransfusionSample']);
-                // $stmt->bindParam(':bloodBagNumber', $indicator['bloodBagNumber']);
-                // $stmt->bindParam(':Remarks', $indicator['Remarks']);
-                // $stmt->bindParam(':idTR_Report', $idTR_Report);
-                // $stmt->execute();
-                // if ($stmt) {
-                //     $rep['s'] = true;
-                // } else {
-                //     $rep['s'] = false;
-                // }
+
                 var_dump($indicator);
                 if (insertIntoTable($con_db, $tableNameindicator, $indicator, $idTR_Report)) {
                     $rep['s'] = true;
