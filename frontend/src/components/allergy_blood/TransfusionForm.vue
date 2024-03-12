@@ -7,6 +7,7 @@ import {
   currentDate,
   currentTime,
 } from "../general/dateUtils";
+import isValidSVGVue from '../general/isValidSVG.vue';
 import axios from "axios";
 import { watch } from "vue";
 
@@ -101,6 +102,9 @@ export default defineComponent({
       SignsAndSymptomsOtherObject: {
         isOther: "",
       },
+      validationObject: {
+        isMedicationHistoryValid: true,
+      }
     };
   },
   async mounted() {
@@ -317,7 +321,7 @@ export default defineComponent({
       $('#CloseButton').modal('hide');
     },
     //cleansing form
-    async handleSubmit(formData) {
+    async handleSubmit(event,formData) {
       try{
         const { PatientInfo, BloodTransfusionTest, VitalSigns, SignsAndSymptomsObject, SubmittingTest, DetailRecordIn24Hrs } = formData;
         const beforeReactionBPSectionOne = this.beforeReactionBPSectionOne;
@@ -330,6 +334,12 @@ export default defineComponent({
         // Physician DateTime
         const physicianDateTime = new Date(`${this.physicianDate} ${this.physicianTime}`);
 
+        if (!this.$refs.form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.$refs.form.classList.add('was-validated');
+        return;
+      }
       //cleansing form
       const cleasingFormData = {
         PatientInfo: {
@@ -392,11 +402,12 @@ export default defineComponent({
       
       console.log("Form submitted! : ", formData);
       console.log("cleasingFormData submitted! : ", cleasingFormData);
-      const response = await axios.post(
+      /* const response = await axios.post(
           this.baseURL + "submitting_transfusion_form",
           { formData: cleasingFormData }
         );
-      console.log("Form submitted successfully!", response.data);
+      console.log("Form submitted successfully!", response.data); */
+      $('#SaveButton').modal('show');
       } catch (error) {
         console.error("Error submitting form:", error);
         // Handle error if necessary
@@ -420,12 +431,13 @@ export default defineComponent({
   },
   components: {
     Icon,
+    isValidSVGVue
   },
 });
 </script>
 <template>
   <div class="container-md">
-    <form @submit.prevent="handleSubmit(formData)">
+    <form ref="form" @submit.prevent="handleSubmit($event,formData)" class="needs-validation" novalidate>
       <div class="card" style="border: 0px; justify-content: center">
         <!-- header -->
         <div class="row">
@@ -910,6 +922,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.PatientInfo.medicationHistory"
+                    required
                   />
                 </div>
               </div>
@@ -917,7 +930,7 @@ export default defineComponent({
             <!--row 5 -->
             <!-- ประวัติการเกิดปฏิกิริยาการรับเลือด มีหรือไม่ -->
             <div
-              class="col-md-5 size-col-4point5 mt16 size-col-50w vertical-style-100w"
+              class="col-md-5 mt16 size-col-50w vertical-style-100w"
             >
               <div style="display: flex">
                 <p
@@ -927,9 +940,15 @@ export default defineComponent({
                   ประวัติการเกิดปฏิกิริยาจากการรับเลือด
                 </p>
                 <div
-                  style="display: block; margin-left: 32px; margin-top: 22px"
+                  style="display: flex; margin-left: 32px; margin-top: 22px"
                 >
-                  <div class="form-check form-check-inline">
+                  <div class="form-check form-check-inline ">
+                    <label
+                      class="form-check-label"
+                      for="isReactionHistory1"
+                      style=" margin-top: 2px; margin-left: 10px"
+                      >ไม่มี</label
+                    >
                     <input
                       class="form-check-input"
                       type="radio"
@@ -937,15 +956,16 @@ export default defineComponent({
                       id="isReactionHistory1"
                       value=0
                       v-model="formData.PatientInfo.isReactionHistory"
-                    />
-                    <label
-                      class="form-check-label"
-                      for="isReactionHistory1"
-                      style=" margin-top: 2px; margin-left: 10px"
-                      >ไม่มี</label
-                    >
+                      required
+                    />      
                   </div>
                   <div class="form-check form-check-inline">
+                    <label
+                      class="form-check-label"
+                      for="isReactionHistory2"
+                      style=" margin-top: 2px; margin-left: 10px"
+                      >มี</label
+                    >
                     <input
                       class="form-check-input"
                       type="radio"
@@ -953,20 +973,16 @@ export default defineComponent({
                       name="isReactionHistory"
                       id="isReactionHistory2"
                       v-model="formData.PatientInfo.isReactionHistory"
+                      required
                     />
-                    <label
-                      class="form-check-label"
-                      for="isReactionHistory2"
-                      style=" margin-top: 2px; margin-left: 10px"
-                      >มี</label
-                    >
                   </div>
+                  <isValidSVGVue v-if="formData.PatientInfo.isReactionHistory === ''" style="margin-top: 3px;"></isValidSVGVue>
                 </div>
               </div>
             </div>
             <!-- ชนิดของปฏิกิริยา -->
             <div v-if="showReactionCategoryInput"
-              class="col-md-7 size-col-7point5 mt16 size-col-50w vertical-style-100w"
+              class="col-md-7  mt16 size-col-50w vertical-style-100w"
             >
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
@@ -988,6 +1004,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.PatientInfo.reactionCategory"
+                    required
                   />
                 </div>
               </div>
@@ -1022,7 +1039,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1032,6 +1049,12 @@ export default defineComponent({
                       class="form-check form-check-inline"
                       style="width: 40%"
                     >
+                      <label
+                        class="form-check-label"
+                        for="isCorrectPatientName1"
+                        style=" margin-top: 2px; margin-left: 10px"
+                        >ถูกต้อง</label
+                      >
                       <input
                         class="form-check-input"
                         type="radio"
@@ -1041,18 +1064,19 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectPatientName
                         "
+                        required
                       />
-                      <label
-                        class="form-check-label"
-                        for="isCorrectPatientName1"
-                        style=" margin-top: 2px; margin-left: 10px"
-                        >ถูกต้อง</label
-                      >
                     </div>
                     <div
                       class="form-check form-check-inline"
                       style="width: 45%"
                     >
+                      <label
+                        class="form-check-label"
+                        for="isCorrectPatientName2"
+                        style=" margin-top: 2px; margin-left: 10px"
+                        >ไม่ถูกต้อง</label
+                      >
                       <input
                         class="form-check-input"
                         type="radio"
@@ -1062,14 +1086,10 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectPatientName
                         "
+                        required
                       />
-                      <label
-                        class="form-check-label"
-                        for="isCorrectPatientName2"
-                        style=" margin-top: 2px; margin-left: 10px"
-                        >ไม่ถูกต้อง</label
-                      >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectPatientName === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1090,7 +1110,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1109,6 +1129,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1130,6 +1151,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1138,6 +1160,7 @@ export default defineComponent({
                         >ไม่มีไข้</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isWithin24hrsFever === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1160,7 +1183,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1179,6 +1202,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1200,6 +1224,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1208,6 +1233,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodComponent === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1228,7 +1254,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1248,6 +1274,7 @@ export default defineComponent({
                           formData.BloodTransfusionTest
                             .isCorrectBloodTransfusionRec
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1270,6 +1297,7 @@ export default defineComponent({
                           formData.BloodTransfusionTest
                             .isCorrectBloodTransfusionRec
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1278,6 +1306,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodTransfusionRec === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1300,7 +1329,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1319,6 +1348,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1340,6 +1370,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1348,6 +1379,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodBagNumber === ''" style="margin-top: 3px;"></isValidSVGVue>          
                   </div>
                 </div>
               </div>
@@ -1368,7 +1400,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1387,6 +1419,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1408,6 +1441,7 @@ export default defineComponent({
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1416,6 +1450,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodGroupDonor === ''" style="margin-top: 3px;"></isValidSVGVue> 
                   </div>
                 </div>
               </div>
@@ -1438,7 +1473,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1458,6 +1493,7 @@ export default defineComponent({
                           formData.BloodTransfusionTest
                             .isCorrectBloodGroupPatient
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1480,6 +1516,7 @@ export default defineComponent({
                           formData.BloodTransfusionTest
                             .isCorrectBloodGroupPatient
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1488,6 +1525,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodGroupPatient === ''" style="margin-top: 3px;"></isValidSVGVue>       
                   </div>
                 </div>
               </div>
@@ -1543,6 +1581,7 @@ export default defineComponent({
                         type="time"
                         v-model="formData.VitalSigns.beforeReactionTime"
                         aria-label="readonly input example"
+                        required
                       />
                     </div>
                   </div>
@@ -1575,6 +1614,7 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionTemp"
+                      required
                     />
                     <span
                       class="input-group-text"
@@ -1622,6 +1662,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionOne"
                       @input="restrictInput($event,'beforeReactionBPSectionOne')"
+                      required
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1639,6 +1680,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionTwo"
                       @input="restrictInput($event,'beforeReactionBPSectionTwo')"
+                      required
                     />
                   </div>
                 </div>
@@ -1670,6 +1712,7 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionPulse"
+                      required
                     />
                   </div>
                 </div>
@@ -1718,6 +1761,7 @@ export default defineComponent({
                         type="time"
                         v-model="formData.VitalSigns.afterReactionTime"
                         aria-label="readonly input example"
+                        required
                       />
                     </div>
                   </div>
@@ -1750,6 +1794,7 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionTemp"
+                      required
                     />
                     <span
                       class="input-group-text"
@@ -1797,6 +1842,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionOne"
                       @input="restrictInput($event,'afterReactionBPSectionOne')"
+                      required
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1814,6 +1860,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionTwo"
                       @input="restrictInput($event,'afterReactionBPSectionTwo')"
+                      required
                     />
                   </div>
                 </div>
@@ -1845,6 +1892,7 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionPulse"
+                      required
                     />
                   </div>
                 </div>
@@ -1856,8 +1904,9 @@ export default defineComponent({
         <!-- Signs and Symptoms -->
         <div class="card mt16" style="border: 0px">
           <div class="col-md-12">
-            <p class="fontTopicBox" style="margin-top: 8px">
+            <p class="fontTopicBox" style="display: flex; margin-top: 8px">
               Signs and Symptoms
+              <isValidSVGVue v-if="formData.SignsAndSymptomsObject.idSignsAndSymptomsName.length == 0 " style="margin-left: 8px; margin-top: 2px;" ></isValidSVGVue>
             </p>
           </div>
           <!-- Signs and Symptoms Name-->
@@ -1884,6 +1933,7 @@ export default defineComponent({
                     v-model="
                       formData.SignsAndSymptomsObject.idSignsAndSymptomsName
                     "
+                    required
                   />
                   <label
                     style=" margin-top: 2px; margin-left: 5px"
@@ -1920,6 +1970,7 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.SignsAndSymptomsObject.Other"
+                      required
                     />
                   </div>
                 </div>
@@ -2240,7 +2291,7 @@ export default defineComponent({
                       </div>
                       <!-- เกิดปฏิกิริยา -->
                       <div
-                        class="col-md-2 size-col-2point5 size-col-43w vertical-style-50w"
+                        class="col-md-3  size-col-43w vertical-style-50w"
                       >
                         <div style="display: flex">
                           <p
@@ -2251,7 +2302,7 @@ export default defineComponent({
                           </p>
                           <div
                             style="
-                              display: block;
+                              display: flex;
                               margin-left: 8px;
                               margin-top: 22px;
                             "
@@ -2266,6 +2317,7 @@ export default defineComponent({
                                 v-model="
                                   formData.DetailRecordIn24Hrs[index].isReaction
                                 "
+                                required
                               />
                               <label
                                 class="form-check-label"
@@ -2284,6 +2336,7 @@ export default defineComponent({
                                 v-model="
                                   formData.DetailRecordIn24Hrs[index].isReaction
                                 "
+                                required
                               />
                               <label
                                 class="form-check-label"
@@ -2292,6 +2345,7 @@ export default defineComponent({
                                 >มี</label
                               >
                             </div>
+                            <isValidSVGVue v-if="formData.DetailRecordIn24Hrs[index].isReaction === ''" style="margin-top: 3px;"></isValidSVGVue>
                           </div>
                         </div>
                       </div>
@@ -2374,6 +2428,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.SubmittingTest.nurseName"
+                    required
                   />
                   <ul
                     v-if="
@@ -2501,6 +2556,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.SubmittingTest.physicianName"
+                    required
                   />
                   <ul
                     v-if="
@@ -2615,7 +2671,6 @@ export default defineComponent({
               class="btn button-style-save"
               style="margin-top: 32px"
               type="submit"
-              data-bs-toggle="modal" data-bs-target="#SaveButton"
             >
               บันทึก
             </button>
@@ -2655,7 +2710,7 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div
+         <div
           class="modal fade"
           id="SaveButton"
           tabindex="-1"
@@ -2679,7 +2734,6 @@ export default defineComponent({
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
-                  @click="navigateToPreviousPage"
                 >
                   ปิด
                 </button>
@@ -2811,6 +2865,16 @@ hr.dashed {
   border-top: 2px dashed #999;
   width: 100%;
   margin-top: 32px;
+}
+
+.form-control.is-valid, .was-validated .form-control:valid{
+  background-image : none;
+}
+.form-check-input.is-valid~.form-check-label, .was-validated .form-check-input:valid~.form-check-label{
+  color: #000000;
+}
+.form-control.is-invalid, .was-validated .form-control:invalid{
+  background-position : right center;
 }
 
 .form-check-input[type="radio"] {
@@ -2950,6 +3014,8 @@ hr.dashed {
 }
 
 
+
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
   .fontSize_header {
     font-size: 20px;
@@ -2968,7 +3034,7 @@ hr.dashed {
     margin-right: auto;
   }
   .mt16 {
-    margin-top: 16px;
+    margin-top: 32px;
   }
   .mt-horizon-16 {
     margin-top: 16px;
