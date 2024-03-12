@@ -1930,6 +1930,7 @@ export default defineComponent({
                     class="form-check-input"
                     type="checkbox"
                     :id="'inlineCheckbox' + index"
+                    name="SignsAndSymptoms"
                     :value="SignsAndSymptoms.idSignsAndSymtomsName"
                     v-model="
                       formData.SignsAndSymptomsObject.idSignsAndSymptomsName
@@ -2312,7 +2313,7 @@ export default defineComponent({
                               <input
                                 class="form-check-input"
                                 type="radio"
-                                :name="'DetailRecordIn24Hrs_isReaction_0_' + index"
+                                :name="'DetailRecordIn24Hrs_isReaction_' + index"
                                 :id="'DetailRecordIn24Hrs_isReaction_0_' + index"
                                 value="0"
                                 v-model="
@@ -2331,7 +2332,7 @@ export default defineComponent({
                               <input
                                 class="form-check-input"
                                 type="radio"
-                                :name="'DetailRecordIn24Hrs_isReaction_1_' + index"
+                                :name="'DetailRecordIn24Hrs_isReaction_' + index"
                                 :id="'DetailRecordIn24Hrs_isReaction_1_' + index"
                                 value="1"
                                 v-model="
