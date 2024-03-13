@@ -146,17 +146,22 @@ $app->get('/getListBloodTransf', function (Request $request, Response $response,
             $bloodTransfRecord['TRForm'] = null;
             $bloodTransfRecord['TRReport'] = null;
             $bloodTransfRecord['approve'] = null;
+            $bloodTransfRecord['status'] = null;
             if (!empty($trForm)) {
                 $bloodTransfRecord['TRForm'] = $trForm[0]['status'];
                 $bloodTransfRecord['idTR_Form'] = $trForm[0]['idTR_Form'];
+                $bloodTransfRecord['status'] = 1;
                 if (!empty($trReport)) {
                     $bloodTransfRecord['TRReport'] = $trReport[0]['status'];
                     $bloodTransfRecord['idTR_Report'] = $trReport[0]['idTR_Report'];
+                    $bloodTransfRecord['status'] = 2;
                     if (!empty(getApprove($trReport[0]['idTR_Report']))) {
                         $bloodTransfRecord['approve'] = 1;
+                        $bloodTransfRecord['status'] = 3;
                     }
                 }
             }
+            
             return $bloodTransfRecord;
         }, $ListBloodValue);
         $response = $response->withHeader('Content-Type', 'application/json');
@@ -718,7 +723,7 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         //Doctor ID : 1254,6523
         //BloodBank ID : 7895
         //Nurse ID : 451236
-        $idUser = "7895";
+        $idUser = "451236";
         $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
         // Prepare cURL request to get token

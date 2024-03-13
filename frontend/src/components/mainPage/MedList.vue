@@ -43,21 +43,32 @@ export default {
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
-            let data = this.sortedRows.slice(startIndex, endIndex);
-            if (!this.searchHN) {
-                return data;
-            } else {
-                return data.filter(row => {
+            let data = this.sortedRows;
+            if (this.searchHN) {
+                data = data.filter(row => {
                     return row.hn.includes(this.searchHN);
                 });
-            }
+            } 
+            return data.slice(startIndex, endIndex)
         },
 
         paginationRange() {
             const start = (this.currentPage - 1) * this.rowsPerPage + 1;
             const end = Math.min(this.currentPage * this.rowsPerPage, this.sortedRows.length);
             return `${start}-${end} of ${this.sortedRows.length}`;
-        }
+        },
+        visiblePages() {
+            const totalPages = this.totalPages;
+            const currentPage = this.currentPage;
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4); // Ensure 5 pages are always shown
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+        },
     },
     methods: {
         sortBy(field) {
@@ -195,7 +206,7 @@ export default {
                             <i v-if="sortByField === 'hn'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('approve')">สถานะ
+                        <th @click="sortBy('status')">สถานะ
                             <i v-if="sortByField === 'approve'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
@@ -234,10 +245,9 @@ export default {
                             ฟอร์มนำส่งตรวจ</td>
                         <td v-else @click="editTransFusionForm(row.idTR_Form)" class="wait click">ฟอร์มนำส่งตรวจ</td>
 
-                        <td v-if="!row.TRForm" class="wait">-</td>
+                        <td v-if="!row.TRReport" class="wait">-</td>
                         <td v-else-if="row.TRReport == 100" @click="getTransFusionReport(row.idTR_Report)" class="click">
                             รายงานการตรวจ</td>
-                        <td v-else-if="!row.TRReport" class="wait">รายงานการตรวจ</td>
                         <td v-else class="wait">รายงานการตรวจ {{ row.TRReport }}%</td>
 
                         <td v-if="!row.approve & isUserApproved() & row.TRReport === 100"
@@ -274,11 +284,10 @@ export default {
                             color: currentPage === 1 ? '#9D9D9D' : 'orange'
                         }" />
                     </button>
-                    <span v-for="pageNumber in totalPages" :key="pageNumber">
-                        <button @click="goToPage(pageNumber)" :style="{
-                            fontWeight: 1000,
-                            color: currentPage === pageNumber ? '#9D9D9D' : 'black'
-                        }">{{ pageNumber }}
+                    <span>
+                        <button v-for="pageNumber in visiblePages" :key="pageNumber" @click="goToPage(pageNumber)"
+                            :style="{ fontWeight: 1000, color: currentPage === pageNumber ? '#9D9D9D' : 'black' }">
+                            {{ pageNumber }}
                         </button>
                     </span>
                     <button @click="nextPage">

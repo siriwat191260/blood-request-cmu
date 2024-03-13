@@ -43,20 +43,31 @@ export default {
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
-            let data = this.sortedRows.slice(startIndex, endIndex); 
-            if (!this.searchHN ) {
-                return data;
-            } else {
-                return data.filter(row => {
-                    return row.hn.includes(this.searchHN); 
+            let data = this.sortedRows;
+            if (this.searchHN) {
+                data = data.filter(row => {
+                    return row.hn.includes(this.searchHN);
                 });
-            }
+            } 
+            return data.slice(startIndex, endIndex)
         },
         paginationRange() {
             const start = (this.currentPage - 1) * this.rowsPerPage + 1;
             const end = Math.min(this.currentPage * this.rowsPerPage, this.sortedRows.length);
             return `${start}-${end} of ${this.sortedRows.length}`;
-        }
+        },
+        visiblePages() {
+            const totalPages = this.totalPages;
+            const currentPage = this.currentPage;
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4); // Ensure 5 pages are always shown
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+        },
     },
     methods: {
         sortBy(field) {
@@ -193,7 +204,7 @@ export default {
                             <i v-if="sortByField === 'hn'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
-                        <th @click="sortBy('approve')">สถานะ
+                        <th @click="sortBy('status')">สถานะ
                             <i v-if="sortByField === 'approve'"
                                 :class="sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                         </th>
@@ -267,24 +278,9 @@ export default {
                         }" />
                     </button>
                     <span>
-                        <button v-if="currentPage - 2 > 0" @click="goToPage(currentPage - 2)"
-                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
-                            {{ currentPage - 2 }}
-                        </button>
-                        <button v-if="(currentPage - 1) > 0" @click="prevPage"
-                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
-                            {{ currentPage - 1 }}
-                        </button>
-                        <button @click="goToPage(currentPage)" :style="{ fontWeight: 1000, color: 'black' }">
-                            {{ currentPage }}
-                        </button>
-                        <button v-if="currentPage < totalPages" @click="nextPage"
-                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
-                            {{ currentPage + 1 }}
-                        </button>
-                        <button v-if="currentPage + 1 < totalPages" @click="goToPage(currentPage + 1)"
-                            :style="{ fontWeight: 1000, color: '#9D9D9D' }">
-                            {{ currentPage + 2 }}
+                        <button v-for="pageNumber in visiblePages" :key="pageNumber" @click="goToPage(pageNumber)"
+                            :style="{ fontWeight: 1000, color: currentPage === pageNumber ? '#9D9D9D' : 'black' }">
+                            {{ pageNumber }}
                         </button>
                     </span>
 
