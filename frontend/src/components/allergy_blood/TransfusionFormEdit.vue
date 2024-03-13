@@ -419,49 +419,20 @@ export default defineComponent({
               PatientInfo && PatientInfo.medicationHistory
                 ? PatientInfo.medicationHistory
                 : null,
-            isReactionHistory:
-              PatientInfo && PatientInfo.isReactionHistory
-                ? PatientInfo.isReactionHistory
-                : null,
+            isReactionHistory: PatientInfo.isReactionHistory,
             reactionCategory:
               PatientInfo && PatientInfo.reactionCategory
                 ? PatientInfo.reactionCategory
                 : null,
           },
           BloodTransfusionTest: {
-            isCorrectPatientName:
-              BloodTransfusionTest && BloodTransfusionTest.isCorrectPatientName
-                ? BloodTransfusionTest.isCorrectPatientName
-                : "",
-            isWithin24hrsFever:
-              BloodTransfusionTest && BloodTransfusionTest.isWithin24hrsFever
-                ? BloodTransfusionTest.isWithin24hrsFever
-                : "",
-            isCorrectBloodComponent:
-              BloodTransfusionTest &&
-              BloodTransfusionTest.isCorrectBloodComponent
-                ? BloodTransfusionTest.isCorrectBloodComponent
-                : "",
-            isCorrectBloodTransfusionRec:
-              BloodTransfusionTest &&
-              BloodTransfusionTest.isCorrectBloodTransfusionRec
-                ? BloodTransfusionTest.isCorrectBloodTransfusionRec
-                : "",
-            isCorrectBloodBagNumber:
-              BloodTransfusionTest &&
-              BloodTransfusionTest.isCorrectBloodBagNumber
-                ? BloodTransfusionTest.isCorrectBloodBagNumber
-                : "",
-            isCorrectBloodGroupDonor:
-              BloodTransfusionTest &&
-              BloodTransfusionTest.isCorrectBloodGroupDonor
-                ? BloodTransfusionTest.isCorrectBloodGroupDonor
-                : "",
-            isCorrectBloodGroupPatient:
-              BloodTransfusionTest &&
-              BloodTransfusionTest.isCorrectBloodGroupPatient
-                ? BloodTransfusionTest.isCorrectBloodGroupPatient
-                : "",
+            isCorrectPatientName: BloodTransfusionTest.isCorrectPatientName,
+            isWithin24hrsFever: BloodTransfusionTest.isWithin24hrsFever,
+            isCorrectBloodComponent: BloodTransfusionTest.isCorrectBloodComponent,
+            isCorrectBloodTransfusionRec: BloodTransfusionTest.isCorrectBloodTransfusionRec,
+            isCorrectBloodBagNumber:BloodTransfusionTest.isCorrectBloodBagNumber,
+            isCorrectBloodGroupDonor:BloodTransfusionTest.isCorrectBloodGroupDonor,
+            isCorrectBloodGroupPatient: BloodTransfusionTest.isCorrectBloodGroupPatient,
           },
           VitalSigns: {
             beforeReactionTime:
@@ -1026,7 +997,6 @@ export default defineComponent({
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
-                        font-family: 'IBM Plex Sans Thai';
                       "
                     >
                       มล.</span
@@ -1684,7 +1654,7 @@ export default defineComponent({
                         class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
-                          padding-right: 16px;
+                          padding-right: 6px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
@@ -1735,7 +1705,6 @@ export default defineComponent({
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
-                        font-family: 'IBM Plex Sans Thai';
                       "
                     >
                       °C</span
@@ -1760,7 +1729,7 @@ export default defineComponent({
                       :class="inputWidth('beforeBP')"
                       style="
                         padding-left: 16px;
-                        padding-right: 16px;
+                        padding-right: 6px;
                         padding-top: 0px;
                         padding-bottom: 0px;
                         text-align: center;
@@ -1863,7 +1832,7 @@ export default defineComponent({
                         class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
-                          padding-right: 16px;
+                          padding-right: 6px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
@@ -1914,7 +1883,6 @@ export default defineComponent({
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
-                        font-family: 'IBM Plex Sans Thai';
                       "
                     >
                       °C</span
@@ -1939,7 +1907,7 @@ export default defineComponent({
                       :class="inputWidth('afterBP')"
                       style="
                         padding-left: 16px;
-                        padding-right: 16px;
+                        padding-right: 6px;
                         padding-top: 0px;
                         padding-bottom: 0px;
                         text-align: center;
@@ -2391,7 +2359,6 @@ export default defineComponent({
                                   font-weight: 700;
                                   font-size: 0.9rem;
                                   color: #202124;
-                                  font-family: 'IBM Plex Sans Thai';
                                 "
                               >
                                 มล.</span
@@ -2880,13 +2847,19 @@ export default defineComponent({
   </div>
 </template>
 <style scoped>
+
+input,
+p,
+button,
+span,
+div {
+    font-family: "IBM Plex Sans Thai";
+}
 .fontSize_header {
   font-size: 1.6rem;
   font-weight: 700;
-  font-family: "IBM Plex Sans Thai";
 }
 .fontTopicBox {
-  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
@@ -2894,20 +2867,17 @@ export default defineComponent({
   color: #3c3c3c;
 }
 .fontInsideBox {
-  font-family: "IBM Plex Sans Thai";
   font-size: 1.1rem;
   font-weight: 800;
   color: #000000;
 }
 .fontTopicInfo {
-  font-family: "IBM Plex Sans Thai";
   font-weight: 700;
   font-size: 0.9rem;
   color: #202124;
   display: inline;
 }
 .fontTopicCheckBox {
-  font-family: "IBM Plex Sans";
   font-weight: 500;
   font-size: 1rem;
   color: #202124;
@@ -2970,7 +2940,6 @@ export default defineComponent({
   width: 100%;
   background-color: rgb(213, 224, 224, 0);
   border: rgb(213, 224, 224, 0);
-  font-family: "Noto Looped Thai";
   font-weight: 400;
   font-size: 16px;
   color: #202124;
@@ -3063,7 +3032,6 @@ hr.dashed {
   height: 44px;
   border-radius: 100px;
   background-color: rgba(0, 191, 165, 1);
-  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
@@ -3087,7 +3055,6 @@ hr.dashed {
   border-radius: 100px;
   background-color: transparent;
   border: 2px solid rgba(0, 191, 165, 1);
-  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
