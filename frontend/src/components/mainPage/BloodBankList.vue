@@ -20,7 +20,7 @@ export default {
             sortByField: '',
             sortDirection: 'asc',
             currentPage: 1,
-            rowsPerPage: 13,
+            rowsPerPage: 10,
         }
     },
     computed: {

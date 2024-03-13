@@ -500,7 +500,8 @@ export default defineComponent({
                         <div class="col-md-6 vertical-style-100w">
                             <div style="margin-top: 60px">
                                 <p class="fontSize_header">
-                                    รายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด (Transfusion reaction report)
+                                    รายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด
+                                    <Icon icon="bx:edit" style="color: black"></Icon>
                                 </p>
                             </div>
                         </div>

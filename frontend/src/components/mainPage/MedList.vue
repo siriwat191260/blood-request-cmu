@@ -20,7 +20,7 @@ export default {
             sortByField: '',
             sortDirection: 'asc',
             currentPage: 1,
-            rowsPerPage: 13
+            rowsPerPage: 10
         }
     },
     computed: {
@@ -68,23 +68,20 @@ export default {
                 this.sortDirection = 'asc';
             }
 
-            if (typeof this.sortedRows[0][field] === 'string') {
-                this.sortedRows.sort((a, b) => {
-                    const valA = a[field].toLowerCase();
-                    const valB = b[field].toLowerCase();
-                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
-                    return 0;
-                });
-            } else {
-                this.sortedRows.sort((a, b) => {
-                    const valA = a[field];
-                    const valB = b[field];
-                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
-                    return 0;
-                });
-            }
+            this.sortedRows.sort((a, b) => {
+                let valA = a[field];
+                let valB = b[field];
+
+                // Convert valA and valB to Date objects if they are strings and field is 'dtm'
+                if (field === 'dtm' && typeof valA === 'string' && typeof valB === 'string') {
+                    valA = new Date(valA);
+                    valB = new Date(valB);
+                }
+
+                if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+                if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
         },
         nextPage() {
             if (this.currentPage < this.totalPages) {
