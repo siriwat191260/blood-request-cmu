@@ -741,7 +741,7 @@ export default defineComponent({
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" placeholder="กรุณากรอกข้อมูล"
+                                        onkeypress="return event.charCode != 45" min="0" max="1000" placeholder="กรุณากรอกข้อมูล"
                                         v-model="formData.BloodBagCharacteristic.volumeOfBag" />
                                 </div>
                             </div>
@@ -756,7 +756,7 @@ export default defineComponent({
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" placeholder="กรุณากรอกข้อมูล"
+                                        onkeypress="return event.charCode != 45" min="0" max="1000" placeholder="กรุณากรอกข้อมูล"
                                         v-model="formData.BloodBagCharacteristic.TransfusionVolume" />
                                 </div>
                             </div>

@@ -330,7 +330,17 @@ export default defineComponent({
     },
     restrictInput(event, name) {
       // Remove non-numeric characters from the input value
-      this[name] = event.target.value.replace(/\D/g, "");
+      let value = event.target.value.replace(/\D/g, '');
+
+      // Ensure value is within the range of 0 to 100
+      if (value === '') {
+        value = ''; // If empty, default to 0
+      } else {
+        value = Math.min(Math.max(parseInt(value), 0), 300).toString();
+      }
+
+      // Update the corresponding property in your Vue data
+      this[name] = value;
     },
     // config this path for hostipal
     // go back to previous page
@@ -1689,7 +1699,8 @@ export default defineComponent({
                       type="number"
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
-                      min="0"
+                      min="30"
+                      max="50"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionTemp"
@@ -1788,6 +1799,7 @@ export default defineComponent({
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
                       min="0"
+                      max="200"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionPulse"
@@ -1867,7 +1879,8 @@ export default defineComponent({
                       type="number"
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
-                      min="0"
+                      min="30"
+                      max="50"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionTemp"
@@ -1966,6 +1979,7 @@ export default defineComponent({
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
                       min="0"
+                      max="200"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionPulse"
