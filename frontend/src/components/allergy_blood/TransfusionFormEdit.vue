@@ -332,7 +332,7 @@ export default defineComponent({
       // Remove non-numeric characters from the input value
       let value = event.target.value.replace(/\D/g, '');
 
-      // Ensure value is within the range of 0 to 100
+      // Ensure value is within the range of 0 to 300
       if (value === '') {
         value = ''; // If empty, default to 0
       } else {
@@ -342,7 +342,15 @@ export default defineComponent({
       // Update the corresponding property in your Vue data
       this[name] = value;
     },
-    // config this path for hostipal
+    handleInputTypingBox(event,max,field) {
+    const inputValue = parseInt(event.target.value);
+    if (inputValue > max) {
+        this.formData.VitalSigns[field] = max;
+        event.target.value = max;
+    } else {
+      this.formData.VitalSigns[field] = inputValue;
+    }
+  },
     // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
@@ -350,7 +358,7 @@ export default defineComponent({
       $("#CloseButton").modal("hide");
     },
     //cleansing form
-    async handleSubmit(formData) {
+    async handleSubmit(event,formData) {
       try {
         const {
           PatientInfo,
@@ -372,6 +380,14 @@ export default defineComponent({
           `${this.physicianDate} ${this.physicianTime}`
         );
 
+        if (!this.$refs.form.checkValidity() || SignsAndSymptomsObject.idSignsAndSymptomsName.length == 0 ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.$refs.form.classList.add('was-validated');
+        $('#Invalid').modal('show');
+        return;
+      }
+      
         //cleansing form
         const cleasingFormData = {
           PatientInfo: {
@@ -523,6 +539,7 @@ export default defineComponent({
             `submitting_transfusion_form/update/${this.$route.params.id}`,
           { formData: cleasingFormData }
         );
+        $('#SaveButton').modal('show');
         console.log("Form submitted update successfully!", response.data);
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -552,7 +569,7 @@ export default defineComponent({
 </script>
 <template>
   <div class="container-md">
-    <form @submit.prevent="handleSubmit(formData)">
+    <form ref="form" @submit.prevent="handleSubmit($event,formData)" class="needs-validation" novalidate>
       <div class="card" style="border: 0px; justify-content: center">
         <!-- header -->
         <div class="row">
@@ -560,7 +577,6 @@ export default defineComponent({
             <div style="margin-top: 60px">
               <p class="fontSize_header">
                 ฟอร์มนำส่งตรวจการเกิดปฏิกิริยาจากการรับเลือด
-                <Icon icon="bx:edit" style="color: black"></Icon>
               </p>
             </div>
           </div>
@@ -1007,6 +1023,7 @@ export default defineComponent({
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
+                        font-family: 'IBM Plex Sans Thai';
                       "
                     >
                       มล.</span
@@ -1037,6 +1054,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.PatientInfo.medicationHistory"
+                    required
                   />
                 </div>
               </div>
@@ -1044,7 +1062,7 @@ export default defineComponent({
             <!--row 5 -->
             <!-- ประวัติการเกิดปฏิกิริยาการรับเลือด มีหรือไม่ -->
             <div
-              class="col-md-5 size-col-4point5 mt16 size-col-50w vertical-style-100w"
+              class="col-md-5 mt16 size-col-50w vertical-style-100w"
             >
               <div style="display: flex">
                 <p
@@ -1054,47 +1072,49 @@ export default defineComponent({
                   ประวัติการเกิดปฏิกิริยาจากการรับเลือด
                 </p>
                 <div
-                  style="display: block; margin-left: 32px; margin-top: 22px"
+                  style="display: flex; margin-left: 32px; margin-top: 22px"
                 >
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="isReactionHistory"
-                      id="isReactionHistory1"
-                      value="0"
-                      v-model="formData.PatientInfo.isReactionHistory"
-                    />
+                  <div class="form-check form-check-inline ">
                     <label
                       class="form-check-label"
                       for="isReactionHistory1"
                       style=" margin-top: 2px; margin-left: 10px"
                       >ไม่มี</label
                     >
-                  </div>
-                  <div class="form-check form-check-inline">
                     <input
                       class="form-check-input"
                       type="radio"
                       name="isReactionHistory"
-                      id="isReactionHistory2"
-                      value="1"
+                      id="isReactionHistory1"
+                      value=0
                       v-model="formData.PatientInfo.isReactionHistory"
-                    />
+                      required
+                    />      
+                  </div>
+                  <div class="form-check form-check-inline">
                     <label
                       class="form-check-label"
                       for="isReactionHistory2"
                       style=" margin-top: 2px; margin-left: 10px"
                       >มี</label
                     >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      value=1
+                      name="isReactionHistory"
+                      id="isReactionHistory2"
+                      v-model="formData.PatientInfo.isReactionHistory"
+                      required
+                    />
                   </div>
+                  <isValidSVGVue v-if="formData.PatientInfo.isReactionHistory === ''" style="margin-top: 3px;"></isValidSVGVue>
                 </div>
               </div>
             </div>
             <!-- ชนิดของปฏิกิริยา -->
-            <div
-              v-if="showReactionCategoryInput"
-              class="col-md-7 size-col-7point5 mt16 size-col-50w vertical-style-100w"
+            <div v-if="showReactionCategoryInput"
+              class="col-md-7  mt16 size-col-50w vertical-style-100w"
             >
               <div class="card-box-info-row-component-style">
                 <div style="display: inline; position: absolute; width: 100%">
@@ -1116,6 +1136,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.PatientInfo.reactionCategory"
+                    required
                   />
                 </div>
               </div>
@@ -1150,7 +1171,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1160,44 +1181,47 @@ export default defineComponent({
                       class="form-check form-check-inline"
                       style="width: 40%"
                     >
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="isCorrectPatientName"
-                        id="isCorrectPatientName1"
-                        value="1"
-                        v-model="
-                          formData.BloodTransfusionTest.isCorrectPatientName
-                        "
-                      />
                       <label
                         class="form-check-label"
                         for="isCorrectPatientName1"
                         style=" margin-top: 2px; margin-left: 10px"
                         >ถูกต้อง</label
                       >
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="isCorrectPatientName"
+                        id="isCorrectPatientName1"
+                        value=1
+                        v-model="
+                          formData.BloodTransfusionTest.isCorrectPatientName
+                        "
+                        required
+                      />
                     </div>
                     <div
                       class="form-check form-check-inline"
                       style="width: 45%"
                     >
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="isCorrectPatientName"
-                        id="isCorrectPatientName2"
-                        value="0"
-                        v-model="
-                          formData.BloodTransfusionTest.isCorrectPatientName
-                        "
-                      />
                       <label
                         class="form-check-label"
                         for="isCorrectPatientName2"
                         style=" margin-top: 2px; margin-left: 10px"
                         >ไม่ถูกต้อง</label
                       >
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="isCorrectPatientName"
+                        id="isCorrectPatientName2"
+                        value=0
+                        v-model="
+                          formData.BloodTransfusionTest.isCorrectPatientName
+                        "
+                        required
+                      />
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectPatientName === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1218,7 +1242,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1233,10 +1257,11 @@ export default defineComponent({
                         type="radio"
                         name="isWithin24hrsFever"
                         id="isWithin24hrsFever1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1254,10 +1279,11 @@ export default defineComponent({
                         type="radio"
                         name="isWithin24hrsFever"
                         id="isWithin24hrsFever2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1266,6 +1292,7 @@ export default defineComponent({
                         >ไม่มีไข้</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isWithin24hrsFever === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1288,7 +1315,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1303,10 +1330,11 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodComponent"
                         id="isCorrectBloodComponent1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1324,10 +1352,11 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodComponent"
                         id="isCorrectBloodComponent2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1336,6 +1365,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodComponent === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1356,7 +1386,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1371,11 +1401,12 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodTransfusionRec"
                         id="isCorrectBloodTransfusionRec1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodTransfusionRec
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1393,11 +1424,12 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodTransfusionRec"
                         id="isCorrectBloodTransfusionRec2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodTransfusionRec
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1406,6 +1438,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodTransfusionRec === ''" style="margin-top: 3px;"></isValidSVGVue>
                   </div>
                 </div>
               </div>
@@ -1428,7 +1461,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1443,10 +1476,11 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodBagNumber"
                         id="isCorrectBloodBagNumber1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1464,10 +1498,11 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodBagNumber"
                         id="isCorrectBloodBagNumber2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1476,6 +1511,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodBagNumber === ''" style="margin-top: 3px;"></isValidSVGVue>          
                   </div>
                 </div>
               </div>
@@ -1496,7 +1532,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1511,10 +1547,11 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupDonor"
                         id="isCorrectBloodGroupDonor1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1532,10 +1569,11 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupDonor"
                         id="isCorrectBloodGroupDonor2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1544,6 +1582,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodGroupDonor === ''" style="margin-top: 3px;"></isValidSVGVue> 
                   </div>
                 </div>
               </div>
@@ -1566,7 +1605,7 @@ export default defineComponent({
                   </p>
                   <div
                     style="
-                      display: block;
+                      display: flex;
                       width: 60%;
                       margin-left: 32px;
                       margin-top: 22px;
@@ -1581,11 +1620,12 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupPatient"
                         id="isCorrectBloodGroupPatient1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodGroupPatient
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1603,11 +1643,12 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupPatient"
                         id="isCorrectBloodGroupPatient2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodGroupPatient
                         "
+                        required
                       />
                       <label
                         class="form-check-label"
@@ -1616,6 +1657,7 @@ export default defineComponent({
                         >ไม่ถูกต้อง</label
                       >
                     </div>
+                    <isValidSVGVue v-if="formData.BloodTransfusionTest.isCorrectBloodGroupPatient === ''" style="margin-top: 3px;"></isValidSVGVue>       
                   </div>
                 </div>
               </div>
@@ -1664,13 +1706,14 @@ export default defineComponent({
                         class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
-                          padding-right: 6px;
+                          padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
                         type="time"
                         v-model="formData.VitalSigns.beforeReactionTime"
                         aria-label="readonly input example"
+                        required
                       />
                     </div>
                   </div>
@@ -1698,12 +1741,14 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="30"
-                      max="50"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 2 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,50,'beforeReactionTemp')"
+                      min=30
+                      max=50
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionTemp"
+                      required
                     />
                     <span
                       class="input-group-text"
@@ -1716,6 +1761,7 @@ export default defineComponent({
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
+                        font-family: 'IBM Plex Sans Thai';
                       "
                     >
                       °C</span
@@ -1740,7 +1786,7 @@ export default defineComponent({
                       :class="inputWidth('beforeBP')"
                       style="
                         padding-left: 16px;
-                        padding-right: 6px;
+                        padding-right: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
                         text-align: center;
@@ -1749,9 +1795,9 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionOne"
-                      @input="
-                        restrictInput($event, 'beforeReactionBPSectionOne')
-                      "
+                      @input="restrictInput($event,'beforeReactionBPSectionOne')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      required
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1763,14 +1809,14 @@ export default defineComponent({
                         padding-top: 0px;
                         padding-bottom: 0px;
                         text-align: center;
-                      "               
+                      "
                       type="text"
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionTwo"
-                      @input="
-                        restrictInput($event, 'beforeReactionBPSectionTwo')
-                      "
+                      @input="restrictInput($event,'beforeReactionBPSectionTwo')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      required
                     />
                   </div>
                 </div>
@@ -1797,12 +1843,14 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
-                      max="200"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,300,'beforeReactionPulse')"
+                      min=0
+                      max=300
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionPulse"
+                      required
                     />
                   </div>
                 </div>
@@ -1844,13 +1892,14 @@ export default defineComponent({
                         class="form-control typing-box-style"
                         style="
                           padding-left: 16px;
-                          padding-right: 6px;
+                          padding-right: 16px;
                           padding-top: 0px;
                           padding-bottom: 0px;
                         "
                         type="time"
                         v-model="formData.VitalSigns.afterReactionTime"
                         aria-label="readonly input example"
+                        required
                       />
                     </div>
                   </div>
@@ -1878,12 +1927,14 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="30"
-                      max="50"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 2 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,50,'afterReactionTemp')"
+                      min=30
+                      max=50
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionTemp"
+                      required
                     />
                     <span
                       class="input-group-text"
@@ -1896,6 +1947,7 @@ export default defineComponent({
                         font-weight: 700;
                         font-size: 0.9rem;
                         color: #202124;
+                        font-family: 'IBM Plex Sans Thai';
                       "
                     >
                       °C</span
@@ -1920,7 +1972,7 @@ export default defineComponent({
                       :class="inputWidth('afterBP')"
                       style="
                         padding-left: 16px;
-                        padding-right: 6px;
+                        padding-right: 16px;
                         padding-top: 0px;
                         padding-bottom: 0px;
                         text-align: center;
@@ -1929,9 +1981,9 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionOne"
-                      @input="
-                        restrictInput($event, 'afterReactionBPSectionOne')
-                      "
+                      @input="restrictInput($event,'afterReactionBPSectionOne')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      required
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
                     <input
@@ -1948,9 +2000,9 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionTwo"
-                      @input="
-                        restrictInput($event, 'afterReactionBPSectionTwo')
-                      "
+                      @input="restrictInput($event,'afterReactionBPSectionTwo')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      required
                     />
                   </div>
                 </div>
@@ -1977,12 +2029,14 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
-                      max="200"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,300,'afterReactionPulse')"
+                      min=0
+                      max=300
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionPulse"
+                      required
                     />
                   </div>
                 </div>
@@ -1994,8 +2048,9 @@ export default defineComponent({
         <!-- Signs and Symptoms -->
         <div class="card mt16" style="border: 0px">
           <div class="col-md-12">
-            <p class="fontTopicBox" style="margin-top: 8px">
+            <p class="fontTopicBox" style="display: flex; margin-top: 8px">
               Signs and Symptoms
+              <isValidSVGVue v-if="formData.SignsAndSymptomsObject.idSignsAndSymptomsName.length == 0 " style="margin-left: 8px; margin-top: 2px;" ></isValidSVGVue>
             </p>
           </div>
           <!-- Signs and Symptoms Name-->
@@ -2058,6 +2113,7 @@ export default defineComponent({
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.SignsAndSymptomsObject.Other"
+                      required
                     />
                   </div>
                 </div>
@@ -2129,7 +2185,7 @@ export default defineComponent({
                           width="24"
                           height="24"
                         />
-                        หมายเลขถุงเลือด : {{ blood_transf24.bloodBagNumber }}
+                        หมายเลขถุงเลือด : {{ blood_transf24.packid }}
                       </p>
                     </div>
                   </button>
@@ -2167,7 +2223,7 @@ export default defineComponent({
                                 padding-bottom: 0px;
                               "
                               type="text"
-                              :value="blood_transf24.bloodComponent"
+                              :value="blood_transf24.product"
                               aria-label="default input example"
                               readonly
                             />
@@ -2216,9 +2272,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  :value="
-                                    parseDate(blood_transf24.startTransfusion)
-                                  "
+                                  :value="parseDate(blood_transf24.dtm)"
                                   aria-label="readonly input example"
                                   readonly
                                 />
@@ -2269,9 +2323,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  :value="
-                                    parseTime(blood_transf24.startTransfusion)
-                                  "
+                                  :value="parseTime(blood_transf24.dtm)"
                                   aria-label="default input example"
                                 />
                               </div>
@@ -2321,9 +2373,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  :value="
-                                    parseTime(blood_transf24.endTransfusion)
-                                  "
+                                  :value="parseTime(blood_transf24.dtm_off)"
                                   aria-label="default input example"
                                 />
                               </div>
@@ -2359,7 +2409,7 @@ export default defineComponent({
                                   padding-bottom: 0px;
                                 "
                                 type="text"
-                                :value="blood_transf24.volume"
+                                :value="blood_transf24.vol"
                                 aria-label="default input example"
                               />
                               <span
@@ -2373,6 +2423,7 @@ export default defineComponent({
                                   font-weight: 700;
                                   font-size: 0.9rem;
                                   color: #202124;
+                                  font-family: 'IBM Plex Sans Thai';
                                 "
                               >
                                 มล.</span
@@ -2383,7 +2434,7 @@ export default defineComponent({
                       </div>
                       <!-- เกิดปฏิกิริยา -->
                       <div
-                        class="col-md-2 size-col-2point5 size-col-43w vertical-style-50w"
+                        class="col-md-3  size-col-43w vertical-style-50w"
                       >
                         <div style="display: flex">
                           <p
@@ -2394,7 +2445,7 @@ export default defineComponent({
                           </p>
                           <div
                             style="
-                              display: block;
+                              display: flex;
                               margin-left: 8px;
                               margin-top: 22px;
                             "
@@ -2403,22 +2454,17 @@ export default defineComponent({
                               <input
                                 class="form-check-input"
                                 type="radio"
-                                :name="
-                                  'DetailRecordIn24Hrs_isReaction_0_' + index
-                                "
-                                :id="
-                                  'DetailRecordIn24Hrs_isReaction_0_' + index
-                                "
-                                value="0"
+                                :name="'DetailRecordIn24Hrs_isReaction_' + index"
+                                :id="'DetailRecordIn24Hrs_isReaction_0_' + index"
+                                value=0
                                 v-model="
                                   formData.DetailRecordIn24Hrs[index].isReaction
                                 "
+                                required
                               />
                               <label
                                 class="form-check-label"
-                                :for="
-                                  'DetailRecordIn24Hrs_isReaction_0_' + index
-                                "
+                                :for="'DetailRecordIn24Hrs_isReaction_0_' + index"
                                 style=" margin-top: 2px; margin-left: 10px"
                                 >ไม่มี</label
                               >
@@ -2427,26 +2473,22 @@ export default defineComponent({
                               <input
                                 class="form-check-input"
                                 type="radio"
-                                :name="
-                                  'DetailRecordIn24Hrs_isReaction_1_' + index
-                                "
-                                :id="
-                                  'DetailRecordIn24Hrs_isReaction_1_' + index
-                                "
-                                value="1"
+                                :name="'DetailRecordIn24Hrs_isReaction_' + index"
+                                :id="'DetailRecordIn24Hrs_isReaction_1_' + index"
+                                value=1
                                 v-model="
                                   formData.DetailRecordIn24Hrs[index].isReaction
                                 "
+                                required
                               />
                               <label
                                 class="form-check-label"
-                                :for="
-                                  'DetailRecordIn24Hrs_isReaction_1_' + index
-                                "
+                                :for="'DetailRecordIn24Hrs_isReaction_1_' + index"
                                 style=" margin-top: 2px; margin-left: 10px"
                                 >มี</label
                               >
                             </div>
+                            <isValidSVGVue v-if="formData.DetailRecordIn24Hrs[index].isReaction === ''" style="margin-top: 3px;"></isValidSVGVue>
                           </div>
                         </div>
                       </div>
@@ -2529,6 +2571,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.SubmittingTest.nurseName"
+                    required
                   />
                   <ul
                     v-if="
@@ -2656,6 +2699,7 @@ export default defineComponent({
                     aria-label="default input example"
                     placeholder="กรุณากรอกข้อมูล"
                     v-model="formData.SubmittingTest.physicianName"
+                    required
                   />
                   <ul
                     v-if="
@@ -2763,20 +2807,13 @@ export default defineComponent({
         </div>
         <div class="card" style="border: 0px; margin-bottom: 32px">
           <div style="display: flex; justify-content: flex-end; gap: 2%">
-            <button
-              class="btn button-style-close"
-              data-bs-toggle="modal"
-              data-bs-target="#CloseButton"
-              style="margin-top: 32px"
-            >
+            <button class="btn button-style-close" type="button" data-bs-toggle="modal" data-bs-target="#CloseButton" style="margin-top: 32px">
               ปิด
             </button>
             <button
               class="btn button-style-save"
               style="margin-top: 32px"
               type="submit"
-              data-bs-toggle="modal"
-              data-bs-target="#SaveButton"
             >
               บันทึก
             </button>
@@ -2792,9 +2829,7 @@ export default defineComponent({
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="closeModalLabel">
-                  คุณต้องการยกเลิกการทำรายการใช่หรือไม่
-                </h5>
+                <h5 class="modal-title" id="closeModalLabel">คุณต้องการยกเลิกการทำรายการใช่หรือไม่</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -2802,7 +2837,7 @@ export default defineComponent({
                   aria-label="ปิด"
                 ></button>
               </div>
-
+              
               <div class="modal-footer">
                 <button
                   type="button"
@@ -2811,18 +2846,14 @@ export default defineComponent({
                 >
                   ปิด
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  @click="navigateToPreviousPage"
-                >
+                <button type="button" class="btn btn-primary" @click="navigateToPreviousPage">
                   ตกลง
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div
+         <div
           class="modal fade"
           id="SaveButton"
           tabindex="-1"
@@ -2832,9 +2863,7 @@ export default defineComponent({
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header text-center">
-                <h5 class="modal-title" id="saveModalLabel">
-                  บันทึกข้อมูลสำเร็จ
-                </h5>
+                <h5 class="modal-title" id="saveModalLabel">บันทึกข้อมูลสำเร็จ</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -2842,13 +2871,37 @@ export default defineComponent({
                   aria-label=""
                 ></button>
               </div>
-
+              
               <div class="modal-footer">
                 <button
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
-                  @click="navigateToPreviousPage"
+                >
+                  ปิด
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="Invalid"
+          tabindex="-1"
+          aria-labelledby="Invalid"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-center">
+                <h5 class="modal-title" id="Invalid">ไม่สามารถบันทึกข้อมูลได้ <Icon icon="noto:warning" width="24" height="24"></Icon></h5>
+              </div>
+              
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
                 >
                   ปิด
                 </button>
@@ -2861,19 +2914,13 @@ export default defineComponent({
   </div>
 </template>
 <style scoped>
-
-input,
-p,
-button,
-span,
-div {
-    font-family: "IBM Plex Sans Thai";
-}
 .fontSize_header {
   font-size: 1.6rem;
   font-weight: 700;
+  font-family: "IBM Plex Sans Thai";
 }
 .fontTopicBox {
+  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
@@ -2881,17 +2928,20 @@ div {
   color: #3c3c3c;
 }
 .fontInsideBox {
+  font-family: "IBM Plex Sans Thai";
   font-size: 1.1rem;
   font-weight: 800;
   color: #000000;
 }
 .fontTopicInfo {
+  font-family: "IBM Plex Sans Thai";
   font-weight: 700;
   font-size: 0.9rem;
   color: #202124;
   display: inline;
 }
 .fontTopicCheckBox {
+  font-family: "IBM Plex Sans";
   font-weight: 500;
   font-size: 1rem;
   color: #202124;
@@ -2954,6 +3004,7 @@ div {
   width: 100%;
   background-color: rgb(213, 224, 224, 0);
   border: rgb(213, 224, 224, 0);
+  font-family: "Noto Looped Thai";
   font-weight: 400;
   font-size: 16px;
   color: #202124;
@@ -2982,6 +3033,16 @@ hr.dashed {
   border-top: 2px dashed #999;
   width: 100%;
   margin-top: 32px;
+}
+
+.form-control.is-valid, .was-validated .form-control:valid{
+  background-image : none;
+}
+.form-check-input.is-valid~.form-check-label, .was-validated .form-check-input:valid~.form-check-label{
+  color: #000000;
+}
+.form-control.is-invalid, .was-validated .form-control:invalid{
+  background-position : right center;
 }
 
 .form-check-input[type="radio"] {
@@ -3046,6 +3107,7 @@ hr.dashed {
   height: 44px;
   border-radius: 100px;
   background-color: rgba(0, 191, 165, 1);
+  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
@@ -3069,6 +3131,7 @@ hr.dashed {
   border-radius: 100px;
   background-color: transparent;
   border: 2px solid rgba(0, 191, 165, 1);
+  font-family: "IBM Plex Sans Thai";
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 30px;
@@ -3110,6 +3173,10 @@ hr.dashed {
   width: 30%
 }
 
+.inputWidthOrigin {
+    width: 100%
+  }
+
 .HNWidth{
   width: 16.67%;
 }
@@ -3117,6 +3184,8 @@ hr.dashed {
 .NameWidth{
   width: 33.33%;
 }
+
+
 
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
@@ -3137,7 +3206,7 @@ hr.dashed {
     margin-right: auto;
   }
   .mt16 {
-    margin-top: 16px;
+    margin-top: 32px;
   }
   .mt-horizon-16 {
     margin-top: 16px;
@@ -3158,6 +3227,10 @@ hr.dashed {
     width: 100%;
   }
   .inputWidth {
+  width: 40%
+}
+
+.inputWidthOrigin {
     width: 100%
   }
   .horizon-style-15w {

@@ -83,6 +83,7 @@ export default defineComponent({
       reactionCategory: [],
       //config this for change baseURL path
       baseURL: import.meta.env.VITE_BASE_URL,
+      //data recieve from fetch
       blood_tranf_detail: {},
       userDoctor: {},
       userNurse: {},
@@ -108,19 +109,18 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // Fetch Signs and Symptoms data on component mount
+    // Fetch All data
     const blood_transf_id = this.$route.params.id;
-    /* this.blood_transf_id = this.$route.params.id; */
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
     await this.fetchBlood_transf_detail(blood_transf_id);
     await this.fetchUserDoctor();
     await this.fetchUserNurse();
+    //check when data change then run
     watch(
       [() => this.signsAndSymptomsOptions, () => this.reactionCategory, () => this.reactionCategory
       , () => this.fetchBlood_transf_detail, () => this.fetchUserDoctor, () => this.fetchUserNurse], 
       ([newSigns, newReaction]) => {
-        // This block will run whenever signsAndSymptomsOptions or reactionCategory change
         this.fetchSignsAndSymptoms();
         this.fetchReactionCategory();
         this.fetchBlood_tranf_detail();
@@ -130,6 +130,7 @@ export default defineComponent({
     );
   },
   computed: {
+    //filter Nurse and Doctor
     filteredItems() {
       return (role) => {
         if (role === "doctor") {
@@ -153,6 +154,7 @@ export default defineComponent({
         }
       };
     },
+    //for input complete then change box size
     inputWidth() {
       return (category) => {
         // Calculate width based on input values
@@ -169,10 +171,11 @@ export default defineComponent({
         ) {
           return "inputWidth";
         } else {
-          return "inputWidth"; // Set the width to 100% initially or if only one input is completed
+          return "inputWidthOrigin"; // Set the width to 100% initially or if only one input is completed
         }
       };
     },
+    //for HN input complete then change box size from length HN
     HNWidth() {
       return () => {
         const name =
@@ -189,6 +192,7 @@ export default defineComponent({
         }
       };
     },
+    //for Name input complete then change box size from length Name
     NameWidth() {
       return () => {
         const name =
@@ -208,6 +212,7 @@ export default defineComponent({
     },
   },
   methods: {
+    //fetch SignsAndSymptoms data
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
@@ -218,6 +223,7 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
+    //fetch ReactionCategory data
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
@@ -229,6 +235,7 @@ export default defineComponent({
         console.error("Error fetching Reaction Category data:", error);
       }
     },
+    //fetch Blood Transfusion Detail data
     async fetchBlood_transf_detail(blood_transf_id) {
       try {
         const response = await axios.post(
@@ -266,6 +273,7 @@ export default defineComponent({
         console.error("Error fetching Blood Transfusion Detail data:", error);
       }
     },
+    //fetch list doctor data
     async fetchUserDoctor() {
       try {
         const response = await axios.get(
@@ -277,6 +285,7 @@ export default defineComponent({
         console.error("Error fetching User Doctor data:", error);
       }
     },
+    //fetch list nurse data
     async fetchUserNurse() {
       try {
         const response = await axios.get(
@@ -288,8 +297,10 @@ export default defineComponent({
         console.error("Error fetching User Nurse data:", error);
       }
     },
+    // fuction real-time-date,time
     currentDate,
     currentTime,
+    // fuction parse date,time
     parseDate,
     parseTime,
     //find name of doctor and nurse
@@ -309,28 +320,39 @@ export default defineComponent({
       this.formData.SubmittingTest.nurseName = item;
       this.showResultsNurse = false;
     },
+    // check value input
     restrictInput(event, name) {
       // Remove non-numeric characters from the input value
       let value = event.target.value.replace(/\D/g, '');
       
-      // Ensure value is within the range of 0 to 100
+      // Ensure value is within the range of 0 to 300
       if (value === '') {
         value = ''; // If empty, default to 0
       } else {
-        value = Math.min(Math.max(parseInt(value), 0), 100).toString();
+        value = Math.min(Math.max(parseInt(value), 0), 300).toString();
       }
 
       // Update the corresponding property in your Vue data
       this[name] = value;
     },
-    // config this path for hostipal
+    //
+    handleInputTypingBox(event,max,field) {
+    const inputValue = parseInt(event.target.value);
+    if (inputValue > max) {
+        this.formData.VitalSigns[field] = max;
+        event.target.value = max;
+    } else {
+      this.formData.VitalSigns[field] = inputValue;
+    }
+  },
+
     // go back to previous page 
     navigateToPreviousPage(){
       this.$router.push(`/mainBloodChecklist`);
       console.log("click")
       $('#CloseButton').modal('hide');
     },
-    //cleansing form
+    //cleansing form & submit
     async handleSubmit(event,formData) {
       try{
         const { PatientInfo, BloodTransfusionTest, VitalSigns, SignsAndSymptomsObject, SubmittingTest, DetailRecordIn24Hrs } = formData;
@@ -426,11 +448,13 @@ export default defineComponent({
     },
   },
   watch: {
+    //check Object in SignsAndSymptoms is checked ?
     "SignsAndSymptomsOtherObject.isOther": function (newVal, oldVal) {
       if (newVal !== 1) {
         this.formData.SignsAndSymptomsObject.Other = "";
       }
     },
+    //check ReactionHistory is checked ?
       "formData.PatientInfo.isReactionHistory": function (newVal, oldVal) {
         if (newVal === 1 || newVal === "1") {
           // Set a flag or update a state variable to show the input field
@@ -1071,7 +1095,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectPatientName"
                         id="isCorrectPatientName1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectPatientName
                         "
@@ -1093,7 +1117,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectPatientName"
                         id="isCorrectPatientName2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectPatientName
                         "
@@ -1136,7 +1160,7 @@ export default defineComponent({
                         type="radio"
                         name="isWithin24hrsFever"
                         id="isWithin24hrsFever1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
                         "
@@ -1158,7 +1182,7 @@ export default defineComponent({
                         type="radio"
                         name="isWithin24hrsFever"
                         id="isWithin24hrsFever2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isWithin24hrsFever
                         "
@@ -1209,7 +1233,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodComponent"
                         id="isCorrectBloodComponent1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
                         "
@@ -1231,7 +1255,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodComponent"
                         id="isCorrectBloodComponent2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodComponent
                         "
@@ -1280,7 +1304,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodTransfusionRec"
                         id="isCorrectBloodTransfusionRec1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodTransfusionRec
@@ -1303,7 +1327,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodTransfusionRec"
                         id="isCorrectBloodTransfusionRec2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodTransfusionRec
@@ -1355,7 +1379,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodBagNumber"
                         id="isCorrectBloodBagNumber1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
                         "
@@ -1377,7 +1401,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodBagNumber"
                         id="isCorrectBloodBagNumber2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodBagNumber
                         "
@@ -1426,7 +1450,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupDonor"
                         id="isCorrectBloodGroupDonor1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
                         "
@@ -1448,7 +1472,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupDonor"
                         id="isCorrectBloodGroupDonor2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest.isCorrectBloodGroupDonor
                         "
@@ -1499,7 +1523,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupPatient"
                         id="isCorrectBloodGroupPatient1"
-                        value="1"
+                        value=1
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodGroupPatient
@@ -1522,7 +1546,7 @@ export default defineComponent({
                         type="radio"
                         name="isCorrectBloodGroupPatient"
                         id="isCorrectBloodGroupPatient2"
-                        value="0"
+                        value=0
                         v-model="
                           formData.BloodTransfusionTest
                             .isCorrectBloodGroupPatient
@@ -1620,8 +1644,10 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45 && "
-                      min="0"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 2 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,50,'beforeReactionTemp')"
+                      min=30
+                      max=50
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionTemp"
@@ -1673,6 +1699,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionOne"
                       @input="restrictInput($event,'beforeReactionBPSectionOne')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
                       required
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
@@ -1691,6 +1718,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="beforeReactionBPSectionTwo"
                       @input="restrictInput($event,'beforeReactionBPSectionTwo')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
                       required
                     />
                   </div>
@@ -1718,8 +1746,10 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,300,'beforeReactionPulse')"
+                      min=0
+                      max=300
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionPulse"
@@ -1800,8 +1830,10 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 2 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,50,'afterReactionTemp')"
+                      min=30
+                      max=50
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionTemp"
@@ -1853,6 +1885,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionOne"
                       @input="restrictInput($event,'afterReactionBPSectionOne')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
                       required
                     />
                     <p class="fontTopicInfo" style="margin-top: 2px">/</p>
@@ -1871,6 +1904,7 @@ export default defineComponent({
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="afterReactionBPSectionTwo"
                       @input="restrictInput($event,'afterReactionBPSectionTwo')"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
                       required
                     />
                   </div>
@@ -1898,8 +1932,10 @@ export default defineComponent({
                       "
                       type="number"
                       pattern="[0-9]*"
-                      onkeypress="return event.charCode != 45"
-                      min="0"
+                      onkeypress="return event.charCode != 45 && !(event.target.value.length >= 3 && event.keyCode !== 8 && event.keyCode !== 46)"
+                      @input="handleInputTypingBox($event,300,'afterReactionPulse')"
+                      min=0
+                      max=300
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionPulse"
@@ -2323,7 +2359,7 @@ export default defineComponent({
                                 type="radio"
                                 :name="'DetailRecordIn24Hrs_isReaction_' + index"
                                 :id="'DetailRecordIn24Hrs_isReaction_0_' + index"
-                                value="0"
+                                value=0
                                 v-model="
                                   formData.DetailRecordIn24Hrs[index].isReaction
                                 "
@@ -2342,7 +2378,7 @@ export default defineComponent({
                                 type="radio"
                                 :name="'DetailRecordIn24Hrs_isReaction_' + index"
                                 :id="'DetailRecordIn24Hrs_isReaction_1_' + index"
-                                value="1"
+                                value=1
                                 v-model="
                                   formData.DetailRecordIn24Hrs[index].isReaction
                                 "
@@ -2674,7 +2710,7 @@ export default defineComponent({
         </div>
         <div class="card" style="border: 0px; margin-bottom: 32px">
           <div style="display: flex; justify-content: flex-end; gap: 2%">
-            <button class="btn button-style-close" data-bs-toggle="modal" data-bs-target="#CloseButton" style="margin-top: 32px">
+            <button class="btn button-style-close" type="button" data-bs-toggle="modal" data-bs-target="#CloseButton" style="margin-top: 32px">
               ปิด
             </button>
             <button
@@ -2744,6 +2780,7 @@ export default defineComponent({
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
+                  @click="navigateToPreviousPage"
                 >
                   ปิด
                 </button>
@@ -3040,6 +3077,10 @@ hr.dashed {
   width: 30%
 }
 
+.inputWidthOrigin {
+    width: 100%
+  }
+
 .HNWidth{
   width: 16.67%;
 }
@@ -3090,6 +3131,10 @@ hr.dashed {
     width: 100%;
   }
   .inputWidth {
+  width: 40%
+}
+
+.inputWidthOrigin {
     width: 100%
   }
   .horizon-style-15w {

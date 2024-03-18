@@ -1392,7 +1392,7 @@ export default defineComponent({
                       type="number"
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
-                      min="0"
+                      min=0
                       aria-label="default input example"
                       v-model="formData.VitalSigns.beforeReactionTemp"
                       readonly
@@ -1486,7 +1486,7 @@ export default defineComponent({
                       type="number"
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
-                      min="0"
+                      min=0
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.beforeReactionPulse"
@@ -1568,7 +1568,7 @@ export default defineComponent({
                       type="number"
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
-                      min="0"
+                      min=0
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionTemp"
@@ -1663,7 +1663,7 @@ export default defineComponent({
                       type="number"
                       pattern="[0-9]*"
                       onkeypress="return event.charCode != 45"
-                      min="0"
+                      min=0
                       aria-label="default input example"
                       placeholder="กรุณากรอกข้อมูล"
                       v-model="formData.VitalSigns.afterReactionPulse"
