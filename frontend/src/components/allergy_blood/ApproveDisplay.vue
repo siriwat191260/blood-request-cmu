@@ -298,7 +298,7 @@ export default defineComponent({
                         <div class="col-md-6">
                             <div style="margin-top: 60px">
                                 <p class="fontSize_header">
-                                    รายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด (Transfusion reaction report)
+                                    สรุปรายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด
                                 </p>
                             </div>
                         </div>
