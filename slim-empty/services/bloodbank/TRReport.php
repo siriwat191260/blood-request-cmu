@@ -93,10 +93,10 @@ function TRReport($p)
         } else {
             $temp = array(
                 'idIndicatorName' => $i,
-                'PreTransfusionSample' => "",
-                'PostTransfusionSample' => "",
-                'bloodBagNumber' => "",
-                'Remarks' => ""
+                'PreTransfusionSample' => null,
+                'PostTransfusionSample' => null,
+                'bloodBagNumber' => null,
+                'Remarks' => null
             );
         }
         $ind[] = $temp;

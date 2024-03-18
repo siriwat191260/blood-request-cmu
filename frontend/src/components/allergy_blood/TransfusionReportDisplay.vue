@@ -482,7 +482,7 @@ export default defineComponent({
                         <div class="col-md-3 form-check-inline">
                             <input :disabled="formData.BloodBagCharacteristic.isTransfusionSet !== 0"
                                 class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet2"
-                                :checked="formData.BloodBagCharacteristic.isTransfusionSet !== 1" />
+                                :checked="formData.BloodBagCharacteristic.isTransfusionSet == 0" />
                             <label class="form-check-label" for="isTransfusionSet2" style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
                     </div>
@@ -825,7 +825,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -838,7 +838,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1169,7 +1169,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1201,7 +1201,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1214,7 +1214,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>

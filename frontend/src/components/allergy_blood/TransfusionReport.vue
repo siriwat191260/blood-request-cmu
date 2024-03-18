@@ -39,31 +39,31 @@ export default defineComponent({
                     reportedTime: "",
                 },
                 BloodBagCharacteristic: {
-                    isTransfusionSet: "",
+                    isTransfusionSet: null,
                     needleStatus: "",
                     plasmaCharacteristicStatus: "",
-                    isLeakagePosition: "",
+                    isLeakagePosition: null,
                     leakagePosition: "",
-                    volumeOfBag: "",
+                    volumeOfBag: null,
                     TransfusionVolume: "",
                 },
-                indicator: [{ idIndicatorName: 0, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 1, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 2, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 3, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 4, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 5, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 6, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 7, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 8, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
-                { idIndicatorName: 9, PreTransfusionSample: "", PostTransfusionSample: "", bloodBagNumber: "", Remarks: "" },
+                indicator: [{ idIndicatorName: 0, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 1, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 2, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 3, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 4, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 5, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 6, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 7, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 8, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
+                { idIndicatorName: 9, PreTransfusionSample: null, PostTransfusionSample: null, bloodBagNumber: null, Remarks: null },
                 ],
                 GramStainAndCulture: {
-                    isSubmittingGramStain: "",
+                    isSubmittingGramStain: null,
                     gramNegativeOrPositive: "",
                     resultGramStain: "",
                     toDateGram: "",
-                    isSubmittingCulture: "",
+                    isSubmittingCulture: null,
                     cultureNegativeOrPositive: "",
                     resultCulture: "",
                     toDateCulture: "",
@@ -325,37 +325,37 @@ export default defineComponent({
     },
     computed: {
         HNWidth() {
-        return () => {
-            const name =
-            this.formData.data.title +
-            " " +
-            this.formData.data.firstName +
-            " " +
-            this.formData.data.lastName;
-            const length = name.length;
-            if (length > 20) {
-            return "HNWidth";
-            } else {
-            return "";
-            }
-        };
+            return () => {
+                const name =
+                    this.formData.data.title +
+                    " " +
+                    this.formData.data.firstName +
+                    " " +
+                    this.formData.data.lastName;
+                const length = name.length;
+                if (length > 20) {
+                    return "HNWidth";
+                } else {
+                    return "";
+                }
+            };
         },
         NameWidth() {
-        return () => {
-            const name =
-            this.formData.data.title +
-            " " +
-            this.formData.data.firstName +
-            " " +
-            this.formData.data.lastName;
-            const length = name.length;
-            if (length > 20) {
-            this.styleName2Line = true;
-            return "NameWidth";
-            } else {
-            return "";
-            }
-        };
+            return () => {
+                const name =
+                    this.formData.data.title +
+                    " " +
+                    this.formData.data.firstName +
+                    " " +
+                    this.formData.data.lastName;
+                const length = name.length;
+                if (length > 20) {
+                    this.styleName2Line = true;
+                    return "NameWidth";
+                } else {
+                    return "";
+                }
+            };
         },
         filteredItems() {
             return () => {
@@ -391,47 +391,47 @@ export default defineComponent({
             <div class="card" style="border: 0px; justify-content: center">
                 <!-- header -->
                 <div class="row">
-                        <div class="col-md-6 vertical-style-100w">
-                            <div style="margin-top: 60px">
-                                <p class="fontSize_header">
-                                    รายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด  
+                    <div class="col-md-6 vertical-style-100w">
+                        <div style="margin-top: 60px">
+                            <p class="fontSize_header">
+                                รายงานการตรวจการเกิดปฏิกิริยาจากการรับเลือด
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 vertical-style-33w" :class="HNWidth()">
+                        <p class="fontTopicBox">HN</p>
+                        <div class="card card-box-style">
+                            <div class="card-body card-box-body-style">
+                                <!-- HN value -->
+                                <p class="fontInsideBox">
+                                    <Icon icon="bx:id-card"
+                                        style="color: #00bfa5; width: 32; height: 32; margin-bottom: 4px;"></Icon>
+                                    &nbsp; {{ formData.data.HN }}
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-3 vertical-style-33w" :class="HNWidth()">
-                            <p class="fontTopicBox">HN</p>
+                    </div>
+                    <!-- ชื่อผู้ป่วย -->
+                    <div class="col-md-3 vertical-style-66w" :class="NameWidth()">
+                        <div>
+                            <p class="fontTopicBox">ชื่อผู้ป่วย</p>
                             <div class="card card-box-style">
-                                <div class="card-body card-box-body-style">
-                                    <!-- HN value -->
+                                <div class="card-body card-box-body-style" style="margin-top: 6px;">
                                     <p class="fontInsideBox">
-                                        <Icon icon="bx:id-card"
-                                            style="color: #00bfa5; width: 32; height: 32; margin-bottom: 4px;"></Icon>
-                                        &nbsp; {{ formData.data.HN }}
+                                        &nbsp;
+                                        {{
+                                            formData.data.title +
+                                            " " +
+                                            formData.data.firstName +
+                                            " " +
+                                            formData.data.lastName
+                                        }}
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <!-- ชื่อผู้ป่วย -->
-                        <div class="col-md-3 vertical-style-66w" :class="NameWidth()">
-                            <div>
-                                <p class="fontTopicBox">ชื่อผู้ป่วย</p>
-                                <div class="card card-box-style">
-                                    <div class="card-body card-box-body-style" style="margin-top: 6px;">
-                                        <p class="fontInsideBox">
-                                            &nbsp;
-                                            {{
-                                                formData.data.title +
-                                                " " +
-                                                formData.data.firstName +
-                                                " " +
-                                                formData.data.lastName
-                                            }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
+                </div>
                 <!--pt1 info read only-->
                 <div class="card card-box-info-style">
                     <!-- row 1 -->
@@ -625,14 +625,14 @@ export default defineComponent({
                             1. มี Transfusion set เสียบอยู่ที่ถุงเลือด
                         </p>
                         <div class="col-md-2 ">
-                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet1" value="1"
-                                v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
+                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet1"
+                                value="1" v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
                             <label class="form-check-label" for="isTransfusionSet1"
                                 style=" margin-top: 2px; margin-left: 10px">มี</label>
                         </div>
                         <div class="col-md-3 form-check-inline">
-                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet2" value="0"
-                                v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
+                            <input class="form-check-input" type="radio" name="isTransfusionSet" id="isTransfusionSet2"
+                                value="0" v-model="formData.BloodBagCharacteristic.isTransfusionSet" />
                             <label class="form-check-label" for="isTransfusionSet2"
                                 style=" margin-top: 2px; margin-left: 10px">ไม่มี</label>
                         </div>
@@ -741,7 +741,8 @@ export default defineComponent({
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" min="0" max="1000" placeholder="กรุณากรอกข้อมูล"
+                                        onkeypress="return event.charCode != 45" min="0" max="1000"
+                                        placeholder="กรุณากรอกข้อมูล"
                                         v-model="formData.BloodBagCharacteristic.volumeOfBag" />
                                 </div>
                             </div>
@@ -756,7 +757,8 @@ export default defineComponent({
                                         padding-top: 0px;
                                         padding-bottom: 0px;
                                         " aria-label="default input example" type="number" pattern="[0-9]*"
-                                        onkeypress="return event.charCode != 45" min="0" max="1000" placeholder="กรุณากรอกข้อมูล"
+                                        onkeypress="return event.charCode != 45" min="0" max="1000"
+                                        placeholder="กรุณากรอกข้อมูล"
                                         v-model="formData.BloodBagCharacteristic.TransfusionVolume" />
                                 </div>
                             </div>
@@ -782,11 +784,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[0].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[0].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -796,11 +810,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].PostTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[0].PostTransfusionSample"
+                                            :style="{ color: formData.indicator[0].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -812,11 +837,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[0].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[0].bloodBagNumber"
+                                            :style="{ color: formData.indicator[0].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -846,11 +882,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[1].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[1].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yellow">Yellow</option>
+                                            <option value="Dark Yellow">Dark Yellow</option>
+                                            <option value="Red">Red</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -860,11 +908,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].PostTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[1].PostTransfusionSample"
+                                            :style="{ color: formData.indicator[1].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yellow">Yellow</option>
+                                            <option value="Dark Yellow">Dark Yellow</option>
+                                            <option value="Red">Red</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -876,11 +936,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[1].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[1].bloodBagNumber"
+                                            :style="{ color: formData.indicator[1].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yellow">Yellow</option>
+                                            <option value="Dark Yellow">Dark Yellow</option>
+                                            <option value="Red">Red</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -979,7 +1051,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -992,7 +1064,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1004,11 +1076,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[3].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[3].bloodBagNumber"
+                                            :style="{ color: formData.indicator[3].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1026,7 +1109,6 @@ export default defineComponent({
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <!-- row 5 -->
                     <div class="row" style="margin-top: 16px; align-items: center;">
@@ -1039,11 +1121,24 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[4].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[4].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="O">O</option>
+                                            <option value="AB">AB</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1053,11 +1148,24 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].PostTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[4].PostTransfusionSample"
+                                            :style="{ color: formData.indicator[4].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="O">O</option>
+                                            <option value="AB">AB</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1069,11 +1177,24 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[4].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[4].bloodBagNumber"
+                                            :style="{ color: formData.indicator[4].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="O">O</option>
+                                            <option value="AB">AB</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1103,11 +1224,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[5].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[5].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Positive">Positive</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1117,11 +1249,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].PostTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[5].PostTransfusionSample"
+                                            :style="{ color: formData.indicator[5].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Positive">Positive</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1133,11 +1276,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[5].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[5].bloodBagNumber"
+                                            :style="{ color: formData.indicator[5].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Positive">Positive</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1167,11 +1321,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[6].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[6].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Positive">Positive</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1180,12 +1345,22 @@ export default defineComponent({
                                 <div style="display: inline; position: absolute; width: 100%">
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
-                                    </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].PostTransfusionSample" />
+                                    </p> <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[6].PostTransfusionSample"
+                                            :style="{ color: formData.indicator[6].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Positive">Positive</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1197,11 +1372,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[6].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[6].bloodBagNumber"
+                                            :style="{ color: formData.indicator[6].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Positive">Positive</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1231,11 +1417,26 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[7].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[7].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Weakly positive">Weakly positive</option>
+                                            <option value="Positive 1+">Positive 1+</option>
+                                            <option value="Positive 2+">Positive 2+</option>
+                                            <option value="Positive 3+">Positive 3+</option>
+                                            <option value="Positive 4+">Positive 4+</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1245,11 +1446,26 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].PostTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[7].PostTransfusionSample"
+                                            :style="{ color: formData.indicator[7].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Weakly positive">Weakly positive</option>
+                                            <option value="Positive 1+">Positive 1+</option>
+                                            <option value="Positive 2+">Positive 2+</option>
+                                            <option value="Positive 3+">Positive 3+</option>
+                                            <option value="Positive 4+">Positive 4+</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1261,11 +1477,26 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[7].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[7].bloodBagNumber"
+                                            :style="{ color: formData.indicator[7].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Weakly positive">Weakly positive</option>
+                                            <option value="Positive 1+">Positive 1+</option>
+                                            <option value="Positive 2+">Positive 2+</option>
+                                            <option value="Positive 3+">Positive 3+</option>
+                                            <option value="Positive 4+">Positive 4+</option>
+                                            <option value="Negative">Negative</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1295,11 +1526,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Pre transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[8].PreTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[8].PreTransfusionSample"
+                                            :style="{ color: formData.indicator[8].PreTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Compatible">Compatible</option>
+                                            <option value="Incompatible">Incompatible</option>
+                                            <option value="Non xm product">Non xm product</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1309,11 +1552,23 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Post transfusion sample
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[8].PostTransfusionSample" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[8].PostTransfusionSample"
+                                             :style="{ color: formData.indicator[8].PostTransfusionSample === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Compatible">Compatible</option>
+                                            <option value="Incompatible">Incompatible</option>
+                                            <option value="Non xm product">Non xm product</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1328,7 +1583,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1361,7 +1616,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1374,7 +1629,7 @@ export default defineComponent({
                                     <input class="form-control typing-box-style" style="
                                         padding-top: 0px;
                                         padding-bottom: 0px;
-                                        " aria-label="default input example" disabled value="-" />
+                                        " aria-label="default input example" disabled   />
                                 </div>
                             </div>
                         </div>
@@ -1386,11 +1641,22 @@ export default defineComponent({
                                     <p class="fontTopicInfo" style="margin-left: 10px;">
                                         Blood bag
                                     </p>
-                                    <input class="form-control typing-box-style" style="
-                                        padding-top: 0px;
-                                        padding-bottom: 0px;
-                                        " aria-label="default input example" placeholder="กรุณากรอกข้อมูล"
-                                        v-model="formData.indicator[9].bloodBagNumber" />
+                                    <div class="custom-select">
+                                        <select class="form-select-sm select-box-style" style="
+                                            /* margin-left: 16px; */
+                                            margin-right: 16px;
+                                            padding-left: 16px;
+                                            padding-top: 0px;
+                                            padding-bottom: 0px;
+                                            " v-model="formData.indicator[9].bloodBagNumber"
+                                            :style="{ color: formData.indicator[9].bloodBagNumber === null ? '#b1b1b1' : '' }">
+                                            <option value=null disabled selected>
+                                                กรุณาเลือกข้อมูล
+                                            </option>
+                                            <option value="Done">Done</option>
+                                            <option value="Not done">Not done</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1419,21 +1685,24 @@ export default defineComponent({
                             ผล Gram stain
                         </p>
                         <div class="col-md-3">
-                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="isSubmittingGramStain1"
-                                value="1" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
+                            <input class="form-check-input" type="radio" name="isSubmittingGramStain"
+                                id="isSubmittingGramStain1" value="1"
+                                v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
                             <label class="form-check-label" for="isSubmittingGramStain1"
                                 style=" margin-top: 2px; margin-left: 10px">ส่งทำ Gram
                                 stain</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="gramNegativeOrPositive1"
-                                value="0" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive"
+                                id="gramNegativeOrPositive1" value="0"
+                                v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
                             <label class="form-check-label" for="gramNegativeOrPositive1"
                                 style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="gramNegativeOrPositive2"
-                                value="1" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive"
+                                id="gramNegativeOrPositive2" value="1"
+                                v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
                             <label class="form-check-label" for="gramNegativeOrPositive2"
                                 style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
@@ -1456,8 +1725,9 @@ export default defineComponent({
                     <div class="row" style="margin-top: 16px; justify-content: flex-end"
                         v-if="parseInt(formData.GramStainAndCulture.isSubmittingGramStain) === 1">
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive" id="gramNegativeOrPositive3"
-                                value="2" v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
+                            <input class="form-check-input" type="radio" name="gramNegativeOrPositive"
+                                id="gramNegativeOrPositive3" value="2"
+                                v-model="formData.GramStainAndCulture.gramNegativeOrPositive" />
                             <label class="form-check-label" for="gramNegativeOrPositive3"
                                 style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
@@ -1494,8 +1764,9 @@ export default defineComponent({
                         <p class=" col-md-2">
                         </p>
                         <div class="col-md-9 ">
-                            <input class="form-check-input" type="radio" name="isSubmittingGramStain" id="isSubmittingGramStain2"
-                                value="0" v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
+                            <input class="form-check-input" type="radio" name="isSubmittingGramStain"
+                                id="isSubmittingGramStain2" value="0"
+                                v-model="formData.GramStainAndCulture.isSubmittingGramStain" />
                             <label class="form-check-label" for="isSubmittingGramStain2"
                                 style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
@@ -1508,20 +1779,23 @@ export default defineComponent({
                             ผล Culture
                         </p>
                         <div class="col-md-3">
-                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="isSubmittingCulture1"
-                                value="1" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
+                            <input class="form-check-input" type="radio" name="isSubmittingCulture"
+                                id="isSubmittingCulture1" value="1"
+                                v-model="formData.GramStainAndCulture.isSubmittingCulture" />
                             <label class="form-check-label" for="isSubmittingCulture"
                                 style=" margin-top: 2px; margin-left: 10px">ส่งทำ Culture</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="cultureNegativeOrPositive1"
-                                value="0" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive"
+                                id="cultureNegativeOrPositive1" value="0"
+                                v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
                             <label class="form-check-label" for="cultureNegativeOrPositive1"
                                 style=" margin-top: 2px; margin-left: 10px">Negative</label>
                         </div>
                         <div class="col-md-2 " v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="cultureNegativeOrPositive2"
-                                value="1" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive"
+                                id="cultureNegativeOrPositive2" value="1"
+                                v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
                             <label class="form-check-label" for="cultureNegativeOrPositive2"
                                 style=" margin-top: 2px; margin-left: 10px">Positive</label>
                         </div>
@@ -1544,8 +1818,9 @@ export default defineComponent({
                     <div class="row" style="margin-top: 16px; justify-content: flex-end"
                         v-if="parseInt(formData.GramStainAndCulture.isSubmittingCulture) === 1">
                         <div class="col-md-3 ">
-                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive" id="cultureNegativeOrPositive3"
-                                value="2" v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
+                            <input class="form-check-input" type="radio" name="cultureNegativeOrPositive"
+                                id="cultureNegativeOrPositive3" value="2"
+                                v-model="formData.GramStainAndCulture.cultureNegativeOrPositive" />
                             <label class="form-check-label" for="cultureNegativeOrPositive3"
                                 style=" margin-top: 2px; margin-left: 10px">รอผลออกวันที่</label>
                         </div>
@@ -1570,7 +1845,8 @@ export default defineComponent({
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
                                                 " type="date" v-model="formData.GramStainAndCulture.toDateCulture"
-                                                aria-label="readonly input example" id="toDateCulture" name="toDateCulture" />
+                                                aria-label="readonly input example" id="toDateCulture"
+                                                name="toDateCulture" />
                                         </div>
                                     </div>
                                 </div>
@@ -1582,8 +1858,9 @@ export default defineComponent({
                         <p class=" col-md-2">
                         </p>
                         <div class="col-md-9 ">
-                            <input class="form-check-input" type="radio" name="isSubmittingCulture" id="isSubmittingCulture2"
-                                value="0" v-model="formData.GramStainAndCulture.isSubmittingCulture" />
+                            <input class="form-check-input" type="radio" name="isSubmittingCulture"
+                                id="isSubmittingCulture2" value="0"
+                                v-model="formData.GramStainAndCulture.isSubmittingCulture" />
                             <label class="form-check-label" for="isSubmittingCulture2"
                                 style=" margin-top: 2px; margin-left: 10px">Not done</label>
                         </div>
@@ -2049,11 +2326,12 @@ div {
     width: 20%;
 }
 
-.HNWidth{
-  width: 16.67%;
+.HNWidth {
+    width: 16.67%;
 }
-.NameWidth{
-  width: 33.33%;
+
+.NameWidth {
+    width: 33.33%;
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1100px) {
@@ -2072,10 +2350,12 @@ div {
     .fontInsideBox {
         font-size: 14px;
     }
-    .HNWidth{
+
+    .HNWidth {
         width: 16.67%;
     }
-    .NameWidth{
+
+    .NameWidth {
         width: 33.33%;
     }
 }
@@ -2111,19 +2391,23 @@ div {
     }
 
     .vertical-style-100w {
-    width: 100%;
+        width: 100%;
     }
-    .vertical-style-50w {
-    width: 50%;
-    margin-bottom: 16px;
-  }
-  .vertical-style-33w {
-    width: 33.33%;
-    margin-bottom: 16px;
-  }
-  .vertical-style-66w {
-    width: 66.67%;
-    margin-bottom: 16px;
-  }
 
-}</style>
+    .vertical-style-50w {
+        width: 50%;
+        margin-bottom: 16px;
+    }
+
+    .vertical-style-33w {
+        width: 33.33%;
+        margin-bottom: 16px;
+    }
+
+    .vertical-style-66w {
+        width: 66.67%;
+        margin-bottom: 16px;
+    }
+
+}
+</style>
