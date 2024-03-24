@@ -9,8 +9,6 @@ function Approve($p)
 
     $conn_db = new PDOConnect('db');
     $con_db = $conn_db->Open();
-
-    // Selecting the database
     $con_db->exec("USE blood_request");
 
     $formData = $p['formData'];
@@ -18,6 +16,7 @@ function Approve($p)
     $con_db->beginTransaction();
 
     if ($formData !== null) {
+        //select data
         $sqldata = "SELECT COUNT(*) FROM blood_request.TransfusionMedicalDirectorReview WHERE idTR_Report = :idTR_Report";
         $stmtdata = $con_db->prepare($sqldata);
         $stmtdata->bindValue(":idTR_Report", $idTR_Report, PDO::PARAM_INT);
@@ -25,17 +24,20 @@ function Approve($p)
         $rowExists = ($stmtdata->fetchColumn() > 0);
 
         if ($rowExists) {
+             // Row exists, update it
             $sqldata = "UPDATE blood_request.TransfusionMedicalDirectorReview SET
             reaction = :reaction, caseDefinitionCriteria = :caseDefinitionCriteria, severity = :severity, 
             imputability = :imputability, approvedBy = :approvedBy, approvedDateTime = :approvedDateTime, other = :other
             WHERE idTR_Report = :idTR_Report";
         } else {
+            // Row does not exist, insert a new row
             $sqldata = "INSERT INTO blood_request.TransfusionMedicalDirectorReview 
             (reaction, caseDefinitionCriteria, severity, imputability, approvedBy, approvedDateTime, other, idTR_Report) 
             VALUES 
             (:reaction, :caseDefinitionCriteria, :severity, :imputability, :approvedBy, :approvedDateTime, :other, :idTR_Report)";
         }
 
+        // Bind values
         $stmtdata = $con_db->prepare($sqldata);
         foreach ($formData as $key => $value) {
             if ($value === "" || $value === null) {

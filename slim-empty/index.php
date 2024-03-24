@@ -650,6 +650,7 @@ $app->post('/submitting_transfusion_form', function (Request $request, Response 
     $rs = $func->callMethod($p);
     return $rs;
 });
+
 $app->put('/submitting_transfusion_form/update/{id}', function (Request $request, Response $response, $args) {
     $id = $args;
     // Get the raw JSON data from the request body
@@ -672,6 +673,7 @@ $app->put('/submitting_transfusion_form/update/{id}', function (Request $request
     $rs = $func->callMethod($p);
     return $rs;
 });
+
 $app->put('/submitting_transfusion_report/update/{id}', function (Request $request, Response $response, $args) {
     $id = $args;
     // Get the raw JSON data from the request body
@@ -694,6 +696,7 @@ $app->put('/submitting_transfusion_report/update/{id}', function (Request $reque
     $rs = $func->callMethod($p);
     return $rs;
 });
+
 $app->put('/submitting_approve', function (Request $request, Response $response, $args) {
     // Get the raw JSON data from the request body
     $formData = $request->getBody()->getContents();
@@ -715,6 +718,41 @@ $app->put('/submitting_approve', function (Request $request, Response $response,
     return $rs;
 });
 
+$app->get('/getToken', function (Request $request, Response $response, array $args) {
+    try {
+
+        $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+
+        // Prepare cURL request
+        $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute the request
+        $apiResponse = curl_exec($ch);
+
+        // Check for errors
+        if (curl_errno($ch)) {
+            throw new Exception("cURL request failed: " . curl_error($ch));
+        }
+
+        // Close cURL resource
+        curl_close($ch);
+
+        // Decode the response
+        $result = json_decode($apiResponse, true);
+
+        // Process $result as needed
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($result));
+        return $response;
+    } catch (Exception $error) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
+
+        return $response->withStatus(500);
+    }
+});
+
 //for test
 $app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
     try {
@@ -723,7 +761,7 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         //Doctor ID : 1254,6523
         //BloodBank ID : 7895
         //Nurse ID : 451236
-        $idUser = "451236";
+        $idUser = "7895";
         $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
 
         // Prepare cURL request to get token
@@ -776,40 +814,6 @@ $app->get('/getUserLogin', function (Request $request, Response $response, array
         // Handle errors
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
-        return $response->withStatus(500);
-    }
-});
-$app->get('/getToken', function (Request $request, Response $response, array $args) {
-    try {
-
-        $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
-
-        // Prepare cURL request
-        $ch = curl_init($endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        // Execute the request
-        $apiResponse = curl_exec($ch);
-
-        // Check for errors
-        if (curl_errno($ch)) {
-            throw new Exception("cURL request failed: " . curl_error($ch));
-        }
-
-        // Close cURL resource
-        curl_close($ch);
-
-        // Decode the response
-        $result = json_decode($apiResponse, true);
-
-        // Process $result as needed
-        $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($result));
-        return $response;
-    } catch (Exception $error) {
-        $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode(["error" => $error->getMessage()]));
-
         return $response->withStatus(500);
     }
 });

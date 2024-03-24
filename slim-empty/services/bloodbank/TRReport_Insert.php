@@ -9,8 +9,6 @@ function TRReport_Insert($p)
 
     $conn_db = new PDOConnect('db');
     $con_db = $conn_db->Open();
-
-    // Selecting the database
     $con_db->exec("USE blood_request");
 
     $formData = $p['formData'];
@@ -22,6 +20,8 @@ function TRReport_Insert($p)
 
     $con_db->beginTransaction();
     $status = 0;
+
+    // insert TR_Report
     if ($data !== null) {
         $sqldata = "INSERT INTO blood_request.TR_Report 
         (`HN`,`title`, `firstName`, `lastName`, `createdDate`, `ward`,`bloodGroup_Patient`, 
@@ -67,7 +67,7 @@ function TRReport_Insert($p)
     $tableNameGramStainAndCulture = "blood_request.GramStainAndCulture";
 
     if ($idTR_Report) {
-        //BloodBagCharacteristic
+        //insert BloodBagCharacteristic
         if (
             $BloodBagCharacteristic !== null && ($BloodBagCharacteristic['isTransfusionSet'] !== null ||
                 $BloodBagCharacteristic['needleStatus'] !== null || $BloodBagCharacteristic['plasmaCharacteristicStatus'] !== null ||
@@ -97,9 +97,7 @@ function TRReport_Insert($p)
             }
         }
 
-        //indicator
-
-
+        //insert indicator
         foreach ($indicators as $indicator) {
             if (
                 $indicator !== null && (
@@ -117,7 +115,7 @@ function TRReport_Insert($p)
             }
         }
 
-        //GramStainAndCulture
+        //insert GramStainAndCulture
         if (
             $GramStainAndCulture !== null && ($GramStainAndCulture['isSubmittingGramStain'] !== null ||
                 $GramStainAndCulture['gramNegativeOrPositive'] != null || $GramStainAndCulture['isSubmittingCulture'] !== null
@@ -145,6 +143,7 @@ function TRReport_Insert($p)
 
     }
 
+    //update status
     if ($status !== 0 && $idTR_Report) {
         $sqlStatus = "UPDATE blood_request.TR_Report SET `status`=:status WHERE idTR_Report = :idTR_Report ";
         $stmtStatus = $con_db->prepare($sqlStatus);

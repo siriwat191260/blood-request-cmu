@@ -16,6 +16,7 @@ function TRReport_Update($p)
     $formData = $p['formData'];
     $id = $p['id'];
     $idTR_Report = $id['id'];
+
     // Extract individual sections of the form data
     $data = $formData['data'];
     $BloodBagCharacteristic = $formData['BloodBagCharacteristic'];
@@ -26,6 +27,8 @@ function TRReport_Update($p)
     echo '</pre>'; 
     $con_db->beginTransaction();
     $status = 0;
+
+    //TR_Report data
     if ($data !== null) {
         $sqldata = "UPDATE blood_request.TR_Report SET
         interpretation = :interpretation, testedBy = :testedBy, testedDateTime = :testedDateTime, 
@@ -70,7 +73,6 @@ function TRReport_Update($p)
         }
     }
 
-    // Get the last inserted ID
     $tableNameBloodBagCharacteristic = "blood_request.BloodBagCharacteristic";
     $tableNameindicator = "blood_request.Indicator";
     $tableNameGramStainAndCulture = "blood_request.GramStainAndCulture";
@@ -153,6 +155,7 @@ function TRReport_Update($p)
 
     }
 
+    //update status
     if ($status !== 0 && $idTR_Report) {
         $sqlStatus = "UPDATE blood_request.TR_Report SET `status`=:status WHERE idTR_Report = :idTR_Report ";
         $stmtStatus = $con_db->prepare($sqlStatus);
@@ -171,8 +174,8 @@ function TRReport_Update($p)
 
     return $rep;
 }
-//dynamic insert
 
+//dynamic insert
 function updateTable($con_db, $tableName, $data, $idTR_Report)
 {
     try {

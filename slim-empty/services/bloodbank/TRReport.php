@@ -7,11 +7,9 @@ function TRReport($p)
 
     $conn_db = new PDOConnect('db');
     $con_db = $conn_db->Open();
-
-    // Selecting the database
     $con_db->exec("USE blood_request");
 
-    // Using a prepared statement to prevent SQL injection
+    // select data from TR_Report
     $sql = "SELECT *
             FROM TR_Report
             LEFT JOIN TransfusionMedicalDirectorReview ON TransfusionMedicalDirectorReview.idTR_Report = TR_Report.idTR_Report
@@ -23,6 +21,7 @@ function TRReport($p)
 
     $rep['data'] = $data[0];
 
+    // select data from GramStainAndCulture
     $sql = "SELECT *
             FROM GramStainAndCulture
             WHERE idTR_Report = :id";
@@ -47,6 +46,7 @@ function TRReport($p)
         $rep['GramStainAndCulture'] = $temp;
     }
 
+    // select data from BloodBagCharacteristic
     $sql = "SELECT *, NeedleStatus.name AS NeedleName, PlasmaCharacteristicStatus.name AS PlasmaCharacteristicStatusName
             FROM BloodBagCharacteristic
             LEFT JOIN PlasmaCharacteristicStatus ON BloodBagCharacteristic.plasmaCharacteristicStatus = PlasmaCharacteristicStatus.idPlasmaCharacteristicStatus
@@ -72,6 +72,7 @@ function TRReport($p)
         $rep['BloodBagCharacteristic'] = $temp;
     }
 
+    // select data from Indicator
     $ind = array();
     for ($i = 1; $i <= 10; $i++) {
         $sql = "SELECT * FROM Indicator
