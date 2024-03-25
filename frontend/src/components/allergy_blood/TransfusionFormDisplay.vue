@@ -102,26 +102,23 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // Fetch Signs and Symptoms data on component mount
+    // Fetch All data
     const idTR_Form = this.$route.params.id;
-    /* this.blood_transf_id = this.$route.params.id; */
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
     await this.fetchTR_Form(idTR_Form);
-
+    //check when data change then run
     watch(
-      [
-        () => this.signsAndSymptomsOptions,
-        () => this.reactionCategory,
-        () => this.fetchTR_Form,
-      ],
-      ([newSigns, newReaction]) => {
-        // This block will run whenever signsAndSymptomsOptions or reactionCategory change
-        this.fetchSignsAndSymptoms();
-        this.fetchReactionCategory();
-        this.fetchTR_Form(idTR_Form);
-      }
-    );
+        [() => this.signsAndSymptomsOptions, () => this.reactionCategory, () => this.reactionCategory
+        , () => this.fetchBlood_transf_detail, () => this.fetchUserDoctor, () => this.fetchUserNurse], 
+        ([newSigns, newReaction]) => {
+          this.fetchSignsAndSymptoms();
+          this.fetchReactionCategory();
+          this.fetchBlood_tranf_detail();
+          this.fetchUserDoctor();
+          this.fetchUserNurse();
+        },
+      );
   },
   computed: {
     inputWidth() {
@@ -144,6 +141,7 @@ export default defineComponent({
         }
       };
     },
+    //for HN input complete then change box size from length HN
     HNWidth() {
       return () => {
         const name =
@@ -160,6 +158,7 @@ export default defineComponent({
         }
       };
     },
+    //for Name input complete then change box size from length Name
     NameWidth() {
       return () => {
         const name =
@@ -179,6 +178,7 @@ export default defineComponent({
     },
   },
   methods: {
+     //fetch SignsAndSymptoms data
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
@@ -189,17 +189,18 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
+    //fetch ReactionCategory data
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getAllReactionCategory"
         );
-        /* console.log(response.data); */
         this.reactionCategory = response.data;
       } catch (error) {
         console.error("Error fetching Reaction Category data:", error);
       }
     },
+    //fetch Transfusion Form
     async fetchTR_Form(idTR_Form) {
       try {
         const response = await axios.get(
@@ -242,20 +243,18 @@ export default defineComponent({
         this.physicianTime = parseTime(
           new Date(response.data.SubmittingTest.physicianDateTime)
         );
-        console.log(response.data.PatientInfo);
       } catch (error) {
         console.error("Error fetching TR Form data:", error);
       }
     },
+    // fuction parse date,time format
     parseDate,
     parseTime,
     // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
-      console.log("click");
       $("#CloseButton").modal("hide");
     },
-    //cleansing form
   },
   watch: {
     "SignsAndSymptomsOtherObject.isOther": function (newVal, oldVal) {
@@ -1675,7 +1674,6 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!-- {{ console.log('signsAndSymptomsOptions :',signsAndSymptomsOptions) }} -->
         <!-- Signs and Symptoms -->
         <div class="card mt16" style="border: 0px">
           <div class="col-md-12">

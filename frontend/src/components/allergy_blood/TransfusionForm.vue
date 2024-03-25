@@ -229,7 +229,6 @@ export default defineComponent({
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getAllReactionCategory"
         );
-        /* console.log(response.data); */
         this.reactionCategory = response.data;
       } catch (error) {
         console.error("Error fetching Reaction Category data:", error);
@@ -265,10 +264,6 @@ export default defineComponent({
         this.formData.DetailRecordIn24Hrs.map((data) => {
           data.isReaction = "";
         });
-        console.log(
-          "formData.DetailRecordIn24Hrs :",
-          this.formData.DetailRecordIn24Hrs
-        );
       } catch (error) {
         console.error("Error fetching Blood Transfusion Detail data:", error);
       }
@@ -279,7 +274,6 @@ export default defineComponent({
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getUserDoctor"
         );
-        /* console.log(response.data); */
         this.userDoctor = response.data;
       } catch (error) {
         console.error("Error fetching User Doctor data:", error);
@@ -291,7 +285,6 @@ export default defineComponent({
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getUserNurse"
         );
-        /* console.log(response.data); */
         this.userNurse = response.data;
       } catch (error) {
         console.error("Error fetching User Nurse data:", error);
@@ -300,7 +293,7 @@ export default defineComponent({
     // fuction real-time-date,time
     currentDate,
     currentTime,
-    // fuction parse date,time
+    // fuction parse date,time format
     parseDate,
     parseTime,
     //find name of doctor and nurse
@@ -344,12 +337,10 @@ export default defineComponent({
     } else {
       this.formData.VitalSigns[field] = inputValue;
     }
-  },
-
+    },
     // go back to previous page 
     navigateToPreviousPage(){
       this.$router.push(`/mainBloodChecklist`);
-      console.log("click")
       $('#CloseButton').modal('hide');
     },
     //cleansing form & submit
@@ -432,14 +423,10 @@ export default defineComponent({
         },
         DetailRecordIn24Hrs : DetailRecordIn24Hrs ? DetailRecordIn24Hrs : {}
       }
-      
-      console.log("Form submitted! : ", formData);
-      console.log("cleasingFormData submitted! : ", cleasingFormData);
       const response = await axios.post(
           this.baseURL + "submitting_transfusion_form",
           { formData: cleasingFormData }
         );
-      console.log("Form submitted successfully!", response.data);
       $('#SaveButton').modal('show');
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -1947,7 +1934,6 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!-- {{ console.log('signsAndSymptomsOptions :',signsAndSymptomsOptions) }} -->
         <!-- Signs and Symptoms -->
         <div class="card mt16" style="border: 0px">
           <div class="col-md-12">

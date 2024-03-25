@@ -12,7 +12,7 @@ import axios from "axios";
 import { watch } from "vue";
 
 export default defineComponent({
-  name: "TransfusionForm",
+  name: "TransfusionEdit",
   data() {
     return {
       // TR_Form Section
@@ -110,15 +110,14 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // Fetch Signs and Symptoms data on component mount
+    // Fetch All data
     const idTR_Form = this.$route.params.id;
-    /* this.blood_transf_id = this.$route.params.id; */
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
     await this.fetchUserDoctor();
     await this.fetchUserNurse();
     await this.fetchTR_Form(idTR_Form);
-
+    //check when data change then run
     watch(
       [
         () => this.signsAndSymptomsOptions,
@@ -128,7 +127,6 @@ export default defineComponent({
         () => this.fetchTR_Form,
       ],
       ([newSigns, newReaction]) => {
-        // This block will run whenever signsAndSymptomsOptions or reactionCategory change
         this.fetchSignsAndSymptoms();
         this.fetchReactionCategory();
         this.fetchBlood_tranf_detail();
@@ -139,6 +137,7 @@ export default defineComponent({
     );
   },
   computed: {
+    //filter Nurse and Doctor
     filteredItems() {
       return (role) => {
         if (role === "doctor") {
@@ -162,6 +161,7 @@ export default defineComponent({
         }
       };
     },
+    //for input complete then change box size
     inputWidth() {
       return (category) => {
         // Calculate width based on input values
@@ -182,6 +182,7 @@ export default defineComponent({
         }
       };
     },
+    //for HN input complete then change box size from length HN
     HNWidth() {
       return () => {
         const name =
@@ -198,6 +199,7 @@ export default defineComponent({
         }
       };
     },
+    //for Name input complete then change box size from length Name
     NameWidth() {
       return () => {
         const name =
@@ -217,6 +219,7 @@ export default defineComponent({
     },
   },
   methods: {
+    //fetch SignsAndSymptoms data
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
@@ -227,39 +230,40 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
+    //fetch ReactionCategory data
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getAllReactionCategory"
         );
-        /* console.log(response.data); */
         this.reactionCategory = response.data;
       } catch (error) {
         console.error("Error fetching Reaction Category data:", error);
       }
     },
+    //fetch list doctor data
     async fetchUserDoctor() {
       try {
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getUserDoctor"
         );
-        /* console.log(response.data); */
         this.userDoctor = response.data;
       } catch (error) {
         console.error("Error fetching User Doctor data:", error);
       }
     },
+    //fetch list nurse data
     async fetchUserNurse() {
       try {
         const response = await axios.get(
           this.baseURL + "trasfusion-form/getUserNurse"
         );
-        /* console.log(response.data); */
         this.userNurse = response.data;
       } catch (error) {
         console.error("Error fetching User Nurse data:", error);
       }
     },
+    //fetch Transfusion Form
     async fetchTR_Form(idTR_Form) {
       try {
         const response = await axios.get(
@@ -302,18 +306,18 @@ export default defineComponent({
         this.physicianTime = parseTime(
           new Date(response.data.SubmittingTest.physicianDateTime)
         );
-        console.log(response.data.PatientInfo);
       } catch (error) {
         console.error("Error fetching TR Form data:", error);
       }
     },
+    // fuction real-time-date,time
     currentDate,
     currentTime,
+    // fuction parse date,time format
     parseDate,
     parseTime,
     //find name of doctor and nurse
     handleInput(role) {
-      console.log("role :", role);
       if (role === "doctor") {
         this.showResultsDoctor = true;
       } else if (role === "nurse") {
@@ -328,6 +332,7 @@ export default defineComponent({
       this.formData.SubmittingTest.nurseName = item;
       this.showResultsNurse = false;
     },
+    // check value input
     restrictInput(event, name) {
       // Remove non-numeric characters from the input value
       let value = event.target.value.replace(/\D/g, '');
@@ -350,11 +355,10 @@ export default defineComponent({
     } else {
       this.formData.VitalSigns[field] = inputValue;
     }
-  },
+    },
     // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
-      console.log("click");
       $("#CloseButton").modal("hide");
     },
     //cleansing form
@@ -531,16 +535,12 @@ export default defineComponent({
           },
           DetailRecordIn24Hrs: DetailRecordIn24Hrs ? DetailRecordIn24Hrs : {},
         };
-
-        console.log("Form submitted! : ", formData);
-        console.log("cleasingFormData submitted! : ", cleasingFormData);
         const response = await axios.put(
           this.baseURL +
             `submitting_transfusion_form/update/${this.$route.params.id}`,
           { formData: cleasingFormData }
         );
         $('#SaveButton').modal('show');
-        console.log("Form submitted update successfully!", response.data);
       } catch (error) {
         console.error("Error submitting form:", error);
         // Handle error if necessary
@@ -2044,7 +2044,6 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!-- {{ console.log('signsAndSymptomsOptions :',signsAndSymptomsOptions) }} -->
         <!-- Signs and Symptoms -->
         <div class="card mt16" style="border: 0px">
           <div class="col-md-12">

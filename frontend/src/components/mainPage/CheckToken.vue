@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 import axios from "axios";
 
 export default defineComponent({
-    name: "MainPage",
+    name: "CheckToken",
     data() {
         return {
             userInfo: [],
@@ -29,6 +29,8 @@ export default defineComponent({
                     localStorage.setItem('userProfile', JSON.stringify(response.data.v));
                     //change page
                     this.$router.push(`/mainBloodChecklist`);
+                }else{
+                    this.$router.push(`/NotFound`);
                 }
 
             } catch (error) {
@@ -40,9 +42,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <div>
-        404
-    </div>
+
 </template>
   
   

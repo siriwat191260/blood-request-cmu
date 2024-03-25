@@ -11,6 +11,7 @@ import Approve from '../components/allergy_blood/Approve.vue';
 import ApproveDisplay from '../components/allergy_blood/ApproveDisplay.vue';
 import MainPage from '../components/mainPage/MainPage.vue';
 import CheckToken from '../components/mainPage/CheckToken.vue';
+import NotFound from '../components/mainPage/404page.vue';
 
 const routes = [
   { path: '/transfusion-form', component: TransfusionForm, name: 'transfusion-form' },
@@ -24,6 +25,7 @@ const routes = [
   { path: '/get-approve/:id', component: ApproveDisplay },
   { path: '/mainBloodChecklist', component: MainPage, name: 'MainPage' },
   { path: '/transfusionSystem/:id', component: CheckToken },
+  { path: '/NotFound', component: NotFound },
 
   // Add more routes as needed
 ];
