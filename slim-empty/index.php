@@ -4,6 +4,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require __DIR__ . '/vendor/autoload.php';
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -11,10 +12,13 @@ error_reporting(E_ALL);
 cors();
 // $cors = new \Cors;
 
-function getListBloodTransf()
+// fix this for change server path
+$urlServer = "http://iservice.med.cmu.ac.th/gateway/bb/";
+
+function getListBloodTransf($urlServer)
 {
-    $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
-    $getListBloodTransfEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_blood_transf.php";
+    $getTokenEndpoint = $urlServer . "get_token.php";
+    $getListBloodTransfEndpoint = $urlServer . "list_blood_transf.php";
     $body = json_encode(array("hn" => "1235"));
 
     // Prepare cURL request to get token
@@ -135,9 +139,9 @@ $app->group('/v1', function () use ($app) {
     });
 });
 
-$app->get('/getListBloodTransf', function (Request $request, Response $response, array $args) {
+$app->get('/getListBloodTransf', function (Request $request, Response $response, array $args) use($urlServer){
     try {
-        $ListBloodValue = getListBloodTransf();
+        $ListBloodValue = getListBloodTransf($urlServer);
         $ListBloodMapping = array_map(function ($bloodTransfRecord) {
             $hn = $bloodTransfRecord['hn'];
             $packid = $bloodTransfRecord['packid'];
@@ -174,9 +178,9 @@ $app->get('/getListBloodTransf', function (Request $request, Response $response,
     }
 });
 
-$app->get('/getListReaction', function (Request $request, Response $response, array $args) {
+$app->get('/getListReaction', function (Request $request, Response $response, array $args) use ($urlServer) {
     try {
-        $ListBloodValue = getListBloodTransf();
+        $ListBloodValue = getListBloodTransf($urlServer);
         $rst = [];
         foreach ($ListBloodValue as &$bloodTransfRecord) {
             $hn = $bloodTransfRecord['hn'];
@@ -213,8 +217,8 @@ $app->get('/getListReaction', function (Request $request, Response $response, ar
     }
 });
 
-$app->group('/trasfusion-form', function () use ($app) {
-    $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+$app->group('/trasfusion-form', function () use ($app,$urlServer) {
+    $getTokenEndpoint = $urlServer . "get_token.php";
     // Prepare cURL request to get token
     $ch1 = curl_init($getTokenEndpoint);
     curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
@@ -251,9 +255,9 @@ $app->group('/trasfusion-form', function () use ($app) {
         $rs = $func->callMethod($p);
         return $rs;
     });
-    $app->post('/getBloodTransfDetail', function (Request $request, Response $response, array $args) {
+    $app->post('/getBloodTransfDetail', function (Request $request, Response $response, array $args) use ($urlServer){
         try {
-            $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+            $getTokenEndpoint = $urlServer . "get_token.php";
 
             // Prepare cURL request to get token
             $ch1 = curl_init($getTokenEndpoint);
@@ -276,7 +280,7 @@ $app->group('/trasfusion-form', function () use ($app) {
             ];
 
             // Extract token and endpoint
-            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/blood_transf_detail.php";
+            $endpoint = $urlServer . "blood_transf_detail.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
@@ -322,10 +326,10 @@ $app->group('/trasfusion-form', function () use ($app) {
             return $response->withStatus(500);
         }
     });
-    $app->get('/getUserDoctor', function (Request $request, Response $response, array $args) use ($token) {
+    $app->get('/getUserDoctor', function (Request $request, Response $response, array $args) use ($token, $urlServer) {
         try {
             // Extract token and endpoint
-            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_user_doctor.php";
+            $endpoint = $urlServer . "list_user_doctor.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
@@ -369,10 +373,10 @@ $app->group('/trasfusion-form', function () use ($app) {
             return $response->withStatus(500);
         }
     });
-    $app->get('/getUserNurse', function (Request $request, Response $response, array $args) use ($token) {
+    $app->get('/getUserNurse', function (Request $request, Response $response, array $args) use ($token, $urlServer) {
         try {
 
-            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_user_nurse.php";
+            $endpoint = $urlServer . "list_user_nurse.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
@@ -416,10 +420,10 @@ $app->group('/trasfusion-form', function () use ($app) {
             return $response->withStatus(500);
         }
     });
-    $app->get('/getUserApprove', function (Request $request, Response $response, array $args) use ($token) {
+    $app->get('/getUserApprove', function (Request $request, Response $response, array $args) use ($token, $urlServer) {
         try {
 
-            $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_approve.php";
+            $endpoint = $urlServer . "list_approve.php";
 
             // Prepare cURL request
             $ch = curl_init($endpoint);
@@ -477,9 +481,9 @@ $app->group('/trasfusion-form', function () use ($app) {
 });
 
 
-$app->get('/getUserBloodbank', function (Request $request, Response $response, array $args) {
+$app->get('/getUserBloodbank', function (Request $request, Response $response, array $args) use ($urlServer){
     try {
-        $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+        $getTokenEndpoint = $urlServer . "get_token.php";
         // Prepare cURL request to get token
         $ch1 = curl_init($getTokenEndpoint);
         curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
@@ -495,7 +499,7 @@ $app->get('/getUserBloodbank', function (Request $request, Response $response, a
         $result = json_decode($apiResponse, true);
         $token = $result['v']['token'];
 
-        $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/list_user_bloodbank.php";
+        $endpoint = $urlServer . "list_user_bloodbank.php";
 
         // Prepare cURL request
         $ch = curl_init($endpoint);
@@ -572,10 +576,10 @@ $app->get('/get-transfusion-report/{id}', function (Request $request, Response $
     return $rs;
 });
 
-$app->get('/getCheckToken', function (Request $request, Response $response, array $args) {
+$app->get('/getCheckToken', function (Request $request, Response $response, array $args) use ($urlServer){
     try {
 
-        $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php";
+        $checkTokenEndpoint = $urlServer . "check_token.php";
 
         $token = $request->getQueryParams()['Token'];
         $tokenFormat = array("token" => $token);
@@ -617,9 +621,9 @@ $app->get('/getCheckToken', function (Request $request, Response $response, arra
     }
 });
 
-$app->get('/getListBloodTransIService', function (Request $request, Response $response, array $args) {
+$app->get('/getListBloodTransIService', function (Request $request, Response $response, array $args) use ($urlServer) {
     try {
-        $ListBloodValue = getListBloodTransf();
+        $ListBloodValue = getListBloodTransf($urlServer);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($ListBloodValue));
         return $response;
@@ -718,10 +722,10 @@ $app->put('/submitting_approve', function (Request $request, Response $response,
     return $rs;
 });
 
-$app->get('/getToken', function (Request $request, Response $response, array $args) {
+$app->get('/getToken', function (Request $request, Response $response, array $args) use($urlServer){
     try {
 
-        $endpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+        $endpoint = $urlServer . "get_token.php";
 
         // Prepare cURL request
         $ch = curl_init($endpoint);
@@ -754,15 +758,15 @@ $app->get('/getToken', function (Request $request, Response $response, array $ar
 });
 
 //for test
-$app->get('/getUserLogin', function (Request $request, Response $response, array $args) {
+$app->get('/getUserLogin', function (Request $request, Response $response, array $args) use($urlServer) {
     try {
-        $getTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/get_token.php";
+        $getTokenEndpoint = $urlServer . "get_token.php";
         //Approve ID : 1254,6523
         //Doctor ID : 1254,6523
         //BloodBank ID : 7895
         //Nurse ID : 451236
-        $idUser = "7895";
-        $checkTokenEndpoint = "http://iservice.med.cmu.ac.th/gateway/bb/check_token.php?uid=$idUser";
+        $idUser = "451236";
+        $checkTokenEndpoint = $urlServer . "check_token.php?uid=$idUser";
 
         // Prepare cURL request to get token
         $ch1 = curl_init($getTokenEndpoint);

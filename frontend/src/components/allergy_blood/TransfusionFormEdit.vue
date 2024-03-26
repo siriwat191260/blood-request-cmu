@@ -2184,7 +2184,7 @@ export default defineComponent({
                           width="24"
                           height="24"
                         />
-                        หมายเลขถุงเลือด : {{ blood_transf24.packid }}
+                        หมายเลขถุงเลือด : {{ blood_transf24.bloodBagNumber }}
                       </p>
                     </div>
                   </button>
@@ -2222,7 +2222,7 @@ export default defineComponent({
                                 padding-bottom: 0px;
                               "
                               type="text"
-                              :value="blood_transf24.product"
+                              :value="blood_transf24.bloodComponent"
                               aria-label="default input example"
                               readonly
                             />
@@ -2271,7 +2271,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  :value="parseDate(blood_transf24.dtm)"
+                                  :value="parseDate(blood_transf24.startTransfusion)"
                                   aria-label="readonly input example"
                                   readonly
                                 />
@@ -2322,7 +2322,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  :value="parseTime(blood_transf24.dtm)"
+                                  :value="parseTime(blood_transf24.startTransfusion)"
                                   aria-label="default input example"
                                 />
                               </div>
@@ -2372,7 +2372,7 @@ export default defineComponent({
                                     padding-bottom: 0px;
                                   "
                                   type="text"
-                                  :value="parseTime(blood_transf24.dtm_off)"
+                                  :value="parseTime(blood_transf24.endTransfusion)"
                                   aria-label="default input example"
                                 />
                               </div>
@@ -2408,7 +2408,7 @@ export default defineComponent({
                                   padding-bottom: 0px;
                                 "
                                 type="text"
-                                :value="blood_transf24.vol"
+                                :value="blood_transf24.volume"
                                 aria-label="default input example"
                               />
                               <span
