@@ -310,20 +310,20 @@ export default defineComponent({
         this.formData.GramStainAndCulture.toDateCulture = "";
       }
     },
-    'formData.data.reportedBy.length': function (newVal) {
-      if (this.formData.data.reportedBy.length >= 1) {
+    'formData.data.reportedBy.length': function (newVal, oldVal) {
+      if (newVal.length >= 1 && oldVal.length < 1) {
         this.formData.data.reportedDate = new Date().toISOString().split("T")[0];
         this.formData.data.reportedTime = this.parseTime(new Date());
-      } else {
+      } else if (newVal.length < 1 && oldVal.length >= 1){
         this.formData.data.reportedDate = "";
         this.formData.data.reportedTime = "";
       }
     },
-    'formData.data.testedBy.length': function (newVal) {
-      if (this.formData.data.testedBy.length >= 1) {
+    'formData.data.testedBy.length': function (newVal, oldVal) {
+      if (newVal.length >= 1 && oldVal.length < 1) {
         this.formData.data.testedDate = new Date().toISOString().split("T")[0];
         this.formData.data.testedTime = this.parseTime(new Date());
-      } else {
+      } else if (newVal.length < 1 && oldVal.length >= 1){
         this.formData.data.testedDate = "";
         this.formData.data.testedTime = "";
       }
@@ -1946,11 +1946,11 @@ export default defineComponent({
                   <div style="position: relative">
                     <div style="display: inline; position: absolute; width: 100%">
                       <input class="form-control typing-box-style" style="
-                                                padding-left: 16px;
-                                                padding-right: 16px;
-                                                padding-top: 0px;
-                                                padding-bottom: 0px;
-                                                " type="time" v-model="formData.data.testedTime"
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        " type="time" v-model="formData.data.testedTime"
                         :disabled="formData.data.testedBy.length === 0" aria-label="readonly input example"
                         id="testedTime" name="testedTime" />
                     </div>

@@ -88,12 +88,12 @@ export default defineComponent({
     };
   },
   async mounted() {
+    //load data from localStorage
+    this.fetchUser();
     //set id TR_Report
     const idTR_Report = this.$route.params.id;
     //fetch data
     await this.fetchTRReport(idTR_Report);
-    //load data from localStorage
-    this.fetchUser();
   },
   methods: {
     //set data for from
@@ -182,12 +182,13 @@ export default defineComponent({
       this.formData.GramStainAndCulture.isSubmittingGramStain = this.tr_report.GramStainAndCulture.isSubmittingGramStain
       this.formData.GramStainAndCulture.gramNegativeOrPositive = this.tr_report.GramStainAndCulture.gramNegativeOrPositive
       this.formData.GramStainAndCulture.resultGramStain = this.tr_report.GramStainAndCulture.resultGramStain
-      this.formData.GramStainAndCulture.toDateGram = this.tr_report.GramStainAndCulture.toDateGram
+      this.formData.GramStainAndCulture.toDateGram = new Date(this.tr_report.GramStainAndCulture.toDateGram).toISOString().split("T")[0]
 
       this.formData.GramStainAndCulture.isSubmittingCulture = this.tr_report.GramStainAndCulture.isSubmittingCulture
       this.formData.GramStainAndCulture.cultureNegativeOrPositive = this.tr_report.GramStainAndCulture.cultureNegativeOrPositive
       this.formData.GramStainAndCulture.resultCulture = this.tr_report.GramStainAndCulture.resultCulture
-      this.formData.GramStainAndCulture.toDateCulture = this.tr_report.GramStainAndCulture.toDateCulture
+      this.formData.GramStainAndCulture.toDateCulture = new Date(this.tr_report.GramStainAndCulture.toDateCulture).toISOString().split("T")[0]
+      
 
       this.formData.TransfusionMedicalDirectorReview.reaction = this.tr_report.data.reaction
       this.formData.TransfusionMedicalDirectorReview.caseDefinitionCriteria = this.tr_report.data.caseDefinitionCriteria
@@ -199,6 +200,7 @@ export default defineComponent({
     },
     fetchUser() {
       this.userInfo = JSON.parse(localStorage.getItem('userProfile'))
+      console.log(this.userInfo)
     },
     async fetchTRReport(idTR_Report) {
       try {
@@ -1484,7 +1486,7 @@ export default defineComponent({
                     </p>
                     <div style="position: relative">
                       <div style="display: inline; position: absolute; width: 100%">
-                        <input class="form-control typing-box-style" style="
+                        <input disabled class="form-control typing-box-style" style="
                                                 padding-left: 16px;
                                                 padding-right: 16px;
                                                 padding-top: 0px;
@@ -1890,7 +1892,7 @@ export default defineComponent({
                                                 padding-top: 0px;
                                                 padding-bottom: 0px;
                                                 " type="time"
-                      :value="formData.TransfusionMedicalDirectorReview.approvedTime" aria-label="readonly input example"
+                       v-model="formData.TransfusionMedicalDirectorReview.approvedTime" aria-label="readonly input example"
                       id="birthdaytime" name="birthdaytime" />
                   </div>
                 </div>

@@ -82,7 +82,6 @@ export default defineComponent({
       },
       showResultsTest: false,
       showResultsReport: false,
-      userInfo: [],
       tr_report: {},
       baseURL: import.meta.env.VITE_BASE_URL,
     };
@@ -92,8 +91,6 @@ export default defineComponent({
     const idTR_Report = this.$route.params.id;
     //fetch data
     await this.fetchTRReport(idTR_Report);
-    //load data from localStorage
-    this.fetchUser();
   },
   methods: {
     //set data for from
@@ -181,12 +178,12 @@ export default defineComponent({
       this.formData.GramStainAndCulture.isSubmittingGramStain = this.tr_report.GramStainAndCulture.isSubmittingGramStain
       this.formData.GramStainAndCulture.gramNegativeOrPositive = this.tr_report.GramStainAndCulture.gramNegativeOrPositive
       this.formData.GramStainAndCulture.resultGramStain = this.tr_report.GramStainAndCulture.resultGramStain
-      this.formData.GramStainAndCulture.toDateGram = this.tr_report.GramStainAndCulture.toDateGram
+      this.formData.GramStainAndCulture.toDateGram = new Date(this.tr_report.GramStainAndCulture.toDateGram).toISOString().split("T")[0]
 
       this.formData.GramStainAndCulture.isSubmittingCulture = this.tr_report.GramStainAndCulture.isSubmittingCulture
       this.formData.GramStainAndCulture.cultureNegativeOrPositive = this.tr_report.GramStainAndCulture.cultureNegativeOrPositive
       this.formData.GramStainAndCulture.resultCulture = this.tr_report.GramStainAndCulture.resultCulture
-      this.formData.GramStainAndCulture.toDateCulture = this.tr_report.GramStainAndCulture.toDateCulture
+      this.formData.GramStainAndCulture.toDateCulture = new Date(this.tr_report.GramStainAndCulture.toDateCulture).toISOString().split("T")[0]
 
       this.formData.TransfusionMedicalDirectorReview.reaction = this.tr_report.data.reaction
       this.formData.TransfusionMedicalDirectorReview.caseDefinitionCriteria = this.tr_report.data.caseDefinitionCriteria
@@ -195,9 +192,6 @@ export default defineComponent({
       this.formData.TransfusionMedicalDirectorReview.approvedBy = this.tr_report.data.approvedBy
       this.formData.TransfusionMedicalDirectorReview.approvedDate = this.tr_report.data.approvedDateTime ? new Date(this.tr_report.data.approvedDateTime).toISOString().split("T")[0] : ""
       this.formData.TransfusionMedicalDirectorReview.approvedTime = this.tr_report.data.approvedDateTime ? parseTime(new Date(this.tr_report.data.approvedDateTime)) : ""
-    },
-    fetchUser() {
-      this.userInfo = JSON.parse(localStorage.getItem('userProfile'))
     },
     async fetchTRReport(idTR_Report) {
       try {
@@ -1859,7 +1853,7 @@ export default defineComponent({
                                                 padding-bottom: 0px;
                                                 " type="date"
                       :value="formData.TransfusionMedicalDirectorReview.approvedDate" aria-label="readonly input example"
-                      id="birthdaytime" name="birthdaytime" />
+                      id="birthdaytime" name="birthdaytime" disabled/>
                   </div>
                 </div>
               </div>
@@ -1886,7 +1880,7 @@ export default defineComponent({
                                                 padding-bottom: 0px;
                                                 " type="time"
                       :value="formData.TransfusionMedicalDirectorReview.approvedTime" aria-label="readonly input example"
-                      id="birthdaytime" name="birthdaytime" />
+                      id="birthdaytime" name="birthdaytime" disabled/>
                   </div>
                 </div>
               </div>

@@ -171,12 +171,12 @@ export default defineComponent({
       this.formData.GramStainAndCulture.isSubmittingGramStain = this.tr_report.GramStainAndCulture.isSubmittingGramStain
       this.formData.GramStainAndCulture.gramNegativeOrPositive = this.tr_report.GramStainAndCulture.gramNegativeOrPositive
       this.formData.GramStainAndCulture.resultGramStain = this.tr_report.GramStainAndCulture.resultGramStain
-      this.formData.GramStainAndCulture.toDateGram = this.tr_report.GramStainAndCulture.toDateGram
+      this.formData.GramStainAndCulture.toDateGram = new Date(this.tr_report.GramStainAndCulture.toDateGram).toISOString().split("T")[0];
 
       this.formData.GramStainAndCulture.isSubmittingCulture = this.tr_report.GramStainAndCulture.isSubmittingCulture
       this.formData.GramStainAndCulture.cultureNegativeOrPositive = this.tr_report.GramStainAndCulture.cultureNegativeOrPositive
       this.formData.GramStainAndCulture.resultCulture = this.tr_report.GramStainAndCulture.resultCulture
-      this.formData.GramStainAndCulture.toDateCulture = this.tr_report.GramStainAndCulture.toDateCulture
+      this.formData.GramStainAndCulture.toDateCulture = new Date(this.tr_report.GramStainAndCulture.toDateCulture).toISOString().split("T")[0];
 
     },
     fetchUser() {
@@ -325,11 +325,11 @@ export default defineComponent({
             isSubmittingGramStain: GramStainAndCulture ? GramStainAndCulture.isSubmittingGramStain : null,
             gramNegativeOrPositive: GramStainAndCulture ? GramStainAndCulture.gramNegativeOrPositive : null,
             resultGramStain: GramStainAndCulture && GramStainAndCulture.resultGramStain ? GramStainAndCulture.resultGramStain : null,
-            toDateGram: GramStainAndCulture && data.toDateGram ? new Date(`${data.toDateGram}`) : null,
+            toDateGram: GramStainAndCulture && GramStainAndCulture.toDateGram ? new Date(`${GramStainAndCulture.toDateGram}`) : null,
             isSubmittingCulture: GramStainAndCulture ? GramStainAndCulture.isSubmittingCulture : null,
             cultureNegativeOrPositive: GramStainAndCulture ? GramStainAndCulture.cultureNegativeOrPositive : null,
             resultCulture: GramStainAndCulture && GramStainAndCulture.resultCulture ? GramStainAndCulture.resultCulture : null,
-            toDateCulture: GramStainAndCulture && data.toDateCulture ? new Date(`${data.toDateCulture}`) : null
+            toDateCulture: GramStainAndCulture && GramStainAndCulture.toDateCulture ? new Date(`${GramStainAndCulture.toDateCulture}`) : null
           },
         }
         console.log("Form submitted! : ", formData);
@@ -358,7 +358,7 @@ export default defineComponent({
       } else if (parseInt(oldVal) === 1) {
         this.formData.GramStainAndCulture.resultGramStain = "";
       }
-      if (parseInt(newVal) === 2) {
+      if (parseInt(newVal) === 2 && oldVal!="") {
         this.formData.GramStainAndCulture.toDateGram = new Date().toISOString().split("T")[0];
       }
     }, 'formData.GramStainAndCulture.cultureNegativeOrPositive': function (newVal, oldVal) {
@@ -367,7 +367,7 @@ export default defineComponent({
       } else if (parseInt(oldVal) === 1) {
         this.formData.GramStainAndCulture.resultCulture = "";
       }
-      if (parseInt(newVal) === 2) {
+      if (parseInt(newVal) === 2 && oldVal!="") {
         this.formData.GramStainAndCulture.toDateCulture = new Date().toISOString().split("T")[0];
       }
     },
@@ -385,20 +385,20 @@ export default defineComponent({
         this.formData.GramStainAndCulture.toDateCulture = "";
       }
     },
-    'formData.data.reportedBy.length': function () {
-      if (this.formData.data.reportedBy.length >= 1) {
+    'formData.data.reportedBy.length': function (newVal, oldVal) {
+      if (newVal.length >= 1 && oldVal.length < 1) {
         this.formData.data.reportedDate = new Date().toISOString().split("T")[0];
         this.formData.data.reportedTime = this.parseTime(new Date());
-      } else {
+      } else if (newVal.length < 1 && oldVal.length >= 1){
         this.formData.data.reportedDate = "";
         this.formData.data.reportedTime = "";
       }
     },
-    'formData.data.testedBy.length': function () {
-      if (this.formData.data.testedBy.length >= 1) {
+    'formData.data.testedBy.length': function (newVal, oldVal) {
+      if (newVal.length >= 1 && oldVal.length < 1) {
         this.formData.data.testedDate = new Date().toISOString().split("T")[0];
         this.formData.data.testedTime = this.parseTime(new Date());
-      } else {
+      } else if (newVal.length < 1 && oldVal.length >= 1){
         this.formData.data.testedDate = "";
         this.formData.data.testedTime = "";
       }

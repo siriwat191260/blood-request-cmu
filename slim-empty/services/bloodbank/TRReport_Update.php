@@ -229,17 +229,12 @@ function updateTable($con_db, $tableName, $data, $idTR_Report)
 
         // Bind values
         foreach ($data as $key => $value) {
-            if ($value === "") {
+            if ($value === "" || $value === null) {
                 $stmt->bindValue(":$key", null, PDO::PARAM_NULL);
-            } else if ($key === 'beforeReactionTime' || $key === 'afterReactionTime') {
-                // Append a date to the time value
-                $time = DateTime::createFromFormat('H:i', $value);
-                $formattedDateTime = $time->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
-                $stmt->bindValue(":$key", $formattedDateTime, PDO::PARAM_STR);
-            } else if ($key === 'nurseDateTime' || $key === 'physicianDateTime') {
-                $formattedDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value)->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
+            } else if ($key === 'toDateCulture' || $key === 'toDateGram') {
+                $formattedDate = (DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value))->setTimezone(new DateTimeZone('+07:00'))->format('Y-m-d H:i:s');
                 $stmt->bindValue(":$key", $formattedDate, PDO::PARAM_STR);
-            } else {
+            }else {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
