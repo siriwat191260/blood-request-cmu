@@ -109,14 +109,12 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // Fetch All data
     const blood_transf_id = this.$route.params.id;
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
     await this.fetchBlood_transf_detail(blood_transf_id);
     await this.fetchUserDoctor();
     await this.fetchUserNurse();
-    //check when data change then run
     watch(
       [() => this.signsAndSymptomsOptions, () => this.reactionCategory, () => this.reactionCategory
       , () => this.fetchBlood_transf_detail, () => this.fetchUserDoctor, () => this.fetchUserNurse], 
@@ -130,7 +128,6 @@ export default defineComponent({
     );
   },
   computed: {
-    //filter Nurse and Doctor
     filteredItems() {
       return (role) => {
         if (role === "doctor") {
@@ -175,7 +172,6 @@ export default defineComponent({
         }
       };
     },
-    //for HN input complete then change box size from length HN
     HNWidth() {
       return () => {
         const name =
@@ -192,7 +188,6 @@ export default defineComponent({
         }
       };
     },
-    //for Name input complete then change box size from length Name
     NameWidth() {
       return () => {
         const name =
@@ -212,7 +207,6 @@ export default defineComponent({
     },
   },
   methods: {
-    //fetch SignsAndSymptoms data
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
@@ -223,7 +217,6 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
-    //fetch ReactionCategory data
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
@@ -234,7 +227,6 @@ export default defineComponent({
         console.error("Error fetching Reaction Category data:", error);
       }
     },
-    //fetch Blood Transfusion Detail data
     async fetchBlood_transf_detail(blood_transf_id) {
       try {
         const response = await axios.post(
@@ -268,7 +260,6 @@ export default defineComponent({
         console.error("Error fetching Blood Transfusion Detail data:", error);
       }
     },
-    //fetch list doctor data
     async fetchUserDoctor() {
       try {
         const response = await axios.get(
@@ -279,7 +270,6 @@ export default defineComponent({
         console.error("Error fetching User Doctor data:", error);
       }
     },
-    //fetch list nurse data
     async fetchUserNurse() {
       try {
         const response = await axios.get(
@@ -290,13 +280,10 @@ export default defineComponent({
         console.error("Error fetching User Nurse data:", error);
       }
     },
-    // fuction real-time-date,time
     currentDate,
     currentTime,
-    // fuction parse date,time format
     parseDate,
     parseTime,
-    //find name of doctor and nurse
     handleInput(role) {
       console.log("role :", role);
       if (role === "doctor") {
@@ -313,7 +300,6 @@ export default defineComponent({
       this.formData.SubmittingTest.nurseName = item;
       this.showResultsNurse = false;
     },
-    // check value input
     restrictInput(event, name) {
       // Remove non-numeric characters from the input value
       let value = event.target.value.replace(/\D/g, '');
@@ -328,7 +314,6 @@ export default defineComponent({
       // Update the corresponding property in your Vue data
       this[name] = value;
     },
-    //
     handleInputTypingBox(event,max,field) {
     const inputValue = parseInt(event.target.value);
     if (inputValue > max) {
@@ -338,12 +323,10 @@ export default defineComponent({
       this.formData.VitalSigns[field] = inputValue;
     }
     },
-    // go back to previous page 
     navigateToPreviousPage(){
       this.$router.push(`/mainBloodChecklist`);
       $('#CloseButton').modal('hide');
     },
-    //cleansing form & submit
     async handleSubmit(event,formData) {
       try{
         const { PatientInfo, BloodTransfusionTest, VitalSigns, SignsAndSymptomsObject, SubmittingTest, DetailRecordIn24Hrs } = formData;
@@ -371,10 +354,7 @@ export default defineComponent({
           firstName: PatientInfo && PatientInfo.firstName ? PatientInfo.firstName : null,
           lastName: PatientInfo && PatientInfo.lastName ? PatientInfo.lastName : null,
           HN: PatientInfo && PatientInfo.HN ? PatientInfo.HN : null,
-          //ค่าอะไร ? id?
           TXN: PatientInfo && PatientInfo.TXN ? PatientInfo.TXN : null,
-          //ค่าอะไร ?
-          /* pt_type: PatientInfo && PatientInfo ? PatientInfo.: null, */
           ward: PatientInfo && PatientInfo.ward ? PatientInfo.ward : null,
           phoneNumber: PatientInfo && PatientInfo.phoneNumber ? PatientInfo.phoneNumber : null,
           diagnosis: PatientInfo && PatientInfo.diagnosis ? PatientInfo.diagnosis : null,
@@ -435,13 +415,11 @@ export default defineComponent({
     },
   },
   watch: {
-    //check Object in SignsAndSymptoms is checked ?
     "SignsAndSymptomsOtherObject.isOther": function (newVal, oldVal) {
       if (newVal !== 1) {
         this.formData.SignsAndSymptomsObject.Other = "";
       }
     },
-    //check ReactionHistory is checked ?
       "formData.PatientInfo.isReactionHistory": function (newVal, oldVal) {
         if (newVal === 1 || newVal === "1") {
           // Set a flag or update a state variable to show the input field

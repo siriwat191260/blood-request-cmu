@@ -23,9 +23,7 @@ export default defineComponent({
           firstName: "",
           lastName: "",
           HN: "",
-          //ค่าอะไร ? id?
           TXN: "",
-          //ค่าอะไร ?
           pt_type: "",
           createdDate: "" || new Date(),
           ward: "",
@@ -110,14 +108,12 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // Fetch All data
     const idTR_Form = this.$route.params.id;
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
     await this.fetchUserDoctor();
     await this.fetchUserNurse();
     await this.fetchTR_Form(idTR_Form);
-    //check when data change then run
     watch(
       [
         () => this.signsAndSymptomsOptions,
@@ -137,7 +133,6 @@ export default defineComponent({
     );
   },
   computed: {
-    //filter Nurse and Doctor
     filteredItems() {
       return (role) => {
         if (role === "doctor") {
@@ -161,7 +156,6 @@ export default defineComponent({
         }
       };
     },
-    //for input complete then change box size
     inputWidth() {
       return (category) => {
         // Calculate width based on input values
@@ -182,7 +176,6 @@ export default defineComponent({
         }
       };
     },
-    //for HN input complete then change box size from length HN
     HNWidth() {
       return () => {
         const name =
@@ -199,7 +192,6 @@ export default defineComponent({
         }
       };
     },
-    //for Name input complete then change box size from length Name
     NameWidth() {
       return () => {
         const name =
@@ -219,7 +211,6 @@ export default defineComponent({
     },
   },
   methods: {
-    //fetch SignsAndSymptoms data
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
@@ -230,7 +221,6 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
-    //fetch ReactionCategory data
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
@@ -241,7 +231,6 @@ export default defineComponent({
         console.error("Error fetching Reaction Category data:", error);
       }
     },
-    //fetch list doctor data
     async fetchUserDoctor() {
       try {
         const response = await axios.get(
@@ -252,7 +241,6 @@ export default defineComponent({
         console.error("Error fetching User Doctor data:", error);
       }
     },
-    //fetch list nurse data
     async fetchUserNurse() {
       try {
         const response = await axios.get(
@@ -263,7 +251,6 @@ export default defineComponent({
         console.error("Error fetching User Nurse data:", error);
       }
     },
-    //fetch Transfusion Form
     async fetchTR_Form(idTR_Form) {
       try {
         const response = await axios.get(
@@ -310,13 +297,10 @@ export default defineComponent({
         console.error("Error fetching TR Form data:", error);
       }
     },
-    // fuction real-time-date,time
     currentDate,
     currentTime,
-    // fuction parse date,time format
     parseDate,
     parseTime,
-    //find name of doctor and nurse
     handleInput(role) {
       if (role === "doctor") {
         this.showResultsDoctor = true;
@@ -332,7 +316,6 @@ export default defineComponent({
       this.formData.SubmittingTest.nurseName = item;
       this.showResultsNurse = false;
     },
-    // check value input
     restrictInput(event, name) {
       // Remove non-numeric characters from the input value
       let value = event.target.value.replace(/\D/g, '');
@@ -356,12 +339,10 @@ export default defineComponent({
       this.formData.VitalSigns[field] = inputValue;
     }
     },
-    // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
       $("#CloseButton").modal("hide");
     },
-    //cleansing form
     async handleSubmit(event,formData) {
       try {
         const {
@@ -403,10 +384,7 @@ export default defineComponent({
             lastName:
               PatientInfo && PatientInfo.lastName ? PatientInfo.lastName : null,
             HN: PatientInfo && PatientInfo.HN ? PatientInfo.HN : null,
-            //ค่าอะไร ? id?
             TXN: PatientInfo && PatientInfo.TXN ? PatientInfo.TXN : null,
-            //ค่าอะไร ?
-            /* pt_type: PatientInfo && PatientInfo ? PatientInfo.: null, */
             createdDate: new Date(),
             ward: PatientInfo && PatientInfo.ward ? PatientInfo.ward : null,
             phoneNumber:

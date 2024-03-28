@@ -24,7 +24,6 @@ export default {
         }
     },
     computed: {
-        //sort row
         sortedRows() {
             if (!this.sortByField) return this.tableData;
 
@@ -38,11 +37,9 @@ export default {
             });
             return sortedRows;
         },
-        //cal total page
         totalPages() {
             return Math.ceil(this.sortedRows.length / this.rowsPerPage);
         },
-        //cal index for row to display
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
@@ -54,7 +51,6 @@ export default {
             }
             return data.slice(startIndex, endIndex)
         },
-        //pagination
         paginationRange() {
             const start = (this.currentPage - 1) * this.rowsPerPage + 1;
             const end = Math.min(this.currentPage * this.rowsPerPage, this.sortedRows.length);
@@ -64,7 +60,7 @@ export default {
             const totalPages = this.totalPages;
             const currentPage = this.currentPage;
             let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, startPage + 4); // Ensure 5 pages are always shown
+            let endPage = Math.min(totalPages, startPage + 4); 
 
             if (endPage - startPage < 4) {
                 startPage = Math.max(1, endPage - 4);
@@ -74,7 +70,6 @@ export default {
         },
     },
     methods: {
-        //sort function
         sortBy(field) {
             if (field === this.sortByField) {
                 this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -87,7 +82,6 @@ export default {
                 let valA = a[field];
                 let valB = b[field];
 
-                // Convert valA and valB to Date objects if they are strings and field is 'dtm'
                 if (field === 'dtm' && typeof valA === 'string' && typeof valB === 'string') {
                     valA = new Date(valA);
                     valB = new Date(valB);
@@ -98,7 +92,6 @@ export default {
                 return 0;
             });
         },
-        //change page
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
@@ -119,7 +112,6 @@ export default {
             this.currentPage = pageNumber;
         },
 
-        //change route
         addTransFusionForm(id) {
             this.$router.push(`/transfusion-form/${id}`);
         },
@@ -140,7 +132,6 @@ export default {
         },
         parseDate,
         parseTime,
-        //check approve
         isUserApproved() {
             for (let i = 0; i < this.userApprove.length; i++) {
                 if (this.userApprove[i].id && this.userApprove[i].id.toString() === this.userInfo.s_uid) {
@@ -167,7 +158,6 @@ export default {
                     <p>{{ userInfo.name }}</p>
                     <p>{{ userInfo.role }}</p>
                 </div>
-                <!-- <button v-if="userInfo" @click="logout">Logout</button> -->
             </div>
         </nav>
         <div class="container-md">

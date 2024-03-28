@@ -23,9 +23,7 @@ export default defineComponent({
           firstName: "",
           lastName: "",
           HN: "",
-          //ค่าอะไร ? id?
           TXN: "",
-          //ค่าอะไร ?
           pt_type: "",
           createdDate: "" || new Date(),
           ward: "",
@@ -102,12 +100,10 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // Fetch All data
     const idTR_Form = this.$route.params.id;
     await this.fetchSignsAndSymptoms();
     await this.fetchReactionCategory();
     await this.fetchTR_Form(idTR_Form);
-    //check when data change then run
     watch(
         [() => this.signsAndSymptomsOptions, () => this.reactionCategory, () => this.reactionCategory
         , () => this.fetchBlood_transf_detail, () => this.fetchUserDoctor, () => this.fetchUserNurse], 
@@ -123,7 +119,6 @@ export default defineComponent({
   computed: {
     inputWidth() {
       return (category) => {
-        // Calculate width based on input values
         if (
           category === "beforeBP" &&
           this.beforeReactionBPSectionOne &&
@@ -141,7 +136,6 @@ export default defineComponent({
         }
       };
     },
-    //for HN input complete then change box size from length HN
     HNWidth() {
       return () => {
         const name =
@@ -158,7 +152,6 @@ export default defineComponent({
         }
       };
     },
-    //for Name input complete then change box size from length Name
     NameWidth() {
       return () => {
         const name =
@@ -178,7 +171,6 @@ export default defineComponent({
     },
   },
   methods: {
-     //fetch SignsAndSymptoms data
     async fetchSignsAndSymptoms() {
       try {
         const response = await axios.get(
@@ -189,7 +181,6 @@ export default defineComponent({
         console.error("Error fetching Signs and Symptoms data:", error);
       }
     },
-    //fetch ReactionCategory data
     async fetchReactionCategory() {
       try {
         const response = await axios.get(
@@ -200,7 +191,6 @@ export default defineComponent({
         console.error("Error fetching Reaction Category data:", error);
       }
     },
-    //fetch Transfusion Form
     async fetchTR_Form(idTR_Form) {
       try {
         const response = await axios.get(
@@ -247,10 +237,8 @@ export default defineComponent({
         console.error("Error fetching TR Form data:", error);
       }
     },
-    // fuction parse date,time format
     parseDate,
     parseTime,
-    // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
       $("#CloseButton").modal("hide");

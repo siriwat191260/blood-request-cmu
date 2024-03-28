@@ -24,7 +24,6 @@ export default {
         }
     },
     computed: {
-        //sort row
         sortedRows() {
             if (!this.sortByField) return this.tableData;
             const sortedRows = [...this.tableData];
@@ -37,11 +36,9 @@ export default {
             });
             return sortedRows;
         },
-        //cal total page
         totalPages() {
             return Math.ceil(this.sortedRows.length / this.rowsPerPage);
         },
-        //cal index for row to display
         displayedRows() {
             const startIndex = (this.currentPage - 1) * this.rowsPerPage;
             const endIndex = startIndex + this.rowsPerPage;
@@ -53,7 +50,6 @@ export default {
             } 
             return data.slice(startIndex, endIndex)
         },
-        //pagination
         paginationRange() {
             const start = (this.currentPage - 1) * this.rowsPerPage + 1;
             const end = Math.min(this.currentPage * this.rowsPerPage, this.sortedRows.length);
@@ -71,7 +67,6 @@ export default {
         },
     },
     methods: {
-        //sort function
         sortBy(field) {
             if (field === this.sortByField) {
                 this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -98,7 +93,6 @@ export default {
                 });
             }
         },
-        //change page
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
@@ -119,7 +113,6 @@ export default {
             this.currentPage = pageNumber;
         },
 
-        //change route
         getTransFusionForm(id) {
             this.$router.push(`/get-transfusion-form/${id}`);
         },
@@ -137,7 +130,6 @@ export default {
         },
         parseDate,
         parseTime,
-        //check approve
         isUserApproved() {
             for (let i = 0; i < this.userApprove.length; i++) {
                 if (this.userApprove[i].id && this.userApprove[i].id.toString() === this.userInfo.s_uid) {

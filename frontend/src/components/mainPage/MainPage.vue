@@ -25,7 +25,6 @@ export default defineComponent({
     fetchUser() {
       this.userInfo = JSON.parse(localStorage.getItem('userProfile'))
     },
-    //fetch list of blood transfer
     async fetchListBloodTransf() {
       try {
         const response = await axios.get(this.baseURL + "getListBloodTransf");
@@ -35,7 +34,6 @@ export default defineComponent({
         console.error("Error fetching List Blood Transfusion data:", error);
       }
     },
-    //fetch list of reaction
     async fetchListReaction() {
       try {
         const response = await axios.get(this.baseURL + "getListReaction");
@@ -45,7 +43,6 @@ export default defineComponent({
         console.error("Error fetching List Blood Transfusion data:", error);
       }
     },
-    //fetch approve list
     async fetchUserApprove() {
       try {
         const response = await axios.get(this.baseURL + "trasfusion-form/getUserApprove");
@@ -67,7 +64,6 @@ export default defineComponent({
     <blood-bank-list v-if="userInfo.role === 'bloodbank'" :userInfo="userInfo" :tableData="listReaction"
       :userApprove="userApprove" />
     <med-list v-else :userInfo="userInfo" :tableData="listBloodTranf" :userApprove="userApprove" />
-    <!-- <template-not-found v-else /> -->
   </div>
 </template>
   

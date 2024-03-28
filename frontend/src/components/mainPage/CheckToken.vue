@@ -16,18 +16,10 @@ export default defineComponent({
     methods: {
         async fetchUser() {
             try {
-                //for test
-                // const response = await axios.get(this.baseURL + "getUserLogin");
-                // localStorage.setItem('userProfile', JSON.stringify(response.data));
-                // this.$router.push(`/mainBloodChecklist`);
 
-                //check token 
                 const response = await axios.get(this.baseURL + "getCheckToken?Token=" + this.$route.params.id);
-                //if the token is valid
                 if (response.data.s == true) {
-                    //set localStorage
                     localStorage.setItem('userProfile', JSON.stringify(response.data.v));
-                    //change page
                     this.$router.push(`/mainBloodChecklist`);
                 }else{
                     this.$router.push(`/NotFound`);

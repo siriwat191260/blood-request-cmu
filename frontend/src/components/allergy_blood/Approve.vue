@@ -88,15 +88,11 @@ export default defineComponent({
     };
   },
   async mounted() {
-    //load data from localStorage
-    this.fetchUser();
-    //set id TR_Report
     const idTR_Report = this.$route.params.id;
-    //fetch data
     await this.fetchTRReport(idTR_Report);
+    this.fetchUser();
   },
   methods: {
-    //set data for from
     importData() {
       console.log(this.userInfo.name)
       this.formData.data.title = this.tr_report.data.title
@@ -120,7 +116,6 @@ export default defineComponent({
       this.formData.data.testedTime = this.tr_report.data.testedDateTime ? parseTime(new Date(this.tr_report.data.testedDateTime)) : ""
       this.formData.data.reportedDate = this.tr_report.data.reportedDateTime ? new Date(this.tr_report.data.reportedDateTime).toISOString().split("T")[0] : ""
       this.formData.data.reportedTime = this.tr_report.data.reportedDateTime ? parseTime(new Date(this.tr_report.data.reportedDateTime)) : ""
-      //BloodBagCharacteristic
       this.formData.BloodBagCharacteristic.isTransfusionSet = this.tr_report.BloodBagCharacteristic.isTransfusionSet
       this.formData.BloodBagCharacteristic.needleStatus = this.tr_report.BloodBagCharacteristic.needleStatus
       this.formData.BloodBagCharacteristic.plasmaCharacteristicStatus = this.tr_report.BloodBagCharacteristic.plasmaCharacteristicStatus
@@ -128,7 +123,6 @@ export default defineComponent({
       this.formData.BloodBagCharacteristic.leakagePosition = this.tr_report.BloodBagCharacteristic.leakagePosition
       this.formData.BloodBagCharacteristic.volumeOfBag = this.tr_report.BloodBagCharacteristic.volumeOfBag
       this.formData.BloodBagCharacteristic.TransfusionVolume = this.tr_report.BloodBagCharacteristic.TransfusionVolume
-      //indicator
       this.formData.indicator[0].PreTransfusionSample = this.tr_report.indicator[0].PreTransfusionSample
       this.formData.indicator[0].PostTransfusionSample = this.tr_report.indicator[0].PostTransfusionSample
       this.formData.indicator[0].bloodBagNumber = this.tr_report.indicator[0].bloodBagNumber
@@ -211,18 +205,15 @@ export default defineComponent({
         console.error("Error fetching List Blood Transfusion data:", error);
       }
     },
-    //date time function
     currentDate,
     currentTime,
     parseDate,
     parseTime,
-    // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
       console.log("click")
       $('#CloseButton').modal('hide');
     },
-    //submit function
     async handleSubmit(formData) {
       try {
         const { TransfusionMedicalDirectorReview } = formData;
@@ -247,7 +238,6 @@ export default defineComponent({
         console.log("Form submitted successfully!", response.data);
       } catch (error) {
         console.error("Error submitting form:", error);
-        // Handle error if necessary
       }
     },
   },
@@ -256,7 +246,6 @@ export default defineComponent({
     Icon,
   },
   watch: {
-    //clear input value if uncheck
     'formData.TransfusionMedicalDirectorReview.other': function (oldVal) {
       if (oldVal == 4) {
         this.formData.TransfusionMedicalDirectorReview.other = "";
@@ -264,7 +253,6 @@ export default defineComponent({
     },
   },
   computed: {
-    //dynamic width
     HNWidth() {
       return () => {
         const name =

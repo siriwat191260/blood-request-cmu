@@ -78,16 +78,12 @@ export default defineComponent({
     };
   },
   async mounted() {
-    //set id TR_Report
     const idTR_Form = this.$route.params.id;
-    //load data from localStorage
     this.fetchUser();
-    //fetch data
     await this.fetchTRForm(idTR_Form);
     await this.fetchUserBloodbank();
   },
   methods: {
-    //set data for from
     importData() {
       this.formData.data.title = this.tr_form.PatientInfo.title
       this.formData.data.firstName = this.tr_form.PatientInfo.firstName
@@ -124,7 +120,6 @@ export default defineComponent({
         console.error("Error fetching User Doctor data:", error);
       }
     },
-    //check role for autocomplete
     handleInput(role) {
       if (role === "test") {
         this.showResultsTest = true;
@@ -132,7 +127,6 @@ export default defineComponent({
         this.showResultsReport = true;
       }
     },
-    //set data autocomplete
     selectReport(item) {
       this.formData.data.reportedBy = item;
       this.showResultsReport = false;
@@ -141,18 +135,15 @@ export default defineComponent({
       this.formData.data.testedBy = item;
       this.showResultsTest = false;
     },
-    //date time function
     currentDate,
     currentTime,
     parseDate,
     parseTime,
-    // go back to previous page
     navigateToPreviousPage() {
       this.$router.push(`/mainBloodChecklist`);
       console.log("click")
       $('#CloseButton').modal('hide');
     },
-    //submit function
     async handleSubmit(formData) {
       try {
         const { data, BloodBagCharacteristic, indicator, GramStainAndCulture } = formData;
@@ -266,12 +257,10 @@ export default defineComponent({
         console.log("Form submitted successfully!", response.data);
       } catch (error) {
         console.error("Error submitting form:", error);
-        // Handle error if necessary
       }
     },
   },
   watch: {
-    //clear input value if uncheck
     'formData.BloodBagCharacteristic.isLeakagePosition': function (newVal, oldVal) {
       if (newVal !== 1) {
         this.formData.BloodBagCharacteristic.leakagePosition = "";
@@ -310,7 +299,7 @@ export default defineComponent({
         this.formData.GramStainAndCulture.toDateCulture = "";
       }
     },
-    'formData.data.reportedBy.length': function (newVal, oldVal) {
+    'formData.data.reportedBy.length': function (newVal) {
       if (newVal.length >= 1 && oldVal.length < 1) {
         this.formData.data.reportedDate = new Date().toISOString().split("T")[0];
         this.formData.data.reportedTime = this.parseTime(new Date());
@@ -334,7 +323,6 @@ export default defineComponent({
     Icon,
   },
   computed: {
-    //dynamic width
     HNWidth() {
       return () => {
         const name =
@@ -368,7 +356,6 @@ export default defineComponent({
         }
       };
     },
-    //set data in autocomplete
     filteredItems() {
       return () => {
         if (this.showResultsReport) {
