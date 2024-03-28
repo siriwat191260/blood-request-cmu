@@ -12,3 +12,7 @@ npm run dev
 ## slim-empty file
 composer install
 php -S localhost:8000
+
+## database
+open with MySQL Workbench 
+change password in file "PDOConnect.php"
